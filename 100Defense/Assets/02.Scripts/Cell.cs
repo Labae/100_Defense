@@ -9,18 +9,27 @@ public class Cell : MonoBehaviour
         EDefault,
         EStart,
         EGoal,
-        ERoad
+        ERoad,
+        ESelected,
+        End
     };
 
-    private bool gApperance;
+    private bool mApperance;
+    private bool mCanClick;
 
     private Map mMap;
     private CellState mState;
     private Material[] mMaterials;
     private MeshRenderer mMeshRenderer;
 
+    private int mCellIndexX;
+    private int mCellIndexY;
+
     public bool Initialize(int x, int y)
     {
+        mCellIndexX = x;
+        mCellIndexY = y;
+
         mMap = GetComponentInParent<Map>();
         if(!mMap)
         {
@@ -41,7 +50,7 @@ public class Cell : MonoBehaviour
             mState = CellState.EDefault;
         }
 
-        mMaterials = new Material[(int)CellState.ERoad];
+        mMaterials = new Material[(int)CellState.End];
         mMaterials[(int)CellState.EDefault] = Resources.Load("02.Materials/CellDefault") as Material;
         if(!mMaterials[(int)CellState.EDefault])
         {
@@ -58,6 +67,12 @@ public class Cell : MonoBehaviour
         if (!mMaterials[(int)CellState.EGoal])
         {
             Debug.Log("Failed Load CellGoal Material.");
+            return false;
+        }
+        mMaterials[(int)CellState.ESelected] = Resources.Load("02.Materials/CellSelected") as Material;
+        if (!mMaterials[(int)CellState.ESelected])
+        {
+            Debug.Log("Failed Load CellSelected Material.");
             return false;
         }
 
@@ -80,28 +95,66 @@ public class Cell : MonoBehaviour
 
     public void ApperanceAnimation()
     {
-        if (!gApperance)
+        if (!mApperance)
         {
-            gApperance = true;
+            mApperance = true;
             StopCoroutine(ApperanceAnimationCoroutine());
             StartCoroutine(ApperanceAnimationCoroutine());
+        }
+    }
+
+    public void Click()
+    {
+        if(mState == CellState.EStart || mState == CellState.EGoal)
+        {
+            return;
+        }
+
+        if(mState == CellState.ESelected)
+        {
+            mState = CellState.EDefault;
+            mMeshRenderer.material = mMaterials[(int)CellState.EDefault];
+            mMap.SetSelectedCell(null);
+        }
+        else
+        {
+            mState = CellState.ESelected;
+            mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
+            mMap.SetSelectedCell(this);
+        }
+
+        if (mCanClick)
+        {
+            mCanClick = false;
+            StopCoroutine(ApperanceAnimationCoroutine());
+            StartCoroutine(ApperanceAnimationCoroutine());
+        }
+    }
+
+    public void ReleaseSelected()
+    {
+        if (mState == CellState.ESelected)
+        {
+            mState = CellState.EDefault;
+            mMeshRenderer.material = mMaterials[(int)CellState.EDefault];
         }
     }
 
     private IEnumerator ApperanceAnimationCoroutine()
     {
         float angle = 180.0f;
-        float speed = 250.0f;
+        float speed = 600.0f;
 
         while(angle <= 540.0f)
         {
             angle += Time.deltaTime * speed;
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.3f;
 
             transform.position = new Vector3(transform.position.x, y, transform.position.z);
             yield return null;
         }
 
         transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        mCanClick = true;
     }
 }

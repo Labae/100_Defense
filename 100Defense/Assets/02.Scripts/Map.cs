@@ -5,11 +5,14 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     private Cell[,] mCell;
+    private Cell mSelectedCell;
 
     private const int mMapSizeX = 10;
     private const int mMapSizeY = 10;
 
     private WaitForSeconds mWFSCellApperanceSquareAnimTime;
+    private int mLayerMask;
+    private bool mIsFinishedCellAnim;
 
     public bool Initialize()
     {
@@ -39,7 +42,7 @@ public class Map : MonoBehaviour
             }
         }
 
-        mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.1f);
+        mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.35f);
         StopCoroutine(CellAnimationCoroutine());
         StartCoroutine(CellAnimationCoroutine());
 
@@ -97,6 +100,26 @@ public class Map : MonoBehaviour
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
+
+        mIsFinishedCellAnim = true;
+    }
+
+    public void SetSelectedCell(Cell cell)
+    {
+        if (mSelectedCell == null)
+        {
+            mSelectedCell = cell;
+        }
+        else
+        {
+            mSelectedCell.ReleaseSelected();
+            mSelectedCell = cell;
+        }
+    }
+
+    public Cell GetSelectedCell()
+    {
+        return mSelectedCell;
     }
 
     public int GetMapSizeX()
@@ -106,5 +129,15 @@ public class Map : MonoBehaviour
     public int GetMapSizeY()
     {
         return mMapSizeY;
+    }
+
+    public int GetLayerMask()
+    {
+        return 1 << LayerMask.NameToLayer("Cell");
+    }
+
+    public bool GetIsFinishedCellsAnim()
+    {
+        return mIsFinishedCellAnim;
     }
 }
