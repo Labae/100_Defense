@@ -12,6 +12,8 @@ public class Cell : MonoBehaviour
         ERoad
     };
 
+    private bool gApperance;
+
     private Map mMap;
     private CellState mState;
     private Material[] mMaterials;
@@ -72,8 +74,34 @@ public class Cell : MonoBehaviour
             return false;
         }
         mMeshRenderer.material = mMaterials[(int)mState];
-
-
+          
         return true;
+    }
+
+    public void ApperanceAnimation()
+    {
+        if (!gApperance)
+        {
+            gApperance = true;
+            StopCoroutine(ApperanceAnimationCoroutine());
+            StartCoroutine(ApperanceAnimationCoroutine());
+        }
+    }
+
+    private IEnumerator ApperanceAnimationCoroutine()
+    {
+        float angle = 180.0f;
+        float speed = 250.0f;
+
+        while(angle <= 540.0f)
+        {
+            angle += Time.deltaTime * speed;
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+
+            transform.position = new Vector3(transform.position.x, y, transform.position.z);
+            yield return null;
+        }
+
+        transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
     }
 }
