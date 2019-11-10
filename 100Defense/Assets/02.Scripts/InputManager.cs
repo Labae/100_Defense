@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private Camera mCamera;
-    private Map mMap;
+    private MapManager mMap;
 
     private void Start()
     {
@@ -43,7 +43,7 @@ public class InputManager : MonoBehaviour
                 return;
             }
 
-            hit.transform.GetComponent<Cell>().Click();
+            hit.transform.GetComponent<CellClass>().Click();
         }
     }
 }
