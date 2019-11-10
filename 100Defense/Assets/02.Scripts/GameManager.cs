@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private GameObject mMapPrefab;
-    private MapManager mMap;
+    private Map mMap;
     private void Start()
     {
         if(!Initialize())
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        mMap = mMapPrefab.GetComponent<MapManager>();
+        mMap = mMapPrefab.GetComponent<Map>();
         if(!mMap)
         {
             Debug.Log("Failed GetComponent Map.");
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public MapManager GetMap()
+    public Map GetMap()
     {
         return mMap;
     }

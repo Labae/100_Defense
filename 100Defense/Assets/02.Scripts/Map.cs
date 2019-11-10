@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapManager : MonoBehaviour
+public class Map : MonoBehaviour
 {
-    private CellClass[,] mCell;
-    private CellClass mSelectedCell;
+    private Cell[,] mCell;
+    private Cell mSelectedCell;
 
     private const int mMapSizeX = 10;
     private const int mMapSizeY = 10;
@@ -14,13 +14,9 @@ public class MapManager : MonoBehaviour
     private int mLayerMask;
     private bool mIsFinishedCellAnim;
 
-    private Map mMapData;
-
     public bool Initialize()
     {
-        mMapData = Resources.Load("03.Datas/MapData") as Map;
-
-        mCell = new CellClass[mMapSizeX, mMapSizeY];
+        mCell = new Cell[mMapSizeX, mMapSizeY];
         if (mCell.Length <= 0)
         {
             Debug.Log("Failed Initialize mCell.");
@@ -31,14 +27,14 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 0; y < mMapSizeY; y++)
             {
-                mCell[x, y] = transform.GetChild(y).GetChild(x).GetComponent<CellClass>();
+                mCell[x, y] = transform.GetChild(y).GetChild(x).GetComponent<Cell>();
                 if (mCell[x, y] == null)
                 {
                     Debug.Log("Failed GetComponent Cell.");
                     return false;
                 }
 
-                if (!mCell[x, y].Initialize(x, y, mMapData.dataArray[y]))
+                if (!mCell[x, y].Initialize(x, y))
                 {
                     Debug.Log("Failed Initialize Cell Component.");
                     return false;
@@ -108,7 +104,7 @@ public class MapManager : MonoBehaviour
         mIsFinishedCellAnim = true;
     }
 
-    public void SetSelectedCell(CellClass cell)
+    public void SetSelectedCell(Cell cell)
     {
         if (mSelectedCell != null)
         {
@@ -118,7 +114,7 @@ public class MapManager : MonoBehaviour
         mSelectedCell = cell;
     }
 
-    public CellClass GetSelectedCell()
+    public Cell GetSelectedCell()
     {
         return mSelectedCell;
     }
