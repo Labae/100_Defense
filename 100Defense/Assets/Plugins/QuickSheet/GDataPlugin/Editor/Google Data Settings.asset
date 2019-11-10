@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbcda13c00cae4f4087d84a149a1c70b, type: 3}
+  m_Name: Google Data Settings
+  m_EditorClassIdentifier: 
+  TemplatePath: QuickSheet/GDataPlugin/Templates
+  RuntimePath: Plugins/QuickSheet/Runtime
+  EditorPath: Plugins/QuickSheet/GDataPlugin/Editor
+  OAuth2Data:
+    client_id: 1011641516660-auvu74ojqktsomfigb86b665viudkrh3.apps.googleusercontent.com
+    auth_uri: 
+    token_uri: 
+    auth_provider_x509_cert_url: 
+    client_secret: awJuwBGK49F8XQS9fWL4JyzX
+    redirect_uris: []
+  _AccessCode: 4/tAF7c0Q521KAQeuGePEo-hlmn3DM_LEYkhFtYdQlHXI5MAfkIvvEJDA
+  _RefreshToken: 1//0eFGjWQz3aqyHCgYIARAAGA4SNwF-L9IrzqFrOWseQ33qFGdFuKavoQ-OzBhHuni-nm_dkkHURc4o6fQwaTFlXXeUcSNpO0OURTc
+  _AccessToken: ya29.Il-wB0_pqBn-Zoaq9KswqfYMOr4i9CKzkAsD5Kdt5tRUB9GRqsoTPmU6JnDE3mt26sh47zoMi08NQxVmKWD0cRURP9L0Po09qcqCKNQybZubzkzbNcWkNyDiXsE5yGDtrQ
