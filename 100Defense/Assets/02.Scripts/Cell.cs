@@ -31,17 +31,17 @@ public class Cell : MonoBehaviour
         mCellIndexY = y;
 
         mMap = GetComponentInParent<Map>();
-        if(!mMap)
+        if (!mMap)
         {
             Debug.Log("Failed Initialize Map Component");
             return false;
         }
 
-        if(x == 0 && y == 0)
+        if (x == 0 && y == 0)
         {
             mState = CellState.EStart;
         }
-        else if(x == mMap.GetMapSizeX() - 1 && y == mMap.GetMapSizeY() - 1)
+        else if (x == mMap.GetMapSizeX() - 1 && y == mMap.GetMapSizeY() - 1)
         {
             mState = CellState.EGoal;
         }
@@ -52,7 +52,7 @@ public class Cell : MonoBehaviour
 
         mMaterials = new Material[(int)CellState.End];
         mMaterials[(int)CellState.EDefault] = Resources.Load("02.Materials/CellDefault") as Material;
-        if(!mMaterials[(int)CellState.EDefault])
+        if (!mMaterials[(int)CellState.EDefault])
         {
             Debug.Log("Failed Load CellDefault Material.");
             return false;
@@ -77,7 +77,7 @@ public class Cell : MonoBehaviour
         }
 
         mMeshRenderer = GetComponent<MeshRenderer>();
-        if(!mMeshRenderer)
+        if (!mMeshRenderer)
         {
             Debug.Log("Failed Initialize mMeshRenderer Component");
             return false;
@@ -89,7 +89,7 @@ public class Cell : MonoBehaviour
             return false;
         }
         mMeshRenderer.material = mMaterials[(int)mState];
-          
+
         return true;
     }
 
@@ -105,26 +105,24 @@ public class Cell : MonoBehaviour
 
     public void Click()
     {
-        if(mState == CellState.EStart || mState == CellState.EGoal)
+        if (mState == CellState.EStart || mState == CellState.EGoal)
         {
             return;
         }
 
-        if(mState == CellState.ESelected)
-        {
-            mState = CellState.EDefault;
-            mMeshRenderer.material = mMaterials[(int)CellState.EDefault];
-            mMap.SetSelectedCell(null);
-        }
-        else
-        {
-            mState = CellState.ESelected;
-            mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
-            mMap.SetSelectedCell(this);
-        }
-
         if (mCanClick)
         {
+            if (mState == CellState.ESelected)
+            {
+                mMap.SetSelectedCell(null);
+            }
+            else
+            {
+                mState = CellState.ESelected;
+                mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
+                mMap.SetSelectedCell(this);
+            }
+
             mCanClick = false;
             StopCoroutine(ApperanceAnimationCoroutine());
             StartCoroutine(ApperanceAnimationCoroutine());
@@ -145,7 +143,7 @@ public class Cell : MonoBehaviour
         float angle = 180.0f;
         float speed = 600.0f;
 
-        while(angle <= 540.0f)
+        while (angle <= 540.0f)
         {
             angle += Time.deltaTime * speed;
             float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.3f;

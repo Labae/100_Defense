@@ -106,15 +106,12 @@ public class Map : MonoBehaviour
 
     public void SetSelectedCell(Cell cell)
     {
-        if (mSelectedCell == null)
-        {
-            mSelectedCell = cell;
-        }
-        else
+        if (mSelectedCell != null)
         {
             mSelectedCell.ReleaseSelected();
-            mSelectedCell = cell;
         }
+
+        mSelectedCell = cell;
     }
 
     public Cell GetSelectedCell()
