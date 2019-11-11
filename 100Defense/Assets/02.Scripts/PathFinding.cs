@@ -148,8 +148,7 @@ public class PathFinding : MonoBehaviour
             {
                 mPath[i].SetState(CellClass.CellState.ERoad);
             }
-            mPath[i].SetApperance(false);
-            mPath[i].ApperanceAnimation();
+            mPath[i].Anim();
             yield return null;
         }
 

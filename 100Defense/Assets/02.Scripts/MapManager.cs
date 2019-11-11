@@ -6,11 +6,14 @@ public class MapManager : MonoBehaviour
 {
     private CellClass[,] mMap;
     private CellClass mSelectedCell;
+    private CellClass mStartCell;
+    private CellClass mGoalCell;
 
     private const int mMapSizeX = 10;
     private const int mMapSizeY = 10;
 
     private WaitForSeconds mWFSCellApperanceSquareAnimTime;
+    private WaitForSeconds mWFSCellStartGoalAnimTime;
     private int mLayerMask;
     private bool mIsFinishedCellAnim;
 
@@ -46,7 +49,11 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        mStartCell = mMap[0, 0];
+        mGoalCell = mMap[mMapSizeX - 1, mMapSizeY - 1];
+
         mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.05f);
+        mWFSCellStartGoalAnimTime = new WaitForSeconds(0.5f);
 
         mPathFind = gameObject.AddComponent<PathFinding>();
         if(!mPathFind)
@@ -80,6 +87,10 @@ public class MapManager : MonoBehaviour
     }
     private IEnumerator CellAnimationCoroutine()
     {
+        mStartCell.Anim();
+        mGoalCell.Anim();
+        yield return mWFSCellStartGoalAnimTime;
+
         for (int x = 4; x < 6; x++)
         {
             for (int y = 4; y < 6; y++)

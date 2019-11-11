@@ -136,9 +136,9 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
     }
 
-    public void SetApperance(bool apperance)
+    public void Anim()
     {
-        mApperance = apperance;
+        StartCoroutine(ApperanceAnimationCoroutine());
     }
 
     public void Click()
