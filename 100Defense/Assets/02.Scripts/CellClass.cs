@@ -136,6 +136,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
     }
 
+    public void SetApperance(bool apperance)
+    {
+        mApperance = apperance;
+    }
+
     public void Click()
     {
         if (mState == CellState.EStart || mState == CellState.EGoal)
@@ -229,6 +234,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return mCellIndexY;
     }
 
+    public TowerClass GetTower()
+    {
+        return mTower;
+    }
+
     private TowerClass CreateTower(string towerName)
     {
         GameObject towerObject = new GameObject(towerName);
@@ -246,7 +256,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         while (angle <= 540.0f)
         {
             angle += Time.deltaTime * speed;
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.15f;
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.3f;
 
             transform.position = new Vector3(transform.position.x, y, transform.position.z);
             yield return null;

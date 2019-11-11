@@ -47,8 +47,6 @@ public class MapManager : MonoBehaviour
         }
 
         mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.05f);
-        StopCoroutine(CellAnimationCoroutine());
-        StartCoroutine(CellAnimationCoroutine());
 
         mPathFind = gameObject.AddComponent<PathFinding>();
         if(!mPathFind)
@@ -65,6 +63,21 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
+    public IEnumerator MapAnimCoroutine()
+    {
+        yield return StartCoroutine(CellAnimationCoroutine());
+        for (int x = 0; x < mMapSizeX; x++)
+        {
+            for (int y = 0; y < mMapSizeY; y++)
+            {
+               if(mMap[x,y].GetTower() != null)
+                {
+                    StartCoroutine(mMap[x, y].GetTower().ApperanceAnim());
+                }
+            }
+        }
+        yield return null;
+    }
     private IEnumerator CellAnimationCoroutine()
     {
         for (int x = 4; x < 6; x++)
@@ -157,6 +170,11 @@ public class MapManager : MonoBehaviour
     public bool GetIsFinishedCellsAnim()
     {
         return mIsFinishedCellAnim;
+    }
+
+    public PathFinding GetPathFinding()
+    {
+        return mPathFind;
     }
 
     public List<CellClass> GetNeighbours(CellClass node)

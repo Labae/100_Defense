@@ -12,6 +12,9 @@ public class TowerClass : MonoBehaviour
 {
     private TowerType mTowerType;
     private Tower mTowerData;
+    private Vector3 mOriginScale;
+    private GameObject mModel;
+
 
     public bool Initialize(CellClass cell, string cellData)
     {
@@ -21,9 +24,9 @@ public class TowerClass : MonoBehaviour
         mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
 
         int towerIndex = -1;
-        for(int i = 0; i < mTowerData.dataArray.Length;  i++)
+        for (int i = 0; i < mTowerData.dataArray.Length; i++)
         {
-            if(cellData == mTowerData.dataArray[i].Key)
+            if (cellData == mTowerData.dataArray[i].Key)
             {
                 mTowerType = (TowerType)i;
                 towerIndex = i;
@@ -31,13 +34,13 @@ public class TowerClass : MonoBehaviour
             }
         }
 
-        if(towerIndex == -1)
+        if (towerIndex == -1)
         {
             Debug.Log("Failed TowerIndex Initilaize.");
             return false;
         }
 
-        GameObject model = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
 
         return true;
     }
@@ -48,7 +51,31 @@ public class TowerClass : MonoBehaviour
         GameObject model = Instantiate(modelData, transform.position, Quaternion.identity);
         model.transform.SetParent(this.transform);
         model.transform.localPosition = Vector3.zero;
+        mOriginScale = model.transform.localScale;
+        model.transform.localScale = Vector3.zero;
 
         return model;
+    }
+
+    public IEnumerator ApperanceAnim()
+    {
+        mModel.transform.localScale = Vector3.zero;
+        float x = 0;
+        float y = 0;
+        float z = 0;
+        float speed = 10.0f;
+        float deltaSpeed;
+        while (mModel.transform.localScale != mOriginScale)
+        {
+            deltaSpeed = speed * Time.deltaTime;
+            x = Mathf.MoveTowards(x, mOriginScale.x, deltaSpeed);
+            y = Mathf.MoveTowards(y, mOriginScale.y, deltaSpeed);
+            z = Mathf.MoveTowards(z, mOriginScale.z, deltaSpeed);
+            mModel.transform.localScale = new Vector3(x, y, z);
+
+            yield return null;
+        }
+
+        mModel.transform.localScale = mOriginScale;
     }
 }

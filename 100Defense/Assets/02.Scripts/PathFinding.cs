@@ -9,19 +9,21 @@ public class PathFinding : MonoBehaviour
     private PathRequestManager mPathRequsetManager;
     private CellClass[] mPath;
     private int mTargetIndex;
+    private CellClass mStartCell;
+    private CellClass mGoalCell;
 
     public bool Initialize(MapManager map)
     {
         mMap = map;
 
-        CellClass startCell = mMap.GetCell(0, 0);
-        if (!startCell)
+        mStartCell = mMap.GetCell(0, 0);
+        if (!mStartCell)
         {
             Debug.Log("Failed Get startCell.");
             return false;
         }
-        CellClass goalCell = mMap.GetCell(mMap.GetMapSizeX() - 1, mMap.GetMapSizeY() - 1);
-        if (!goalCell)
+        mGoalCell = mMap.GetCell(mMap.GetMapSizeX() - 1, mMap.GetMapSizeY() - 1);
+        if (!mGoalCell)
         {
             Debug.Log("Failed Get goalCell.");
             return false;
@@ -30,9 +32,12 @@ public class PathFinding : MonoBehaviour
         mPathRequsetManager = gameObject.AddComponent<PathRequestManager>();
         mPathRequsetManager.Initialize();
 
-        PathRequestManager.RequestPath(startCell, goalCell, OnPathFound);
-
         return true;
+    }
+
+    public void PathFind()
+    {
+        PathRequestManager.RequestPath(mStartCell, mGoalCell, OnPathFound);
     }
 
     public void OnPathFound(CellClass[] newPath, bool pathSuccess)
@@ -52,7 +57,6 @@ public class PathFinding : MonoBehaviour
 
     private IEnumerator FindPath(CellClass start, CellClass goal)
     {
-        Debug.Log("FIND PATH");
         CellClass[] wayPoints = new CellClass[0];
         bool pathSuccess = false;
 
@@ -144,6 +148,8 @@ public class PathFinding : MonoBehaviour
             {
                 mPath[i].SetState(CellClass.CellState.ERoad);
             }
+            mPath[i].SetApperance(false);
+            mPath[i].ApperanceAnimation();
             yield return null;
         }
 
