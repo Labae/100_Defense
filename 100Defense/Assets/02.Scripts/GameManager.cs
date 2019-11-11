@@ -53,8 +53,12 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         yield return StartCoroutine(mMap.MapAnimCoroutine());
+
         yield return new WaitForSeconds(0.5f);
         mMap.GetPathFinding().PathFind();
+
+        yield return new WaitForSeconds(0.5f);
+        mMap.SetCanClick(true);
     }
 
     public MapManager GetMap()

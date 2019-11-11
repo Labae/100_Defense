@@ -45,6 +45,29 @@ public class TowerClass : MonoBehaviour
         return true;
     }
 
+    public bool Build(CellClass cell, TowerType type)
+    {
+        transform.SetParent(cell.transform);
+        transform.localPosition = Vector3.zero;
+
+        mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
+
+        int towerIndex = -1;
+        mTowerType = type;
+        towerIndex = (int)type;
+
+        if (towerIndex == -1)
+        {
+            Debug.Log("Failed TowerIndex Initilaize.");
+            return false;
+        }
+
+        mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        StartCoroutine(ApperanceAnim());
+
+        return true;
+    }
+
     private GameObject CreateModel(string modelName)
     {
         GameObject modelData = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
@@ -55,6 +78,11 @@ public class TowerClass : MonoBehaviour
         model.transform.localScale = Vector3.zero;
 
         return model;
+    }
+
+    public Tower GetTowerData()
+    {
+        return mTowerData;
     }
 
     public IEnumerator ApperanceAnim()

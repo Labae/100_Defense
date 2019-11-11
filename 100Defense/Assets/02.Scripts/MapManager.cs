@@ -19,6 +19,9 @@ public class MapManager : MonoBehaviour
 
     private Map mMapData;
     private PathFinding mPathFind;
+
+    private bool mCanClick = false;
+
     public bool Initialize()
     {
         mMapData = Resources.Load("03.Datas/MapData") as Map;
@@ -180,6 +183,16 @@ public class MapManager : MonoBehaviour
     public int GetLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");
+    }
+
+    public bool GetCanClick()
+    {
+        return mCanClick;
+    }
+
+    public void SetCanClick(bool click)
+    {
+        mCanClick = click;
     }
 
     public bool GetIsFinishedCellsAnim()

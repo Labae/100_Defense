@@ -18,6 +18,11 @@ public class InputManager : MonoBehaviour
         {
             CellClick();
         }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
+        }
     }
 
     private void CellClick()

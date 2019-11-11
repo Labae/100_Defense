@@ -15,7 +15,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     };
 
     private bool mApperance;
-    private bool mCanClick;
 
     private MapManager mMap;
     [SerializeField]
@@ -23,6 +22,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     private Material[] mMaterials;
     private MeshRenderer mMeshRenderer;
     private TowerClass mTower;
+    private CellState mPrevState;
 
     private int mCellIndexX;
     private int mCellIndexY;
@@ -148,7 +148,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             return;
         }
 
-        if (mCanClick)
+        if (mMap.GetCanClick())
         {
             if (mState == CellState.ESelected)
             {
@@ -156,12 +156,12 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             }
             else
             {
+                mPrevState = mState;
                 mState = CellState.ESelected;
                 mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
                 mMap.SetSelectedCell(this);
             }
 
-            mCanClick = false;
             StopCoroutine(ApperanceAnimationCoroutine());
             StartCoroutine(ApperanceAnimationCoroutine());
         }
@@ -171,8 +171,8 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     {
         if (mState == CellState.ESelected)
         {
-            mState = CellState.EDefault;
-            mMeshRenderer.material = mMaterials[(int)CellState.EDefault];
+            mState = mPrevState;
+            mMeshRenderer.material = mMaterials[(int)mPrevState];
         }
     }
 
@@ -248,6 +248,29 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return towerObject.GetComponent<TowerClass>();
     }
 
+    public bool BuildTower(TowerType type)
+    {
+        if (mTower != null)
+        {
+            return false;
+        }
+        else
+        {
+            mTower = CreateTower(GetTowerName(type));
+            if (!mTower.Build(this, type))
+            {
+                Debug.Log("Failed Tower Initialize.");
+                return false;
+            }
+
+            mWalkable = false;
+
+            mMap.GetPathFinding().PathFind();
+
+            return true;
+        }
+    }
+
     private IEnumerator ApperanceAnimationCoroutine()
     {
         float angle = 180.0f;
@@ -263,7 +286,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
 
         transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
-        mCanClick = true;
     }
 
     public int HeapIndex
@@ -339,11 +361,24 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
     public void SetState(CellState state)
     {
-        if(state == CellState.EStart || state == CellState.EGoal)
+        if (state == CellState.EStart || state == CellState.EGoal)
         {
             return;
         }
         mState = state;
         mMeshRenderer.material = mMaterials[(int)state];
+    }
+
+    public string GetTowerName(TowerType type)
+    {
+        switch (type)
+        {
+            case TowerType.ID_TOWER01:
+                return "ID_TOWER01";
+            case TowerType.ID_TOWER02:
+                return "ID_TOWER02";
+            default:
+                return string.Empty;
+        }
     }
 }

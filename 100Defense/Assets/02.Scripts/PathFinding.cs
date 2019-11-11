@@ -135,6 +135,20 @@ public class PathFinding : MonoBehaviour
 
     private IEnumerator ShowPath()
     {
+        for (int x = 0; x < mMap.GetMapSizeX(); x++)
+        {
+            for (int y = 0; y < mMap.GetMapSizeY(); y++)
+            {
+                if(mMap.GetCell(x, y).GetState() == CellClass.CellState.EStart ||
+                    mMap.GetCell(x, y).GetState() == CellClass.CellState.EGoal)
+                {
+                    continue;
+                }
+
+                mMap.GetCell(x, y).SetState(CellClass.CellState.EDefault);
+            }
+        }
+
         for (int i = 0; i < mPath.Length; i++)
         {
             if (mPath[i].GetState() == CellClass.CellState.EStart)
