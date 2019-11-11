@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     private GameObject mMapPrefab;
     private MapManager mMap;
+
     private void Start()
     {
         if(!Initialize())

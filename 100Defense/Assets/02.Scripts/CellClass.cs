@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellClass : MonoBehaviour
+public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 {
     public enum CellState
     {
@@ -18,6 +18,7 @@ public class CellClass : MonoBehaviour
     private bool mCanClick;
 
     private MapManager mMap;
+    [SerializeField]
     private CellState mState;
     private Material[] mMaterials;
     private MeshRenderer mMeshRenderer;
@@ -28,10 +29,17 @@ public class CellClass : MonoBehaviour
 
     private string mCellData;
 
+    private bool mWalkable;
+    private CellClass mParent;
+    private int mGCost;
+    private int mHCost;
+    private int mHeapIndex;
+
     public bool Initialize(int x, int y, MapData data)
     {
         mCellIndexX = x;
         mCellIndexY = y;
+        mWalkable = true;
 
         mMap = GetComponentInParent<MapManager>();
         if (!mMap)
@@ -72,6 +80,12 @@ public class CellClass : MonoBehaviour
             Debug.Log("Failed Load CellGoal Material.");
             return false;
         }
+        mMaterials[(int)CellState.ERoad] = Resources.Load("02.Materials/CellRoad") as Material;
+        if (!mMaterials[(int)CellState.ERoad])
+        {
+            Debug.Log("Failed Load CellRoad Material.");
+            return false;
+        }
         mMaterials[(int)CellState.ESelected] = Resources.Load("02.Materials/CellSelected") as Material;
         if (!mMaterials[(int)CellState.ESelected])
         {
@@ -94,6 +108,20 @@ public class CellClass : MonoBehaviour
         mMeshRenderer.material = mMaterials[(int)mState];
 
         mCellData = GetCellData(data);
+        if (mCellData == "0")
+        {
+            mTower = null;
+        }
+        else
+        {
+            mTower = CreateTower(mCellData);
+            if (!mTower.Initialize(this, mCellData))
+            {
+                Debug.Log("Failed Tower Initialize");
+                return false;
+            }
+            mWalkable = false;
+        }
 
         return true;
     }
@@ -191,6 +219,16 @@ public class CellClass : MonoBehaviour
         }
     }
 
+    public int GetCellX()
+    {
+        return mCellIndexX;
+    }
+
+    public int GetCellY()
+    {
+        return mCellIndexY;
+    }
+
     private TowerClass CreateTower(string towerName)
     {
         GameObject towerObject = new GameObject(towerName);
@@ -203,12 +241,12 @@ public class CellClass : MonoBehaviour
     private IEnumerator ApperanceAnimationCoroutine()
     {
         float angle = 180.0f;
-        float speed = 600.0f;
+        float speed = 1000.0f;
 
         while (angle <= 540.0f)
         {
             angle += Time.deltaTime * speed;
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.3f;
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * 0.15f;
 
             transform.position = new Vector3(transform.position.x, y, transform.position.z);
             yield return null;
@@ -216,18 +254,86 @@ public class CellClass : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
         mCanClick = true;
+    }
 
-        if (mCellData == "0")
+    public int HeapIndex
+    {
+        get
         {
-            mTower = null;
+            return mHeapIndex;
         }
-        else
+        set
         {
-            mTower = CreateTower(mCellData);
-            if (!mTower.Initialize(this, mCellData))
-            {
-                Debug.Log("Failed Tower Initialize");
-            }
+            mHeapIndex = value;
         }
+    }
+
+    public int FCost
+    {
+        get
+        {
+            return mGCost + mHCost;
+        }
+    }
+
+    public int CompareTo(CellClass cellToCompare)
+    {
+        int compare = FCost.CompareTo(cellToCompare.FCost);
+        if (compare == 0)
+        {
+            compare = mHCost.CompareTo(cellToCompare.mHCost);
+        }
+
+        return -compare;
+    }
+
+    public bool GetWalkable()
+    {
+        return mWalkable;
+    }
+
+    public int GetGCost()
+    {
+        return mGCost;
+    }
+
+    public void SetGCost(int cost)
+    {
+        mGCost = cost;
+    }
+
+    public void SetHCost(int cost)
+    {
+        mHCost = cost;
+    }
+
+    public void SetParent(CellClass parent)
+    {
+        mParent = parent;
+    }
+
+    public CellClass GetParent()
+    {
+        return mParent;
+    }
+
+    public void SetWalkable(bool walkable)
+    {
+        mWalkable = walkable;
+    }
+
+    public CellState GetState()
+    {
+        return mState;
+    }
+
+    public void SetState(CellState state)
+    {
+        if(state == CellState.EStart || state == CellState.EGoal)
+        {
+            return;
+        }
+        mState = state;
+        mMeshRenderer.material = mMaterials[(int)state];
     }
 }

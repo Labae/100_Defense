@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
-    private CellClass[,] mCell;
+    private CellClass[,] mMap;
     private CellClass mSelectedCell;
 
     private const int mMapSizeX = 10;
@@ -15,13 +15,13 @@ public class MapManager : MonoBehaviour
     private bool mIsFinishedCellAnim;
 
     private Map mMapData;
-
+    private PathFinding mPathFind;
     public bool Initialize()
     {
         mMapData = Resources.Load("03.Datas/MapData") as Map;
 
-        mCell = new CellClass[mMapSizeX, mMapSizeY];
-        if (mCell.Length <= 0)
+        mMap = new CellClass[mMapSizeX, mMapSizeY];
+        if (mMap.Length <= 0)
         {
             Debug.Log("Failed Initialize mCell.");
             return false;
@@ -31,14 +31,14 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 0; y < mMapSizeY; y++)
             {
-                mCell[x, y] = transform.GetChild(y).GetChild(x).GetComponent<CellClass>();
-                if (mCell[x, y] == null)
+                mMap[x, y] = transform.GetChild(y).GetChild(x).GetComponent<CellClass>();
+                if (mMap[x, y] == null)
                 {
                     Debug.Log("Failed GetComponent Cell.");
                     return false;
                 }
 
-                if (!mCell[x, y].Initialize(x, y, mMapData.dataArray[y]))
+                if (!mMap[x, y].Initialize(x, y, mMapData.dataArray[y]))
                 {
                     Debug.Log("Failed Initialize Cell Component.");
                     return false;
@@ -46,9 +46,21 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.35f);
+        mWFSCellApperanceSquareAnimTime = new WaitForSeconds(0.05f);
         StopCoroutine(CellAnimationCoroutine());
         StartCoroutine(CellAnimationCoroutine());
+
+        mPathFind = gameObject.AddComponent<PathFinding>();
+        if(!mPathFind)
+        {
+            Debug.Log("Failed Add PathFinding Component.");
+            return false;
+        }
+
+        if (!mPathFind.Initialize(this))
+        {
+            Debug.Log("Failed Initialize PathFind.");
+        }
 
         return true;
     }
@@ -59,8 +71,8 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 4; y < 6; y++)
             {
-                mCell[y, x].ApperanceAnimation();
-                mCell[x, y].ApperanceAnimation();
+                mMap[y, x].ApperanceAnimation();
+                mMap[x, y].ApperanceAnimation();
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
@@ -69,8 +81,8 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 3; y < 7; y++)
             {
-                mCell[y, x].ApperanceAnimation();
-                mCell[x, y].ApperanceAnimation();
+                mMap[y, x].ApperanceAnimation();
+                mMap[x, y].ApperanceAnimation();
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
@@ -79,8 +91,8 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 2; y < 8; y++)
             {
-                mCell[y, x].ApperanceAnimation();
-                mCell[x, y].ApperanceAnimation();
+                mMap[y, x].ApperanceAnimation();
+                mMap[x, y].ApperanceAnimation();
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
@@ -89,8 +101,8 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 1; y < 9; y++)
             {
-                mCell[y, x].ApperanceAnimation();
-                mCell[x, y].ApperanceAnimation();
+                mMap[y, x].ApperanceAnimation();
+                mMap[x, y].ApperanceAnimation();
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
@@ -99,8 +111,8 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 0; y < 10; y++)
             {
-                mCell[y, x].ApperanceAnimation();
-                mCell[x, y].ApperanceAnimation();
+                mMap[y, x].ApperanceAnimation();
+                mMap[x, y].ApperanceAnimation();
             }
         }
         yield return mWFSCellApperanceSquareAnimTime;
@@ -132,6 +144,11 @@ public class MapManager : MonoBehaviour
         return mMapSizeY;
     }
 
+    public int GetMapMaxSize()
+    {
+        return mMapSizeX * mMapSizeY;
+    }
+
     public int GetLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");
@@ -140,5 +157,43 @@ public class MapManager : MonoBehaviour
     public bool GetIsFinishedCellsAnim()
     {
         return mIsFinishedCellAnim;
+    }
+
+    public List<CellClass> GetNeighbours(CellClass node)
+    {
+        List<CellClass> neighbours = new List<CellClass>();
+
+        // Left
+        if(node.GetCellX() - 1 >= 0)
+        {
+            neighbours.Add(mMap[node.GetCellX() - 1, node.GetCellY()]);
+        }
+        // Right
+        if (node.GetCellX() + 1 < mMapSizeX)
+        {
+            neighbours.Add(mMap[node.GetCellX() + 1, node.GetCellY()]);
+        }
+        // Up
+        if (node.GetCellY() - 1 >= 0)
+        {
+            neighbours.Add(mMap[node.GetCellX(), node.GetCellY() - 1]);
+        }
+        // Down
+        if (node.GetCellY() + 1 < mMapSizeY)
+        {
+            neighbours.Add(mMap[node.GetCellX(), node.GetCellY() + 1]);
+        }
+
+        return neighbours;
+    }
+
+    public CellClass[,] GetCells()
+    {
+        return mMap;
+    }
+
+    public CellClass GetCell(int x, int y)
+    {
+        return mMap[x, y];
     }
 }
