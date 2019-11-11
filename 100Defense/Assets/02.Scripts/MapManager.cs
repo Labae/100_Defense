@@ -72,7 +72,7 @@ public class MapManager : MonoBehaviour
 
     public IEnumerator MapAnimCoroutine()
     {
-        yield return StartCoroutine(CellAnimationCoroutine());
+        yield return StartCoroutine(CellApperanceAnimationCoroutine());
         for (int x = 0; x < mMapSizeX; x++)
         {
             for (int y = 0; y < mMapSizeY; y++)
@@ -83,14 +83,11 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-        yield return null;
-    }
-    private IEnumerator CellAnimationCoroutine()
-    {
-        mStartCell.Anim();
-        mGoalCell.Anim();
         yield return mWFSCellStartGoalAnimTime;
-
+        yield return StartCoroutine(CellStartGoalAnimationCoroutine());
+    }
+    private IEnumerator CellApperanceAnimationCoroutine()
+    {
         for (int x = 4; x < 6; x++)
         {
             for (int y = 4; y < 6; y++)
@@ -142,6 +139,13 @@ public class MapManager : MonoBehaviour
         yield return mWFSCellApperanceSquareAnimTime;
 
         mIsFinishedCellAnim = true;
+    }
+
+    private IEnumerator CellStartGoalAnimationCoroutine()
+    {
+        mStartCell.Anim();
+        mGoalCell.Anim();
+        yield return mWFSCellStartGoalAnimTime;
     }
 
     public void SetSelectedCell(CellClass cell)

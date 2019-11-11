@@ -120,6 +120,8 @@ public class PathFinding : MonoBehaviour
             currentNode = currentNode.GetParent();
         }
 
+        path.Reverse();
+
         return path.ToArray();
     }
 
