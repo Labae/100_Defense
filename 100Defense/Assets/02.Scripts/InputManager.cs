@@ -21,7 +21,12 @@ public class InputManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.B))
         {
-            mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
+            BuildTower();
+        }
+
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            DestoryTower();
         }
     }
 
@@ -49,6 +54,22 @@ public class InputManager : MonoBehaviour
             }
 
             hit.transform.GetComponent<CellClass>().Click();
+        }
+    }
+
+    private void BuildTower()
+    {
+        if (mMap.GetSelectedCell() != null)
+        {
+            mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
+        }
+    }
+
+    private void DestoryTower()
+    {
+        if (mMap.GetSelectedCell() != null)
+        {
+            mMap.GetSelectedCell().DestoryTower();
         }
     }
 }

@@ -68,6 +68,10 @@ public class TowerClass : MonoBehaviour
         return true;
     }
 
+    public void Destory()
+    {
+        Destroy(this.gameObject);
+    }
     private GameObject CreateModel(string modelName)
     {
         GameObject modelData = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;

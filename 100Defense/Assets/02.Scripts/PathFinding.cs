@@ -12,6 +12,8 @@ public class PathFinding : MonoBehaviour
     private CellClass mStartCell;
     private CellClass mGoalCell;
 
+    private bool mPathSuccess;
+
     public bool Initialize(MapManager map)
     {
         mMap = map;
@@ -58,8 +60,7 @@ public class PathFinding : MonoBehaviour
     private IEnumerator FindPath(CellClass start, CellClass goal)
     {
         CellClass[] wayPoints = new CellClass[0];
-        bool pathSuccess = false;
-
+        mPathSuccess = false;
         if (start.GetWalkable() && goal.GetWalkable())
         {
             Heap<CellClass> openSet = new Heap<CellClass>(mMap.GetMapMaxSize());
@@ -74,7 +75,7 @@ public class PathFinding : MonoBehaviour
 
                 if (currentNode == goal)
                 {
-                    pathSuccess = true;
+                    mPathSuccess = true;
                     break;
                 }
 
@@ -102,11 +103,11 @@ public class PathFinding : MonoBehaviour
         }
 
         yield return null;
-        if (pathSuccess)
+        if (mPathSuccess)
         {
             wayPoints = RetracePath(start, goal);
         }
-        mPathRequsetManager.FinishedProcessingPath(wayPoints, pathSuccess);
+        mPathRequsetManager.FinishedProcessingPath(wayPoints, mPathSuccess);
     }
 
     private CellClass[] RetracePath(CellClass startNode, CellClass endNode)
@@ -133,18 +134,24 @@ public class PathFinding : MonoBehaviour
         return 10 * distX + 10 * distY;
     }
 
+    public bool GetPathSuccess()
+    {
+        return mPathSuccess;
+    }
+
     private IEnumerator ShowPath()
     {
         for (int x = 0; x < mMap.GetMapSizeX(); x++)
         {
             for (int y = 0; y < mMap.GetMapSizeY(); y++)
             {
-                if(mMap.GetCell(x, y).GetState() == CellClass.CellState.EStart ||
+                if (mMap.GetCell(x, y).GetState() == CellClass.CellState.EStart ||
                     mMap.GetCell(x, y).GetState() == CellClass.CellState.EGoal)
                 {
                     continue;
                 }
 
+                mMap.SetSelectedCell(null);
                 mMap.GetCell(x, y).SetState(CellClass.CellState.EDefault);
             }
         }

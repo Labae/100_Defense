@@ -266,7 +266,28 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mWalkable = false;
 
             mMap.GetPathFinding().PathFind();
+            if (!mMap.GetPathFinding().GetPathSuccess())
+            {
+                mTower.Destory();
+                mWalkable = true;
+                return false;
+            }
 
+            return true;
+        }
+    }
+
+    public bool DestoryTower()
+    {
+        if (mTower == null)
+        {
+            return false;
+        }
+        else
+        {
+            mTower.Destory();
+            mWalkable = true;
+            mMap.GetPathFinding().PathFind();
             return true;
         }
     }
