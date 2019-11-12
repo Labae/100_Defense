@@ -70,7 +70,7 @@ public class TowerClass : MonoBehaviour
 
     public void Destory()
     {
-        Destroy(this.gameObject);
+        StartCoroutine(DestoryCoroutine());
     }
     private GameObject CreateModel(string modelName)
     {
@@ -95,7 +95,7 @@ public class TowerClass : MonoBehaviour
         float x = 0;
         float y = 0;
         float z = 0;
-        float speed = 10.0f;
+        float speed = 6.0f;
         float deltaSpeed;
         while (mModel.transform.localScale != mOriginScale)
         {
@@ -109,5 +109,27 @@ public class TowerClass : MonoBehaviour
         }
 
         mModel.transform.localScale = mOriginScale;
+    }
+
+    public IEnumerator DestoryCoroutine()
+    {
+        float x = mModel.transform.localScale.x;
+        float y = mModel.transform.localScale.y;
+        float z = mModel.transform.localScale.z;
+        float speed = 6.0f;
+        float deltaSpeed;
+        while (mModel.transform.localScale != Vector3.zero)
+        {
+            deltaSpeed = speed * Time.deltaTime;
+            x = Mathf.MoveTowards(x, 0, deltaSpeed);
+            y = Mathf.MoveTowards(y, 0, deltaSpeed);
+            z = Mathf.MoveTowards(z, 0, deltaSpeed);
+            mModel.transform.localScale = new Vector3(x, y, z);
+
+            yield return null;
+        }
+
+        Destroy(this.gameObject);
+
     }
 }
