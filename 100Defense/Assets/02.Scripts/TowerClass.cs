@@ -22,6 +22,11 @@ public class TowerClass : MonoBehaviour
         transform.localPosition = Vector3.zero;
 
         mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
+        if (!mTowerData)
+        {
+            Debug.Log("Tower data not load");
+            return false;
+        }
 
         int towerIndex = -1;
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
@@ -41,6 +46,11 @@ public class TowerClass : MonoBehaviour
         }
 
         mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        if(!mModel)
+        {
+            Debug.Log("Failed Create Tower Model");
+            return false;
+        }
 
         return true;
     }
@@ -51,6 +61,11 @@ public class TowerClass : MonoBehaviour
         transform.localPosition = Vector3.zero;
 
         mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
+        if(!mTowerData)
+        {
+            Debug.Log("Tower data not load");
+            return false;
+        }
 
         int towerIndex = -1;
         mTowerType = type;
@@ -63,6 +78,12 @@ public class TowerClass : MonoBehaviour
         }
 
         mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        if (!mModel)
+        {
+            Debug.Log("Failed Create Tower Model");
+            return false;
+        }
+
         StartCoroutine(ApperanceAnim());
 
         return true;
@@ -75,6 +96,10 @@ public class TowerClass : MonoBehaviour
     private GameObject CreateModel(string modelName)
     {
         GameObject modelData = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
+        if(!modelData)
+        {
+            return null;
+        }
         GameObject model = Instantiate(modelData, transform.position, Quaternion.identity);
         model.transform.SetParent(this.transform);
         model.transform.localPosition = Vector3.zero;

@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     private Camera mCamera;
     private MapManager mMap;
+    private EnemyClass mEnemy;
 
     private void Start()
     {
@@ -27,6 +28,11 @@ public class InputManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.D))
         {
             DestoryTower();
+        }
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            CreateEnemy(0, 1);
         }
     }
 
@@ -70,6 +76,30 @@ public class InputManager : MonoBehaviour
         if (mMap.GetSelectedCell() != null)
         {
             mMap.GetSelectedCell().DestoryTower();
+        }
+    }
+
+    private void CreateEnemy(int enemyIndex, int waveNumber)
+    {
+        if(!mMap)
+        {
+            mMap = GetComponent<GameManager>().GetMap();
+        }
+        StartCoroutine(CreateEnemyCoroutine(enemyIndex, mMap.GetPathFinding().GetPath(), waveNumber));
+    }
+
+    private IEnumerator CreateEnemyCoroutine(int enemyIndex, List<Vector3> path, int waveNumber)
+    {
+        WaitForSeconds wfsTime = new WaitForSeconds(1.0f);
+
+        for (int i = 0; i < waveNumber; i++)
+        {
+            GameObject enemy = new GameObject();
+            mEnemy = enemy.AddComponent<EnemyClass>();
+
+            mEnemy.Initialize(enemyIndex, path);
+
+            yield return wfsTime;
         }
     }
 }

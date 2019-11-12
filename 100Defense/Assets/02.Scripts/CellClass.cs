@@ -61,32 +61,34 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mState = CellState.EDefault;
         }
 
+        string matPath = "02.Materials/01.Cells/";
+
         mMaterials = new Material[(int)CellState.End];
-        mMaterials[(int)CellState.EDefault] = Resources.Load("02.Materials/CellDefault") as Material;
+        mMaterials[(int)CellState.EDefault] = Resources.Load(matPath + "CellDefault") as Material;
         if (!mMaterials[(int)CellState.EDefault])
         {
             Debug.Log("Failed Load CellDefault Material.");
             return false;
         }
-        mMaterials[(int)CellState.EStart] = Resources.Load("02.Materials/CellStart") as Material;
+        mMaterials[(int)CellState.EStart] = Resources.Load(matPath + "CellStart") as Material;
         if (!mMaterials[(int)CellState.EStart])
         {
             Debug.Log("Failed Load CellStart Material.");
             return false;
         }
-        mMaterials[(int)CellState.EGoal] = Resources.Load("02.Materials/CellGoal") as Material;
+        mMaterials[(int)CellState.EGoal] = Resources.Load(matPath + "CellGoal") as Material;
         if (!mMaterials[(int)CellState.EGoal])
         {
             Debug.Log("Failed Load CellGoal Material.");
             return false;
         }
-        mMaterials[(int)CellState.ERoad] = Resources.Load("02.Materials/CellRoad") as Material;
+        mMaterials[(int)CellState.ERoad] = Resources.Load(matPath + "CellRoad") as Material;
         if (!mMaterials[(int)CellState.ERoad])
         {
             Debug.Log("Failed Load CellRoad Material.");
             return false;
         }
-        mMaterials[(int)CellState.ESelected] = Resources.Load("02.Materials/CellSelected") as Material;
+        mMaterials[(int)CellState.ESelected] = Resources.Load(matPath + "CellSelected") as Material;
         if (!mMaterials[(int)CellState.ESelected])
         {
             Debug.Log("Failed Load CellSelected Material.");

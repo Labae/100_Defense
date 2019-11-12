@@ -122,6 +122,7 @@ public class PathFinding : MonoBehaviour
         }
 
         path.Reverse();
+        path.Insert(0, startNode);
 
         return path.ToArray();
     }
@@ -137,6 +138,17 @@ public class PathFinding : MonoBehaviour
     public bool GetPathSuccess()
     {
         return mPathSuccess;
+    }
+
+    public List<Vector3> GetPath()
+    {
+        List<Vector3> path = new List<Vector3>();
+        for (int i = 0; i < mPath.Length; i++)
+        {
+            path.Add(mPath[i].transform.position);
+        }
+
+        return path;
     }
 
     private IEnumerator ShowPath()

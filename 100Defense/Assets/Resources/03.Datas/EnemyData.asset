@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19567f32e4018f34f843387ef3685215, type: 3}
+  m_Name: EnemyData
+  m_EditorClassIdentifier: 
+  SheetName: MySpreadSheet
+  WorksheetName: Enemy
+  dataArray:
+  - key: ID_ENEMY01
+    name: Red_Caterpillars
+    health: 15
+    movespeed: 5
+  - key: ID_ENEMY02
+    name: Earthworm
+    health: 30
+    movespeed: 10
+  - key: ID_ENEMY03
+    name: Turtle
+    health: 45
+    movespeed: 15
+  - key: ID_ENEMY04
+    name: Sloth
+    health: 60
+    movespeed: 20
