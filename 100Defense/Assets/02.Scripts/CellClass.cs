@@ -27,15 +27,13 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     private int mCellIndexX;
     private int mCellIndexY;
 
-    private string mCellData;
-
     private bool mWalkable;
     private CellClass mParent;
     private int mGCost;
     private int mHCost;
     private int mHeapIndex;
 
-    public bool Initialize(int x, int y, MapData data)
+    public bool Initialize(int x, int y, string data)
     {
         mCellIndexX = x;
         mCellIndexY = y;
@@ -109,15 +107,14 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         mMeshRenderer.material = mMaterials[(int)mState];
 
-        mCellData = GetCellData(data);
-        if (mCellData == "0")
+        if (data == "0")
         {
             mTower = null;
         }
         else
         {
-            mTower = CreateTower(mCellData);
-            if (!mTower.Initialize(this, mCellData))
+            mTower = CreateTower(data);
+            if (!mTower.Initialize(this, data))
             {
                 Debug.Log("Failed Tower Initialize");
                 return false;
@@ -175,54 +172,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         {
             mState = mPrevState;
             mMeshRenderer.material = mMaterials[(int)mPrevState];
-        }
-    }
-
-    private string GetCellData(MapData data)
-    {
-        if (mCellIndexX == 0)
-        {
-            return data.X0;
-        }
-        else if (mCellIndexX == 1)
-        {
-            return data.X1;
-        }
-        else if (mCellIndexX == 2)
-        {
-            return data.X2;
-        }
-        else if (mCellIndexX == 3)
-        {
-            return data.X3;
-        }
-        else if (mCellIndexX == 4)
-        {
-            return data.X4;
-        }
-        else if (mCellIndexX == 5)
-        {
-            return data.X5;
-        }
-        else if (mCellIndexX == 6)
-        {
-            return data.X6;
-        }
-        else if (mCellIndexX == 7)
-        {
-            return data.X7;
-        }
-        else if (mCellIndexX == 8)
-        {
-            return data.X8;
-        }
-        else if (mCellIndexX == 9)
-        {
-            return data.X9;
-        }
-        else
-        {
-            return string.Empty;
         }
     }
 

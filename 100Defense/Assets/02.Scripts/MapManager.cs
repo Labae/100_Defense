@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     private CellClass[,] mMap;
+    private string[,] mMapData;
     private CellClass mSelectedCell;
     private CellClass mStartCell;
     private CellClass mGoalCell;
@@ -17,19 +18,25 @@ public class MapManager : MonoBehaviour
     private int mLayerMask;
     private bool mIsFinishedCellAnim;
 
-    private Map mMapData;
+    //private Map mMapData;
     private PathFinding mPathFind;
 
     private bool mCanClick = false;
 
-    public bool Initialize()
+    public bool Initialize(CSVManager csv)
     {
-        mMapData = Resources.Load("03.Datas/MapData") as Map;
-
         mMap = new CellClass[mMapSizeX, mMapSizeY];
         if (mMap.Length <= 0)
         {
             Debug.Log("Failed Initialize mCell.");
+            return false;
+        }
+
+        string[,] mapData = null;
+        mapData = csv.LoadMap("03.Datas/MapData");
+        if (mapData == null)
+        {
+            Debug.Log("Failed Load MapData.csv");
             return false;
         }
 
@@ -44,7 +51,7 @@ public class MapManager : MonoBehaviour
                     return false;
                 }
 
-                if (!mMap[x, y].Initialize(x, y, mMapData.dataArray[y]))
+                if (!mMap[x, y].Initialize(x, y, mapData[x,y]))
                 {
                     Debug.Log("Failed Initialize Cell Component.");
                     return false;

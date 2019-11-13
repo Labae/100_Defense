@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     private GameObject mMapPrefab;
     private MapManager mMap;
+    private CSVManager mCSV;
 
     private void Start()
     {
@@ -33,6 +34,13 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
+        mCSV = GetComponent<CSVManager>();
+        if(!mCSV)
+        {
+            Debug.Log("Failed Get CSV Component.");
+            return false;
+        }
+
         mMap = mMapPrefab.GetComponent<MapManager>();
         if(!mMap)
         {
@@ -40,7 +48,7 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        if(!mMap.Initialize())
+        if(!mMap.Initialize(mCSV))
         {
             Debug.Log("Failed Initialize Map Component.");
             return false;
