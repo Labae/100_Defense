@@ -84,13 +84,16 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.dataArray[towerIndex].Key);
+
         StartCoroutine(ApperanceAnim());
 
         return true;
     }
 
-    public void Destory()
+    public void Destory(CellClass cell)
     {
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
         StartCoroutine(DestoryCoroutine());
     }
     private GameObject CreateModel(string modelName)

@@ -1,44 +1,112 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Text;
 
 public class CSVManager : MonoBehaviour
 {
-    public string[,] LoadMap(string mapPath)
+    public string[,] LoadMap()
     {
-        TextAsset mapData = Resources.Load(mapPath) as TextAsset;
-        if(!mapData)
+        StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/MapData.csv"));
+        bool endOfFile = false;
+
+        string[,] retval = new string[10,10];
+
+        int x = 0;
+        int y = 0;
+        bool first = true;
+
+        while(!endOfFile)
         {
-            Debug.Log("Failed Load mapData");
-            return null;
-        }
-
-        string[,] retVal = new string[10, 10];
-
-        string[] data = mapData.text.Split(new char[] { '\n' });
-
-        for (int i = 1; i < data.Length - 1; i++)
-        {
-            string[] row = data[i].Split(new char[] { ',' });
-
-            if (row[1] != "")
+            string data_string = strReader.ReadLine();
+            if(data_string == null)
             {
-                Vector2 mapIndex = GetMapIndex(int.Parse(row[0]));
-                row[1] = row[1].Remove(row[1].Length - 1);
-                retVal[(int)mapIndex.x, (int)mapIndex.y] = row[1];
+                endOfFile = true;
+                break;
+            }
+
+            if(first)
+            {
+                first = false;
+                continue;
+            }
+
+            var data_value = data_string.Split(',');
+            retval[x, y] = data_value[1].ToString();
+
+            x++;
+            if(x >= 10)
+            {
+                y++;
+                x = 0;
+            }
+
+            if(y >= 10)
+            {
+                endOfFile = true;
+                break;
             }
         }
 
-        return retVal;
+        return retval;
     }
 
-    public void BuildTower(int x, int y, TowerType type)
+    public void MapSave(string[,] mapData)
     {
+        List<string[]> rowData = new List<string[]>();
+        string[] rowDataTemp = new string[2];
+        rowDataTemp[0] = "Key";
+        rowDataTemp[1] = "TowerName";
+        rowData.Add(rowDataTemp);
 
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+            {
+                rowDataTemp = new string[2];
+                int keyValue = x * 10 + y % 10;
+                string key = keyValue.ToString();
+                rowDataTemp[0] = key;
+                rowDataTemp[1] = mapData[y, x];
+                rowData.Add(rowDataTemp);
+            }
+        }
+
+        string[][] output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        int length = output.GetLength(0);
+        string delimiter = ",";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+        {
+            sb.AppendLine(string.Join(delimiter, output[index]));
+        }
+
+        string filePath = getPath("/Resources/03.Datas/MapData.csv");
+
+        StreamWriter outStream = File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
     }
 
-    private Vector2 GetMapIndex(int index)
+    private string getPath(string path)
     {
-        return new Vector2(index / 10, index % 10);
+#if UNITY_EDITOR
+        return Application.dataPath + path;
+#elif UNITY_ANDROID
+        return Application.persistentDataPath+path;
+#elif UNITY_IPHONE
+        return Application.persistentDataPath+"/"+path;
+#else
+        return Application.dataPath +"/"+"path;
+#endif
     }
 }

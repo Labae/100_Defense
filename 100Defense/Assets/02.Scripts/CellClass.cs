@@ -190,6 +190,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return mTower;
     }
 
+    public MapManager GetMap()
+    {
+        return mMap;
+    }
+
     private TowerClass CreateTower(string towerName)
     {
         GameObject towerObject = new GameObject(towerName);
@@ -219,7 +224,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mMap.GetPathFinding().PathFind();
             if (!mMap.GetPathFinding().GetPathSuccess())
             {
-                mTower.Destory();
+                mTower.Destory(this);
                 mWalkable = true;
                 return false;
             }
@@ -236,7 +241,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         else
         {
-            mTower.Destory();
+            mTower.Destory(this);
             mWalkable = true;
             mMap.GetPathFinding().PathFind();
             return true;

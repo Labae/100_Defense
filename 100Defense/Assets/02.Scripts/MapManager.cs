@@ -18,8 +18,8 @@ public class MapManager : MonoBehaviour
     private int mLayerMask;
     private bool mIsFinishedCellAnim;
 
-    //private Map mMapData;
     private PathFinding mPathFind;
+    private CSVManager mCSV;
 
     private bool mCanClick = false;
 
@@ -32,9 +32,10 @@ public class MapManager : MonoBehaviour
             return false;
         }
 
-        string[,] mapData = null;
-        mapData = csv.LoadMap("03.Datas/MapData");
-        if (mapData == null)
+        mCSV = csv;
+
+        mMapData = mCSV.LoadMap();
+        if (mMapData == null)
         {
             Debug.Log("Failed Load MapData.csv");
             return false;
@@ -51,7 +52,7 @@ public class MapManager : MonoBehaviour
                     return false;
                 }
 
-                if (!mMap[x, y].Initialize(x, y, mapData[x,y]))
+                if (!mMap[x, y].Initialize(x, y, mMapData[x,y]))
                 {
                     Debug.Log("Failed Initialize Cell Component.");
                     return false;
@@ -248,5 +249,24 @@ public class MapManager : MonoBehaviour
     public CellClass GetCell(int x, int y)
     {
         return mMap[x, y];
+    }
+
+    public void SetMapData(int x, int y, string data)
+    {
+        if(data == null)
+        {
+            data = "0";
+        }
+        mMapData[x, y] = data;
+    }
+
+    public string[,] GetMapData()
+    {
+        return mMapData;
+    }
+
+    public void Save()
+    {
+        mCSV.MapSave(mMapData);
     }
 }

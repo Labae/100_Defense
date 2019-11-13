@@ -34,6 +34,11 @@ public class InputManager : MonoBehaviour
         {
             CreateEnemy(0, 1);
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            mMap.Save();
+        }
     }
 
     private void CellClick()
