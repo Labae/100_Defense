@@ -6,9 +6,12 @@ public class EnemyClass : MonoBehaviour
 {
     private float mSpeed;
     private GameObject mModel;
+    private MapManager mMap;
 
     public bool Initialize(MapManager map, string enemyKey, List<Vector3> path)
     {
+        mMap = map;
+
         Enemy enemyData = Resources.Load("03.Datas/EnemyData") as Enemy;
         if (!enemyData)
         {
@@ -45,7 +48,7 @@ public class EnemyClass : MonoBehaviour
         }
         meshRenderer.material = mat;
 
-        map.AddEnemy(this);
+        mMap.AddEnemy(this);
         StartCoroutine(EnemyCoroutine(path));
 
         return true;
@@ -135,6 +138,10 @@ public class EnemyClass : MonoBehaviour
 
             yield return null;
         }
+
+        mMap.RemoveEnemy(this);
+
+        yield return StartCoroutine(DestroyEnemy());
     }
 
     private Vector3 GetAngle(Vector3 direction)
@@ -159,5 +166,28 @@ public class EnemyClass : MonoBehaviour
         {
             return Vector3.zero;
         }
+    }
+
+    private IEnumerator DestroyEnemy()
+    {
+        Vector3 originScale = mModel.transform.localScale;
+        float x = mModel.transform.localScale.x;
+        float y = mModel.transform.localScale.y;
+        float z = mModel.transform.localScale.z;
+        float speed = 1.0f;
+
+        while (mModel.transform.localScale != Vector3.zero)
+        {
+            x = Mathf.MoveTowards(x, 0, speed * Time.deltaTime);
+            y = Mathf.MoveTowards(y, 0, speed * Time.deltaTime);
+            z = Mathf.MoveTowards(z, 0, speed * Time.deltaTime);
+
+            mModel.transform.localScale = new Vector3(x, y, z);
+            yield return null;
+        }
+
+        mModel.transform.localScale = Vector3.zero;
+
+        Destroy(this.gameObject);
     }
 }

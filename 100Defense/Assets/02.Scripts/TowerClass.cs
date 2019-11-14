@@ -72,8 +72,15 @@ public class TowerClass : MonoBehaviour
             }
         }
 
-        if(enemyTrs == null)
+        if (enemies.Count == 0)
         {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
+            return;
+        }
+
+        if (enemyTrs == null)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
             return;
         }
         transform.LookAt(enemyTrs);
