@@ -7,37 +7,54 @@ public class InputManager : MonoBehaviour
     private Camera mCamera;
     private MapManager mMap;
     private EnemyClass mEnemy;
+    private WaveManager mWave;
 
-    private void Start()
+    public bool Initlaize(MapManager map)
     {
+        mMap = map;
         mCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        if (!mCamera)
+        {
+            Debug.Log("Failed Get Camera Component");
+            return false;
+        }
+
+        return true;
     }
 
-    void Update()
+    public void MouseEvent()
     {
         if (Input.GetMouseButtonDown(0))
         {
             CellClick();
         }
+    }
 
-        if(Input.GetKeyDown(KeyCode.B))
+    public void KeyboardEvent()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
         {
             BuildTower();
         }
 
-        if(Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             DestoryTower();
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            CreateEnemy(0, 1);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             mMap.Save();
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            if (!mWave)
+            {
+                mWave = GetComponent<WaveManager>();
+            }
+
+            mWave.WaveStart();
         }
     }
 
@@ -48,7 +65,7 @@ public class InputManager : MonoBehaviour
             mMap = GetComponent<GameManager>().GetMap();
         }
 
-        if(!mMap.GetIsFinishedCellsAnim())
+        if (!mMap.GetIsFinishedCellsAnim())
         {
             return;
         }
@@ -81,30 +98,6 @@ public class InputManager : MonoBehaviour
         if (mMap.GetSelectedCell() != null)
         {
             mMap.GetSelectedCell().DestoryTower();
-        }
-    }
-
-    private void CreateEnemy(int enemyIndex, int waveNumber)
-    {
-        if(!mMap)
-        {
-            mMap = GetComponent<GameManager>().GetMap();
-        }
-        StartCoroutine(CreateEnemyCoroutine(enemyIndex, mMap.GetPathFinding().GetPath(), waveNumber));
-    }
-
-    private IEnumerator CreateEnemyCoroutine(int enemyIndex, List<Vector3> path, int waveNumber)
-    {
-        WaitForSeconds wfsTime = new WaitForSeconds(1.0f);
-
-        for (int i = 0; i < waveNumber; i++)
-        {
-            GameObject enemy = new GameObject();
-            mEnemy = enemy.AddComponent<EnemyClass>();
-
-            mEnemy.Initialize(enemyIndex, path);
-
-            yield return wfsTime;
         }
     }
 }

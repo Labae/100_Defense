@@ -199,9 +199,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     {
         GameObject towerObject = new GameObject(towerName);
         towerObject.transform.position = Vector3.zero;
-        towerObject.AddComponent<TowerClass>();
+        TowerClass tower = towerObject.AddComponent<TowerClass>();
+        mMap.AddTower(tower);
 
-        return towerObject.GetComponent<TowerClass>();
+        return tower;
     }
 
     public bool BuildTower(TowerType type)

@@ -7,13 +7,23 @@ public class EnemyClass : MonoBehaviour
     private float mSpeed;
     private GameObject mModel;
 
-    public bool Initialize(int enemyIndex, List<Vector3> path)
+    public bool Initialize(MapManager map, string enemyKey, List<Vector3> path)
     {
         Enemy enemyData = Resources.Load("03.Datas/EnemyData") as Enemy;
         if (!enemyData)
         {
             Debug.Log("Enemy data not load");
             return false;
+        }
+
+        int enemyIndex = 0;
+        for (int i = 0; i < enemyData.dataArray.Length; i++)
+        {
+            if(enemyKey == enemyData.dataArray[i].Key)
+            {
+                enemyIndex = i;
+                break;
+            }
         }
 
         transform.name = enemyData.dataArray[enemyIndex].Name;
@@ -35,6 +45,7 @@ public class EnemyClass : MonoBehaviour
         }
         meshRenderer.material = mat;
 
+        map.AddEnemy(this);
         StartCoroutine(EnemyCoroutine(path));
 
         return true;

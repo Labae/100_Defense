@@ -10,6 +10,9 @@ public class MapManager : MonoBehaviour
     private CellClass mStartCell;
     private CellClass mGoalCell;
 
+    private List<TowerClass> mTowers;
+    private List<EnemyClass> mEnemies;
+
     private const int mMapSizeX = 10;
     private const int mMapSizeY = 10;
 
@@ -41,6 +44,8 @@ public class MapManager : MonoBehaviour
             return false;
         }
 
+        mTowers = new List<TowerClass>();
+        mEnemies = new List<EnemyClass>();
         for (int x = 0; x < mMapSizeX; x++)
         {
             for (int y = 0; y < mMapSizeY; y++)
@@ -268,5 +273,43 @@ public class MapManager : MonoBehaviour
     public void Save()
     {
         mCSV.MapSave(mMapData);
+    }
+
+    public void AddTower(TowerClass tower)
+    {
+        mTowers.Add(tower);
+    }
+
+    public void RemoveTower(TowerClass tower)
+    {
+        mTowers.Remove(tower);
+    }
+
+    public List<TowerClass> GetTowers()
+    {
+        return mTowers;
+    }
+
+    public void AddEnemy(EnemyClass enemy)
+    {
+        mEnemies.Add(enemy);
+    }
+
+    public void RemoveEnemy(EnemyClass enemy)
+    {
+        mEnemies.Remove(enemy);
+    }
+
+    public List<EnemyClass> GetmEnemies()
+    {
+        return mEnemies;
+    }
+
+    public void TowerUpdate()
+    {
+        for (int i = 0; i < mTowers.Count; i++)
+        {
+            mTowers[i].Loop(this);
+        }
     }
 }

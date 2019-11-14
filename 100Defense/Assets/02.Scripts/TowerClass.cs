@@ -14,6 +14,7 @@ public class TowerClass : MonoBehaviour
     private Tower mTowerData;
     private Vector3 mOriginScale;
     private GameObject mModel;
+    private int mTowerRange;
 
 
     public bool Initialize(CellClass cell, string cellData)
@@ -52,7 +53,22 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
+        mTowerRange = mTowerData.dataArray[towerIndex].Range;
+
         return true;
+    }
+
+    public void Loop(MapManager map)
+    {
+        List<EnemyClass> enemies = map.GetmEnemies();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
+            if (dist <= mTowerRange)
+            {
+                transform.LookAt(enemies[i].transform);
+            }
+        }
     }
 
     public bool Build(CellClass cell, TowerType type)
@@ -94,6 +110,7 @@ public class TowerClass : MonoBehaviour
     public void Destory(CellClass cell)
     {
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
+        cell.GetMap().RemoveTower(this);
         StartCoroutine(DestoryCoroutine());
     }
     private GameObject CreateModel(string modelName)
