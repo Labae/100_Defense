@@ -47,7 +47,7 @@ public class TowerClass : MonoBehaviour
         }
 
         mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
-        if(!mModel)
+        if (!mModel)
         {
             Debug.Log("Failed Create Tower Model");
             return false;
@@ -61,14 +61,22 @@ public class TowerClass : MonoBehaviour
     public void Loop(MapManager map)
     {
         List<EnemyClass> enemies = map.GetmEnemies();
+        Transform enemyTrs = null;
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
             if (dist <= mTowerRange)
             {
-                transform.LookAt(enemies[i].transform);
+                enemyTrs = enemies[i].transform;
+                break;
             }
         }
+
+        if(enemyTrs == null)
+        {
+            return;
+        }
+        transform.LookAt(enemyTrs);
     }
 
     public bool Build(CellClass cell, TowerType type)
@@ -77,7 +85,7 @@ public class TowerClass : MonoBehaviour
         transform.localPosition = Vector3.zero;
 
         mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
-        if(!mTowerData)
+        if (!mTowerData)
         {
             Debug.Log("Tower data not load");
             return false;
@@ -101,22 +109,31 @@ public class TowerClass : MonoBehaviour
         }
 
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.dataArray[towerIndex].Key);
+        mTowerRange = mTowerData.dataArray[towerIndex].Range;
 
         StartCoroutine(ApperanceAnim());
 
         return true;
     }
 
-    public void Destory(CellClass cell)
+    public void DestroyTower(CellClass cell)
     {
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
         cell.GetMap().RemoveTower(this);
         StartCoroutine(DestoryCoroutine());
     }
+
+    public void Destroyimmediately(CellClass cell)
+    {
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
+        cell.GetMap().RemoveTower(this);
+        Destroy(this.gameObject);
+    }
+
     private GameObject CreateModel(string modelName)
     {
         GameObject modelData = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
-        if(!modelData)
+        if (!modelData)
         {
             return null;
         }

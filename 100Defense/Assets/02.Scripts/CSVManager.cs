@@ -95,6 +95,8 @@ public class CSVManager : MonoBehaviour
         StreamWriter outStream = File.CreateText(filePath);
         outStream.WriteLine(sb);
         outStream.Close();
+
+        Debug.Log("Map Save.");
     }
 
     private string getPath(string path)

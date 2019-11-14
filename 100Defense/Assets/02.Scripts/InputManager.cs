@@ -6,7 +6,6 @@ public class InputManager : MonoBehaviour
 {
     private Camera mCamera;
     private MapManager mMap;
-    private EnemyClass mEnemy;
     private WaveManager mWave;
 
     public bool Initlaize(MapManager map)
@@ -39,7 +38,7 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            DestoryTower();
+            DestroyTower();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -93,7 +92,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void DestoryTower()
+    private void DestroyTower()
     {
         if (mMap.GetSelectedCell() != null)
         {
