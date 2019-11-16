@@ -29,11 +29,11 @@ public class TowerData
   public int Damage { get {return damage; } set { damage = value;} }
   
   [SerializeField]
-  int range;
-  public int Range { get {return range; } set { range = value;} }
+  float range;
+  public float Range { get {return range; } set { range = value;} }
   
   [SerializeField]
-  int attackspeed;
-  public int Attackspeed { get {return attackspeed; } set { attackspeed = value;} }
+  float attackspeed;
+  public float Attackspeed { get {return attackspeed; } set { attackspeed = value;} }
   
 }

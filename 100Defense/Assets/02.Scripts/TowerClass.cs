@@ -14,7 +14,8 @@ public class TowerClass : MonoBehaviour
     private Tower mTowerData;
     private Vector3 mOriginScale;
     private GameObject mModel;
-    private int mTowerRange;
+    private Canon mCanon;
+    private float mTowerRange;
 
 
     public bool Initialize(CellClass cell, string cellData)
@@ -46,14 +47,25 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        TowerData towerData = mTowerData.dataArray[towerIndex];
+
+        mModel = CreateModel(towerData.Modelname);
         if (!mModel)
         {
             Debug.Log("Failed Create Tower Model");
             return false;
         }
 
-        mTowerRange = mTowerData.dataArray[towerIndex].Range;
+        mCanon = GetComponentInChildren<Canon>();
+        if(!mCanon)
+        {
+            Debug.Log("Failed Get Canon Component");
+            return false;
+        }
+
+        mCanon.Initialize(towerData.Attackspeed);
+
+        mTowerRange = towerData.Range;
 
         return true;
     }
@@ -61,17 +73,30 @@ public class TowerClass : MonoBehaviour
     public void Loop(MapManager map)
     {
         List<EnemyClass> enemies = map.GetmEnemies();
-        Transform enemyTrs = null;
+        Transform target = null;
+        target = GetTargetedEnemy(enemies, target);
+
+        Rotate(enemies, target);
+        mCanon.Loop(target);
+    }
+
+    private Transform GetTargetedEnemy(List<EnemyClass> enemies, Transform target)
+    {
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
             if (dist <= mTowerRange)
             {
-                enemyTrs = enemies[i].transform;
+                target = enemies[i].transform;
                 break;
             }
         }
 
+        return target;
+    }
+
+    private void Rotate(List<EnemyClass> enemies, Transform enemyTrs)
+    {
         if (enemies.Count == 0)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
@@ -108,16 +133,27 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mModel = CreateModel(mTowerData.dataArray[towerIndex].Modelname);
+        TowerData towerData = mTowerData.dataArray[towerIndex];
+
+        mModel = CreateModel(towerData.Modelname);
         if (!mModel)
         {
             Debug.Log("Failed Create Tower Model");
             return false;
         }
 
-        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.dataArray[towerIndex].Key);
-        mTowerRange = mTowerData.dataArray[towerIndex].Range;
+        mCanon = GetComponentInChildren<Canon>();
+        if (!mCanon)
+        {
+            Debug.Log("Failed Get Canon Component");
+            return false;
+        }
 
+        mCanon.Initialize(towerData.Attackspeed);
+
+        mTowerRange = towerData.Range;
+
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), towerData.Key);
         StartCoroutine(ApperanceAnim());
 
         return true;

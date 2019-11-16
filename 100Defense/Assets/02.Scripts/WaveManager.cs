@@ -35,6 +35,19 @@ public class WaveManager : MonoBehaviour
             int waveCount = mWaveData.dataArray[mWaveIndex].COUNT;
             mIsWave = true;
             mWaveIndex++;
+
+            List<TowerClass> towers = mMap.GetTowers();
+            for (int i = 0; i < towers.Count; i++)
+            {
+                Canon canon = towers[i].GetComponentInChildren<Canon>();
+                if(!canon)
+                {
+                    continue;
+                }
+
+                canon.SetAttackTimerZero();
+            }
+
             StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount));
         }
     }

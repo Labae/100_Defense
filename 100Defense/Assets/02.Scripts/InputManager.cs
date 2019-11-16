@@ -53,6 +53,11 @@ public class InputManager : MonoBehaviour
                 mWave = GetComponent<WaveManager>();
             }
 
+            if(mMap.GetPathFinding().GetPathSuccess() == false)
+            {
+                return;
+            }
+
             mWave.WaveStart();
         }
     }

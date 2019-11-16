@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb4931813a361148a6651be452ff88e, type: 3}
   m_Name: TowerImportSetting
   m_EditorClassIdentifier: 
-  templatePath: QuickSheet/GDataPlugin/Templates
+  templatePath: Plugins/QuickSheet/GDataPlugin/Templates
   scriptFilePath: Plugins/QuickSheet/Runtime
   editorScriptFilePath: Plugins/QuickSheet/GDataPlugin/Editor
   sheetName: MySpreadSheet
@@ -38,11 +38,11 @@ MonoBehaviour:
     name: Damage
     isEnable: 0
     isArray: 0
-  - type: 3
+  - type: 5
     name: Range
     isEnable: 0
     isArray: 0
-  - type: 3
+  - type: 5
     name: AttackSpeed
     isEnable: 0
     isArray: 0
