@@ -74,6 +74,11 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        if(!mMap.GetCanClick())
+        {
+            return;
+        }
+
         RaycastHit hit;
         Ray ray = mCamera.ScreenPointToRay(Input.mousePosition);
 

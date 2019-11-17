@@ -13,7 +13,7 @@ public class WaveManager : MonoBehaviour
     public bool Initialize(MapManager map)
     {
         mWaveData = Resources.Load("03.Datas/WaveData") as Wave;
-        if(!mWaveData)
+        if (!mWaveData)
         {
             Debug.Log("Failed load wave data");
             return false;
@@ -31,6 +31,13 @@ public class WaveManager : MonoBehaviour
     {
         if (!mIsWave)
         {
+            if(mWaveIndex >= mWaveData.dataArray.Length)
+            {
+                return;
+            }
+            mMap.SetCanClick(false);
+            mMap.SetSelectedCell(null);
+
             string enemyKey = mWaveData.dataArray[mWaveIndex].Enemykey;
             int waveCount = mWaveData.dataArray[mWaveIndex].COUNT;
             mIsWave = true;
@@ -40,7 +47,7 @@ public class WaveManager : MonoBehaviour
             for (int i = 0; i < towers.Count; i++)
             {
                 Canon canon = towers[i].GetComponentInChildren<Canon>();
-                if(!canon)
+                if (!canon)
                 {
                     continue;
                 }
@@ -54,7 +61,6 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator CreateEnemyCoroutine(string enemyKey, List<Vector3> path, int waveNumber)
     {
-
         for (int i = 0; i < waveNumber; i++)
         {
             GameObject enemyObject = new GameObject();
@@ -65,5 +71,6 @@ public class WaveManager : MonoBehaviour
             yield return mWFSNextEnemySpawnTime;
         }
         mIsWave = false;
+        mMap.SetCanClick(true);
     }
 }
