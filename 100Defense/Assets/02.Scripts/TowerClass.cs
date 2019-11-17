@@ -63,7 +63,7 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mCanon.Initialize(towerData.Attackspeed);
+        mCanon.Initialize(towerData.Attackspeed, towerData.Damage);
 
         mTowerRange = towerData.Range;
 
@@ -74,25 +74,31 @@ public class TowerClass : MonoBehaviour
     {
         List<EnemyClass> enemies = map.GetmEnemies();
         Transform target = null;
-        target = GetTargetedEnemy(enemies, target);
+        target = GetTargetedEnemy(enemies);
+        if(target == null)
+        {
+            return;
+        }
 
         Rotate(enemies, target);
         mCanon.Loop(target);
     }
 
-    private Transform GetTargetedEnemy(List<EnemyClass> enemies, Transform target)
+    private Transform GetTargetedEnemy(List<EnemyClass> enemies)
     {
+        Transform retVal = null;
+
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
             if (dist <= mTowerRange)
             {
-                target = enemies[i].transform;
+                retVal = enemies[i].transform;
                 break;
             }
         }
 
-        return target;
+        return retVal;
     }
 
     private void Rotate(List<EnemyClass> enemies, Transform enemyTrs)
@@ -149,7 +155,7 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mCanon.Initialize(towerData.Attackspeed);
+        mCanon.Initialize(towerData.Attackspeed, towerData.Damage);
 
         mTowerRange = towerData.Range;
 

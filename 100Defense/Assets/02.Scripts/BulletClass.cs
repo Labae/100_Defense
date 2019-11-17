@@ -5,10 +5,12 @@ using UnityEngine;
 public class BulletClass : MonoBehaviour
 {
     private float mSpeed = 3.0f;
+    private int mAttackDamage;
     private Transform mTargetTrs;
-    public void Initialize(Transform target)
+    public void Initialize(Transform target, int damage)
     {
         mTargetTrs = target.GetChild(0);
+        mAttackDamage = damage;
 
         StartCoroutine(MoveCoroutine(mTargetTrs));
     }
@@ -28,7 +30,12 @@ public class BulletClass : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            Destroy(this.gameObject);
+            IDamagable damagable = other.GetComponentInParent<IDamagable>();
+            if (damagable != null)
+            {
+                damagable.Damage(mAttackDamage);
+                Destroy(this.gameObject);
+            }
         }
     }
 }

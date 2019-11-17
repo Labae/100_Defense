@@ -19,7 +19,7 @@ MonoBehaviour:
     modelname: Tower01
     type: Attack
     price: 0
-    damage: 0
+    damage: 10
     range: 1
     attackspeed: 5
   - key: ID_TOWER02

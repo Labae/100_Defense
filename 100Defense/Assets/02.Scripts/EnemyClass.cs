@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyClass : MonoBehaviour
+public class EnemyClass : MonoBehaviour, IDamagable
 {
     private float mSpeed;
     private GameObject mModel;
     private MapManager mMap;
+
+    public int Health { get; set; }
 
     public bool Initialize(MapManager map, string enemyKey, List<Vector3> path)
     {
@@ -19,7 +21,7 @@ public class EnemyClass : MonoBehaviour
             return false;
         }
 
-        int enemyIndex = 0;
+        int enemyIndex = -1;
         for (int i = 0; i < enemyData.dataArray.Length; i++)
         {
             if(enemyKey == enemyData.dataArray[i].Key)
@@ -29,15 +31,24 @@ public class EnemyClass : MonoBehaviour
             }
         }
 
-        transform.name = enemyData.dataArray[enemyIndex].Name;
+        if(enemyIndex == -1)
+        {
+            Debug.Log("Failed find enemy index");
+            return false;
+        }
 
-        mModel = CreateModel(enemyData.dataArray[enemyIndex].Name, path[0]);
+        EnemyData data = enemyData.dataArray[enemyIndex];
+
+        transform.name = data.Name;
+        mSpeed = data.Movespeed;
+        Health = data.Health;
+
+        mModel = CreateModel(data.Name, path[0]);
         if (!mModel)
         {
             Debug.Log("Enemy Model not load");
             return false;
         }
-        mSpeed = enemyData.dataArray[enemyIndex].Movespeed;
 
         MeshRenderer meshRenderer = mModel.GetComponent<MeshRenderer>();
         Material mat = Resources.Load("02.Materials/02.Enemys/" + enemyData.dataArray[enemyIndex].Name) as Material;
@@ -189,5 +200,15 @@ public class EnemyClass : MonoBehaviour
         mModel.transform.localScale = Vector3.zero;
 
         Destroy(this.gameObject);
+    }
+
+    public void Damage(int _damage)
+    {
+        Health -= _damage;
+        if(Health <= 0)
+        {
+            mMap.RemoveEnemy(this);
+            Destroy(this.gameObject);
+        }
     }
 }

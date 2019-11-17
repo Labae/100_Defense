@@ -6,13 +6,15 @@ public class Canon : MonoBehaviour
 {
     private float mAttackSpeed;
     private float mAttackSpeedTimer;
+    private int mAttackDamage;
 
     private GameObject mBulletPrefab;
 
-    public void Initialize(float _speed)
+    public void Initialize(float _speed, int _damage)
     {
         mAttackSpeed = _speed;
         mAttackSpeedTimer = 0.0f;
+        mAttackDamage = _damage;
 
         mBulletPrefab = Resources.Load("01.Prefabs/Bullet") as GameObject;
         if (!mBulletPrefab)
@@ -33,7 +35,7 @@ public class Canon : MonoBehaviour
                 mAttackSpeedTimer = mAttackSpeed;
                 GameObject bulletObj = Instantiate(mBulletPrefab, transform.position, Quaternion.identity);
                 BulletClass bullet = bulletObj.AddComponent<BulletClass>();
-                bullet.Initialize(target);
+                bullet.Initialize(target, mAttackDamage);
             }
         }
     }
