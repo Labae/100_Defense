@@ -17,6 +17,7 @@ public class TowerClass : MonoBehaviour
     private Canon mCanon;
     private float mTowerRange;
 
+    private float mRotateSpeed = 2.0f;
 
     public bool Initialize(CellClass cell, string cellData)
     {
@@ -101,20 +102,12 @@ public class TowerClass : MonoBehaviour
         return retVal;
     }
 
-    private void Rotate(List<EnemyClass> enemies, Transform enemyTrs)
+    private void Rotate(List<EnemyClass> enemies, Transform target)
     {
-        if (enemies.Count == 0)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
-            return;
-        }
-
-        if (enemyTrs == null)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
-            return;
-        }
-        transform.LookAt(enemyTrs);
+        Vector3 dir = target.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
+        transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
     }
 
     public bool Build(CellClass cell, TowerType type)

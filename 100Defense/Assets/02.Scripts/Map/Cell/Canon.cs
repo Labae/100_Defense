@@ -16,7 +16,7 @@ public class Canon : MonoBehaviour
         mAttackSpeedTimer = 0.0f;
         mAttackDamage = _damage;
 
-        mBulletPrefab = Resources.Load("01.Prefabs/Bullet") as GameObject;
+        mBulletPrefab = Resources.Load("01.Prefabs/Bullet/Bullet") as GameObject;
         if (!mBulletPrefab)
         {
             Debug.Log("Failed load bulletObj");
@@ -33,11 +33,24 @@ public class Canon : MonoBehaviour
             if (mAttackSpeedTimer <= 0)
             {
                 mAttackSpeedTimer = mAttackSpeed;
-                GameObject bulletObj = Instantiate(mBulletPrefab, transform.position, Quaternion.identity);
-                BulletClass bullet = bulletObj.AddComponent<BulletClass>();
-                bullet.Initialize(target, mAttackDamage);
+                if(!CreateBullet(target))
+                {
+                    return;
+                }
             }
         }
+    }
+
+    private bool CreateBullet(Transform target)
+    {
+        GameObject bulletObj = Instantiate(mBulletPrefab, transform.position, Quaternion.identity);
+        BulletClass bullet = bulletObj.AddComponent<BulletClass>();
+        if(!bullet.Initialize(target, mAttackDamage))
+        {
+            Debug.Log("Failed Initialize bulletClass");
+            return false;
+        }
+        return true;
     }
 
     public void SetAttackTimerZero()
