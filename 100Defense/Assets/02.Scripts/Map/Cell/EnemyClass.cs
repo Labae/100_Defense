@@ -7,6 +7,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
     private float mSpeed;
     private GameObject mModel;
     private MapManager mMap;
+    private GameObject mEnemyEffect;
 
     public int Health { get; set; }
 
@@ -14,7 +15,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
     {
         mMap = map;
 
-        Enemy enemyData = Resources.Load("03.Datas/EnemyData") as Enemy;
+        Enemy enemyData = Resources.Load("03.Datas/Game/EnemyData") as Enemy;
         if (!enemyData)
         {
             Debug.Log("Enemy data not load");
@@ -50,6 +51,13 @@ public class EnemyClass : MonoBehaviour, IDamagable
             return false;
         }
 
+        mEnemyEffect = Resources.Load("01.Prefabs/Enemy/EnemyEffectImpact") as GameObject;
+        if(!mEnemyEffect)
+        {
+            Debug.Log("EnemyEffectImpact not load");
+            return false;
+        }
+
         MeshRenderer meshRenderer = mModel.GetComponent<MeshRenderer>();
         Material mat = Resources.Load("02.Materials/02.Enemys/" + enemyData.dataArray[enemyIndex].Name) as Material;
         if (!mat)
@@ -58,6 +66,8 @@ public class EnemyClass : MonoBehaviour, IDamagable
             return false;
         }
         meshRenderer.material = mat;
+
+        mEnemyEffect.GetComponent<ParticleSystem>().GetComponent<Renderer>().material = mat;
 
         mMap.AddEnemy(this);
         StartCoroutine(EnemyCoroutine(path));
@@ -77,7 +87,8 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
         GameObject model = Instantiate(modelData, Vector3.zero, Quaternion.identity);
         model.transform.SetParent(transform);
-        model.transform.localPosition = new Vector3(0.0f, 0.25f + model.transform.localScale.y * 0.5f, 0.0f);
+        float cellHalfSizeY = mMap.GetCell(0,0).transform.localScale.y * 0.5f;
+        model.transform.localPosition = new Vector3(0.0f, cellHalfSizeY + model.transform.localScale.y * 0.5f, 0.0f);
 
         return model;
     }
@@ -208,6 +219,14 @@ public class EnemyClass : MonoBehaviour, IDamagable
         if(Health <= 0)
         {
             mMap.RemoveEnemy(this);
+            GameObject effect = Instantiate(mEnemyEffect, transform.position, Quaternion.identity) as GameObject;
+            if(!effect)
+            {
+                Debug.Log("Failed Instantiate enemy effect");
+                return;
+            }
+
+            Destroy(effect, 2.0f);
             Destroy(this.gameObject);
         }
     }

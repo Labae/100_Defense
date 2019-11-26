@@ -5,6 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private Camera mCamera;
+    private Camera mUICamera;
     private MapManager mMap;
     private WaveManager mWave;
 
@@ -15,6 +16,13 @@ public class InputManager : MonoBehaviour
         if (!mCamera)
         {
             Debug.Log("Failed Get Camera Component");
+            return false;
+        }
+
+        mUICamera = FindObjectOfType<UICamera>().GetComponent<Camera>();
+        if (mUICamera == null)
+        {
+            Debug.Log("Failed Get UICamera Component");
             return false;
         }
 
@@ -81,6 +89,15 @@ public class InputManager : MonoBehaviour
 
         RaycastHit hit;
         Ray ray = mCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray2 = mUICamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray2, out hit, Mathf.Infinity, LayerMask.NameToLayer("UI")))
+        {
+            if(hit.transform != null)
+            {
+                return;
+            } 
+        }
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mMap.GetLayerMask()))
         {

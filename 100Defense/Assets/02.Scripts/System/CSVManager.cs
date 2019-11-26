@@ -8,7 +8,7 @@ public class CSVManager : MonoBehaviour
 {
     public string[,] LoadMap()
     {
-        StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/MapData.csv"));
+        StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/Game/MapData.csv"));
         bool endOfFile = false;
 
         string[,] retval = new string[10,10];
@@ -90,7 +90,7 @@ public class CSVManager : MonoBehaviour
             sb.AppendLine(string.Join(delimiter, output[index]));
         }
 
-        string filePath = getPath("/Resources/03.Datas/MapData.csv");
+        string filePath = getPath("/Resources/03.Datas/Game/MapData.csv");
 
         StreamWriter outStream = File.CreateText(filePath);
         outStream.WriteLine(sb);

@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
 
     public bool Initialize(MapManager map)
     {
-        mWaveData = Resources.Load("03.Datas/WaveData") as Wave;
+        mWaveData = Resources.Load("03.Datas/Game/WaveData") as Wave;
         if (!mWaveData)
         {
             Debug.Log("Failed load wave data");

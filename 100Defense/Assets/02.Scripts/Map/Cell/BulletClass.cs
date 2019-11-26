@@ -23,7 +23,7 @@ public class BulletClass : MonoBehaviour
         mAttackDamage = damage;
 
 
-        mBulletEffectObj = Resources.Load("01.Prefabs/Bullet/BulletEffectImapct") as GameObject;
+        mBulletEffectObj = Resources.Load("01.Prefabs/Bullet/BulletEffectImpact") as GameObject;
         if (!mBulletEffectObj)
         {
             Debug.Log("Failed load bulletEffect");

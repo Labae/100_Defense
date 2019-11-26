@@ -44,20 +44,40 @@ public class MapManager : MonoBehaviour
             return false;
         }
 
+        GameObject cell = Resources.Load("01.Prefabs/Map/Cell") as GameObject;
+        if(!cell)
+        {
+            Debug.Log("Faield Load Cell prefab");
+            return false;
+        }
+
         mTowers = new List<TowerClass>();
         mEnemies = new List<EnemyClass>();
-        for (int x = 0; x < mMapSizeX; x++)
+
+        float offsetXY = cell.transform.localScale.x * 0.1f;
+        int index = mMapSizeX / 2;
+
+        for (int y = 0; y < mMapSizeY; y++)
         {
-            for (int y = 0; y < mMapSizeY; y++)
+            GameObject line = new GameObject("Line" + y.ToString());
+            line.transform.SetParent(transform);
+            for (int x = 0; x < mMapSizeX; x++)
             {
-                mMap[x, y] = transform.GetChild(y).GetChild(x).GetComponent<CellClass>();
+                GameObject cellObj = Instantiate(cell, transform.position, Quaternion.identity);
+                cellObj.name = "Cell" + "(" + x.ToString() + ", " + y.ToString() + ")";
+                cellObj.transform.SetParent(line.transform);
+                float posX = (x - index) * cellObj.transform.localScale.x + (x * offsetXY);
+                float posY = (y - index) * cellObj.transform.localScale.y + (y * offsetXY);
+                cellObj.transform.position = new Vector3(posX, 0.0f, posY);
+
+                mMap[x, y] = cellObj.GetComponent<CellClass>();
                 if (mMap[x, y] == null)
                 {
                     Debug.Log("Failed GetComponent Cell.");
                     return false;
                 }
 
-                if (!mMap[x, y].Initialize(x, y, mMapData[x,y]))
+                if (!mMap[x, y].Initialize(x, y, mMapData[x, y]))
                 {
                     Debug.Log("Failed Initialize Cell Component.");
                     return false;

@@ -10,7 +10,7 @@ public class Canon : MonoBehaviour
 
     private GameObject mBulletPrefab;
 
-    public void Initialize(float _speed, int _damage)
+    public bool Initialize(float _speed, int _damage)
     {
         mAttackSpeed = _speed;
         mAttackSpeedTimer = 0.0f;
@@ -20,9 +20,10 @@ public class Canon : MonoBehaviour
         if (!mBulletPrefab)
         {
             Debug.Log("Failed load bulletObj");
-            return;
+            return false;
         }
 
+        return true;
     }
 
     public void Loop(Transform target)

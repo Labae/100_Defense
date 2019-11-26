@@ -24,7 +24,7 @@ public class TowerClass : MonoBehaviour
         transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
 
-        mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
+        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
         if (!mTowerData)
         {
             Debug.Log("Tower data not load");
@@ -64,7 +64,11 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mCanon.Initialize(towerData.Attackspeed, towerData.Damage);
+        if(!mCanon.Initialize(towerData.Attackspeed, towerData.Damage))
+        {
+            Debug.Log("Failed Initialize Canon");
+            return false;
+        }
 
         mTowerRange = towerData.Range;
 
@@ -115,7 +119,7 @@ public class TowerClass : MonoBehaviour
         transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
 
-        mTowerData = Resources.Load("03.Datas/TowerData") as Tower;
+        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
         if (!mTowerData)
         {
             Debug.Log("Tower data not load");
@@ -148,7 +152,11 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mCanon.Initialize(towerData.Attackspeed, towerData.Damage);
+        if (!mCanon.Initialize(towerData.Attackspeed, towerData.Damage))
+        {
+            Debug.Log("Failed Initialize Canon");
+            return false;
+        }
 
         mTowerRange = towerData.Range;
 

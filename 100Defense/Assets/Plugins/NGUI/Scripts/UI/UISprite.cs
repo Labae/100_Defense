@@ -137,6 +137,11 @@ public class UISprite : UIBasicSprite
 		return a.GetSprite(spriteName);
 	}
 
+    public void SetSprite(Sprite sprite)
+    {
+        mSpriteName = sprite.name;
+    }
+
 	public override void MarkAsChanged ()
 	{
 		mSprite = null;

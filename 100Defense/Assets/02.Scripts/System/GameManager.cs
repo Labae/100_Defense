@@ -1,22 +1,40 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance = null;
+
     private InputManager mInput;
     private GameObject mMapPrefab;
     private MapManager mMap;
     private CSVManager mCSV;
     private WaveManager mWave;
 
-    private void Start()
+    private bool mInitializeSuccess;
+
+    private void Awake()
     {
-        if(!Initialize())
+        if (instance == null)
         {
-            Debug.Log("Failed GameManager Initialize.");
-            return;
+            instance = this;
+        }
+        else if (instance != null)
+        {
+            Destroy(gameObject);
         }
 
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        StartCoroutine(Initialize());
+        if (!mInitializeSuccess)
+        {
+            return;
+        }
         StartCoroutine(InitializeAnim());
     }
 
@@ -33,69 +51,189 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool Initialize()
+    //private bool Initialize()
+    //{
+    //    mCSV = gameObject.AddComponent<CSVManager>();
+    //    if (!mCSV)
+    //    {
+    //        Debug.Log("Failed Get CSV Component.");
+    //        return false;
+    //    }
+
+    //    GameObject map = Resources.Load("01.Prefabs/Map/Map") as GameObject;
+    //    if (!map)
+    //    {
+    //        Debug.Log("Failed Load Map Prefab.");
+    //        return false;
+
+    //    }
+
+    //    mMapPrefab = Instantiate<GameObject>(map, Vector3.zero, Quaternion.identity);
+    //    if (!mMapPrefab)
+    //    {
+    //        Debug.Log("Failed Instantiate Map Prefab.");
+    //        return false;
+
+    //    }
+
+    //    mMap = mMapPrefab.GetComponent<MapManager>();
+    //    if (!mMap)
+    //    {
+    //        Debug.Log("Failed GetComponent Map.");
+    //        return false;
+
+    //    }
+
+    //    if (!mMap.Initialize(mCSV))
+    //    {
+    //        Debug.Log("Failed Initialize Map Component.");
+    //        return false;
+
+    //    }
+
+    //    mWave = gameObject.AddComponent<WaveManager>();
+    //    if (!mWave)
+    //    {
+    //        Debug.Log("Failed Add WaveManager Component");
+    //        return false;
+
+    //    }
+
+    //    if (!mWave.Initialize(mMap))
+    //    {
+    //        Debug.Log("Failed Initialize WaveManager Component");
+    //        return false;
+
+    //    }
+
+    //    //// UI Scene Load
+    //    //AsyncOperation op = SceneManager.LoadSceneAsync("UIScene", LoadSceneMode.Additive);
+    //    //op.allowSceneActivation = false;
+    //    //while (!op.isDone)
+    //    //{
+    //    //    Debug.Log("Loading");
+    //    //    yield return null;
+    //    //}
+    //    //op.allowSceneActivation = true;
+    //    //Debug.Log("Load Complete");
+
+    //    SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
+
+
+
+    //    mInput = gameObject.AddComponent<InputManager>();
+    //    if (!mInput)
+    //    {
+    //        Debug.Log("Failed Add InputManager Component");
+    //        return false;
+
+    //    }
+
+    //    if (!mInput.Initlaize(mMap))
+    //    {
+    //        Debug.Log("Failed Initialize InputManager Component");
+    //        return false;
+
+    //    }
+
+    //    return true;
+    //}
+
+    private IEnumerator Initialize()
     {
+        mInitializeSuccess = true;
+
         mCSV = gameObject.AddComponent<CSVManager>();
         if (!mCSV)
         {
             Debug.Log("Failed Get CSV Component.");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
-        GameObject map = Resources.Load("01.Prefabs/Map") as GameObject;
-        if(!map)
+        GameObject map = Resources.Load("01.Prefabs/Map/Map") as GameObject;
+        if (!map)
         {
             Debug.Log("Failed Load Map Prefab.");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
         mMapPrefab = Instantiate<GameObject>(map, Vector3.zero, Quaternion.identity);
-        if(!mMapPrefab)
+        if (!mMapPrefab)
         {
             Debug.Log("Failed Instantiate Map Prefab.");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
         mMap = mMapPrefab.GetComponent<MapManager>();
-        if(!mMap)
+        if (!mMap)
         {
             Debug.Log("Failed GetComponent Map.");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
         if (!mMap.Initialize(mCSV))
         {
             Debug.Log("Failed Initialize Map Component.");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
+
+        mWave = gameObject.AddComponent<WaveManager>();
+        if (!mWave)
+        {
+            Debug.Log("Failed Add WaveManager Component");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        if (!mWave.Initialize(mMap))
+        {
+            Debug.Log("Failed Initialize WaveManager Component");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        //// UI Scene Load
+        //AsyncOperation op = SceneManager.LoadSceneAsync("UIScene", LoadSceneMode.Additive);
+        //op.allowSceneActivation = false;
+        //while (!op.isDone)
+        //{
+        //    Debug.Log("Loading");
+        //    yield return null;
+        //}
+        //op.allowSceneActivation = true;
+        //Debug.Log("Load Complete");
+
+        yield return SceneManager.LoadSceneAsync("UIScene", LoadSceneMode.Additive);
+
+        //SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
+
+        //yield return new WaitForSeconds(1.0f);
 
         mInput = gameObject.AddComponent<InputManager>();
         if (!mInput)
         {
             Debug.Log("Failed Add InputManager Component");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
         if (!mInput.Initlaize(mMap))
         {
             Debug.Log("Failed Initialize InputManager Component");
-            return false;
+            mInitializeSuccess = false;
+            yield break;
         }
 
-        mWave = gameObject.AddComponent<WaveManager>();
-        if(!mWave)
+        if (!mInitializeSuccess)
         {
-            Debug.Log("Failed Add WaveManager Component");
-            return false;
+            Debug.Log("Failed Initlaize GameManager");
+            yield break;
         }
-
-        if(!mWave.Initialize(mMap))
-        {
-            Debug.Log("Failed Initialize WaveManager Component");
-            return false;
-        }
-
-        return true;
     }
 
     private IEnumerator InitializeAnim()
@@ -113,5 +251,10 @@ public class GameManager : MonoBehaviour
     public MapManager GetMap()
     {
         return mMap;
+    }
+
+    public WaveManager GetWaveManager()
+    {
+        return mWave;
     }
 }
