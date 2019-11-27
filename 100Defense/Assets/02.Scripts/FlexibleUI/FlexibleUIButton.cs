@@ -90,7 +90,6 @@ public class FlexibleUIButton : FlexibleUI
 
         mButton.tweenTarget = null;
         mButtonScale.tweenTarget = mButtonScale.transform;
-        //mButton.defaultColor = mSprite.color;
 
         iconSprite.gameObject.SetActive(false);
         iconSprite.gameObject.SetActive(true);

@@ -5,14 +5,24 @@ using UnityEngine;
 public class UICreate : MonoBehaviour
 {
     public static GameObject CreateButton(
+       Vector2 pos,
+       Vector2 size,
+       int depth,
+       EventDelegate eventDelegate,
+       Transform parent)
+    {
+        return CreateButton(pos, size, depth, eventDelegate, parent, FlexibleUIButton.ButtonType.Default, UIWidget.Pivot.Center, "Button");
+    }
+
+    public static GameObject CreateButton(
         Vector2 pos,
         Vector2 size,
         int depth,
         EventDelegate eventDelegate,
         Transform parent,
-        FlexibleUIButton.ButtonType type = FlexibleUIButton.ButtonType.Default,
-        UIWidget.Pivot pivot = UIWidget.Pivot.Center,
-        string name = "button")
+        FlexibleUIButton.ButtonType type,
+        UIWidget.Pivot pivot,
+        string name)
     {
         GameObject obj = Instantiate(Resources.Load("01.Prefabs/UI/Button") as GameObject);
         if (obj == null)
@@ -52,8 +62,6 @@ public class UICreate : MonoBehaviour
         {
             btn.onClick.Add(eventDelegate);
         }
-
-       // btn.disabledColor 
 
         flexibleBtn.buttonType = type;
 
