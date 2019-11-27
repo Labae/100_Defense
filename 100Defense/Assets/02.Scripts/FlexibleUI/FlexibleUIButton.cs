@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(UISprite))]
 [RequireComponent(typeof(UIButton))]
+[RequireComponent(typeof(UIButtonScale))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class FlexibleUIButton : FlexibleUI
 {
@@ -16,6 +17,7 @@ public class FlexibleUIButton : FlexibleUI
 
     private UISprite mSprite;
     private UIButton mButton;
+    private UIButtonScale mButtonScale;
     private BoxCollider2D mBoxCollider;
     private UISprite iconSprite;
 
@@ -27,6 +29,7 @@ public class FlexibleUIButton : FlexibleUI
 
         mSprite = GetComponent<UISprite>();
         mButton = GetComponent<UIButton>();
+        mButtonScale = GetComponent<UIButtonScale>();
         mBoxCollider = GetComponent<BoxCollider2D>();
 
         mSprite.atlas = skinData.UIAtlas as INGUIAtlas;
@@ -84,6 +87,10 @@ public class FlexibleUIButton : FlexibleUI
                     break;
             }
         }
+
+        mButton.tweenTarget = null;
+        mButtonScale.tweenTarget = mButtonScale.transform;
+        //mButton.defaultColor = mSprite.color;
 
         iconSprite.gameObject.SetActive(false);
         iconSprite.gameObject.SetActive(true);

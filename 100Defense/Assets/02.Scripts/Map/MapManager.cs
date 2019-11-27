@@ -45,7 +45,7 @@ public class MapManager : MonoBehaviour
         }
 
         GameObject cell = Resources.Load("01.Prefabs/Map/Cell") as GameObject;
-        if(!cell)
+        if (!cell)
         {
             Debug.Log("Faield Load Cell prefab");
             return false;
@@ -92,7 +92,7 @@ public class MapManager : MonoBehaviour
         mWFSCellStartGoalAnimTime = new WaitForSeconds(0.5f);
 
         mPathFind = gameObject.AddComponent<PathFinding>();
-        if(!mPathFind)
+        if (!mPathFind)
         {
             Debug.Log("Failed Add PathFinding Component.");
             return false;
@@ -106,6 +106,8 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
+
+    #region Coroutine
     public IEnumerator MapAnimCoroutine()
     {
         yield return StartCoroutine(CellApperanceAnimationCoroutine());
@@ -113,7 +115,7 @@ public class MapManager : MonoBehaviour
         {
             for (int y = 0; y < mMapSizeY; y++)
             {
-               if(mMap[x,y].GetTower() != null)
+                if (mMap[x, y].GetTower() != null)
                 {
                     StartCoroutine(mMap[x, y].GetTower().ApperanceAnim());
                 }
@@ -184,6 +186,8 @@ public class MapManager : MonoBehaviour
         yield return mWFSCellStartGoalAnimTime;
     }
 
+    #endregion
+
     public void SetSelectedCell(CellClass cell)
     {
         if (mSelectedCell != null)
@@ -199,6 +203,7 @@ public class MapManager : MonoBehaviour
         return mSelectedCell;
     }
 
+    #region Get Map Size
     public int GetMapSizeX()
     {
         return mMapSizeX;
@@ -213,10 +218,14 @@ public class MapManager : MonoBehaviour
         return mMapSizeX * mMapSizeY;
     }
 
+    #endregion
+
     public int GetLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");
     }
+
+    #region Get Set CanClick
 
     public bool GetCanClick()
     {
@@ -228,11 +237,14 @@ public class MapManager : MonoBehaviour
         mCanClick = click;
     }
 
+    #endregion
+
     public bool GetIsFinishedCellsAnim()
     {
         return mIsFinishedCellAnim;
     }
 
+    #region Path Find Function
     public PathFinding GetPathFinding()
     {
         return mPathFind;
@@ -243,7 +255,7 @@ public class MapManager : MonoBehaviour
         List<CellClass> neighbours = new List<CellClass>();
 
         // Left
-        if(node.GetCellX() - 1 >= 0)
+        if (node.GetCellX() - 1 >= 0)
         {
             neighbours.Add(mMap[node.GetCellX() - 1, node.GetCellY()]);
         }
@@ -266,6 +278,10 @@ public class MapManager : MonoBehaviour
         return neighbours;
     }
 
+    #endregion
+
+
+    #region Get Cell Function
     public CellClass[,] GetCells()
     {
         return mMap;
@@ -276,9 +292,12 @@ public class MapManager : MonoBehaviour
         return mMap[x, y];
     }
 
+    #endregion
+
+    #region Get Set MapData
     public void SetMapData(int x, int y, string data)
     {
-        if(data == null)
+        if (data == null)
         {
             data = "0";
         }
@@ -290,11 +309,15 @@ public class MapManager : MonoBehaviour
         return mMapData;
     }
 
+    #endregion
+
     public void Save()
     {
         mCSV.MapSave(mMapData);
     }
 
+
+    #region Tower Function
     public void AddTower(TowerClass tower)
     {
         mTowers.Add(tower);
@@ -309,6 +332,18 @@ public class MapManager : MonoBehaviour
     {
         return mTowers;
     }
+
+    public void TowerUpdate()
+    {
+        for (int i = 0; i < mTowers.Count; i++)
+        {
+            mTowers[i].Loop(this);
+        }
+    }
+
+    #endregion
+
+    #region Enemy Function
 
     public void AddEnemy(EnemyClass enemy)
     {
@@ -325,11 +360,5 @@ public class MapManager : MonoBehaviour
         return mEnemies;
     }
 
-    public void TowerUpdate()
-    {
-        for (int i = 0; i < mTowers.Count; i++)
-        {
-            mTowers[i].Loop(this);
-        }
-    }
+    #endregion
 }
