@@ -140,7 +140,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         StartCoroutine(ApperanceAnimationCoroutine());
     }
 
-    public void Click()
+    private void OnClick()
     {
         if (mState == CellState.EStart || mState == CellState.EGoal)
         {
