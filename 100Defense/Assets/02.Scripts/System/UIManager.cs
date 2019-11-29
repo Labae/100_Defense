@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    private GameObject mUIScreen;
-    private GameObject mUIContainer;
+    private GameObject mSettingBtn;
+    private UIPanel mScreenPanel;
 
-    private GameObject mGameQuitBtn; 
+    private GameObject mSettingBackground;
+    private UIPanel mSettingPanel;
+
+    private GameObject mCancelClick;
+    private UIPanel mCancelClickPanel;
 
     private void Start()
     {
-        if(!Initialize())
+        if (!Initialize())
         {
             return;
         }
@@ -26,30 +30,77 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        mUIScreen = GameObject.Find("UIScreen");
-        mUIContainer = GameObject.Find("UIContainer");
-
-        if(mUIScreen == null)
+        if (!UICreate.Initialize())
         {
-            Debug.Log("Failed Find UIScreen");
-            return false;
-        }
-        if (mUIContainer == null)
-        {
-            Debug.Log("Failed Find UIContainer");
+            Debug.Log("Failed UICreate Initialize");
             return false;
         }
 
-        UIWidget screenWidget = mUIScreen.GetComponent<UIWidget>();
-        UIWidget containerWidget = mUIContainer.GetComponent<UIWidget>();
 
-        mGameQuitBtn = UICreate.CreateButton(screenWidget.localSize * 0.5f, new Vector2(100.0f, 100.0f), 1, new EventDelegate(Test), mUIScreen.transform, FlexibleUIButton.ButtonType.Exit, UIWidget.Pivot.TopRight, "Exit Btn");
+        Vector2 screenSize = new Vector2(GetComponent<UIRoot>().manualWidth, GetComponent<UIRoot>().manualHeight);
+
+        // 스크린 패널
+        GameObject screenPanel = UICreate.CreatePanel(transform, "Screen Panel");
+        mScreenPanel = screenPanel.GetComponent<UIPanel>();
+        mScreenPanel.depth = 1;
+        mSettingBtn = UICreate.CreateButton(
+            new Vector2(screenSize.x * -0.5f, screenSize.y * 0.5f),
+            new Vector2(100, 100),
+            0,
+            new EventDelegate(OpenSettingPanel),
+            screenPanel.transform,
+            FlexibleUIButton.ButtonType.Setting,
+            UIWidget.Pivot.TopLeft,
+            "Setting Btn");
+
+        // 셋팅 패널
+        GameObject settingPanel = UICreate.CreatePanel(transform, "Setting Panel");
+        mSettingPanel = settingPanel.GetComponent<UIPanel>();
+        mSettingPanel.depth = 2;
+        mSettingBackground = UICreate.CreateBackground(
+            Vector2.zero,
+            new Vector2(700, 600),
+            0,
+            settingPanel.transform,
+            UIWidget.Pivot.Center,
+            "Setting Background"
+            );
+        mSettingBackground.SetActive(false);
+        UISprite settingBackgroundSprite = mSettingBackground.GetComponent<UISprite>();
+        GameObject settingExitBtn = UICreate.CreateButton(
+            settingBackgroundSprite.localSize * 0.5f,
+            new Vector2(100, 100),
+            1,
+            new EventDelegate(CloseSettingPanel),
+            mSettingBackground.transform,
+            FlexibleUIButton.ButtonType.Exit,
+            UIWidget.Pivot.TopRight,
+            "Setting Exit Btn");
+
+
+        // 터치 되는 부분을 설정하는 panel
+        mCancelClick = UICreate.CreatePanel(transform, "Cancel Click");
+        mCancelClickPanel = mCancelClick.GetComponent<UIPanel>();
+        mCancelClickPanel.depth = 0;
+        BoxCollider2D cancelCollider = mCancelClick.AddComponent<BoxCollider2D>();
+        cancelCollider.isTrigger = true;
+        cancelCollider.size = screenSize;
+        GameObject cancelBackground = UICreate.CreateBackground(Vector2.zero, screenSize, 1, mCancelClick.transform);
+        cancelBackground.GetComponent<UISprite>().color = Color.clear;
+        cancelBackground.GetComponent<UISprite>().depth = 999;
 
         return true;
     }
 
-    public void Test()
+    private void OpenSettingPanel()
     {
-        Debug.Log("TEST");
+        mSettingBackground.SetActive(true);
+        mCancelClickPanel.depth = mSettingPanel.depth - 1;
+    }
+
+    private void CloseSettingPanel()
+    {
+        mSettingBackground.SetActive(false);
+        mCancelClickPanel.depth = 0;
     }
 }

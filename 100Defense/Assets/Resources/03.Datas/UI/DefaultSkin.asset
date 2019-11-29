@@ -15,8 +15,13 @@ MonoBehaviour:
   UIAtlas: {fileID: 11400000, guid: 99171741a851b12469f0492f407b7d8d, type: 2}
   UIMaterial: {fileID: 2100000, guid: 318030a0fbe78b84690bb199795d6604, type: 2}
   DefaultButtonColor: {r: 0.11645913, g: 1, b: 0, a: 1}
-  ButtonSprite: {fileID: 21300000, guid: 17ef8c2e6bda845ca82eb3e56635a961, type: 3}
-  ExitButtonColor: {r: 1, g: 0, b: 0, a: 1}
+  ButtonSprite: {fileID: 21300000, guid: a0c4441e403ea437ca79f6f9b5b15da8, type: 3}
+  ExitButtonColor: {r: 0, g: 0, b: 0, a: 1}
   IconExitSprite: {fileID: 21300000, guid: d39501b085d2e4262864da757517d6dc, type: 3}
-  CheckButtonColor: {r: 1, g: 0, b: 0.8950033, a: 1}
+  CheckButtonColor: {r: 0, g: 0, b: 0, a: 1}
   IconCheckSprite: {fileID: 21300000, guid: f61a63332f51e4069ba74806131bc66f, type: 3}
+  SettingButtonColor: {r: 0, g: 0, b: 0, a: 1}
+  IconSettingSprite: {fileID: 21300000, guid: 7c4ed06ca329f4b68b133ca8791678d5, type: 3}
+  DefaultBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  DefaultBackgroundSprite: {fileID: 21300000, guid: 159709bc538104a329b60b7b07386209,
+    type: 3}

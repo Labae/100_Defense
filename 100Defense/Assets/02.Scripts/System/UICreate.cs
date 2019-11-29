@@ -4,6 +4,35 @@ using UnityEngine;
 
 public class UICreate : MonoBehaviour
 {
+    private static GameObject mButton;
+    private static GameObject mBackground;
+    private static GameObject mPanel;
+    public static bool Initialize()
+    {
+        mButton = Resources.Load("01.Prefabs/UI/Button") as GameObject;
+        if (mButton == null)
+        {
+            Debug.Log("Failed Load Button Prefab");
+            return false;
+        }
+
+        mBackground = Resources.Load("01.Prefabs/UI/Background") as GameObject;
+        if (mBackground == null)
+        {
+            Debug.Log("Failed Load Background Prefab");
+            return false;
+        }
+
+        mPanel = Resources.Load("01.Prefabs/UI/Panel") as GameObject;
+        if (mPanel == null)
+        {
+            Debug.Log("Failed Load Panel Prefab");
+            return false;
+        }
+
+        return true;
+    }
+
     public static GameObject CreateButton(
        Vector2 pos,
        Vector2 size,
@@ -24,25 +53,13 @@ public class UICreate : MonoBehaviour
         UIWidget.Pivot pivot,
         string name)
     {
-        GameObject obj = Instantiate(Resources.Load("01.Prefabs/UI/Button") as GameObject);
-        if (obj == null)
-        {
-            Debug.Log("Failed Load Button Prefab");
-            return null;
-        }
 
+        GameObject obj = NGUITools.AddChild(parent, mButton);
         obj.name = name;
         UISprite sprite = obj.GetComponent<UISprite>();
         UIButton btn = obj.GetComponent<UIButton>();
         FlexibleUIButton flexibleBtn = obj.GetComponent<FlexibleUIButton>();
         UISprite icon = obj.transform.GetChild(0).GetComponent<UISprite>();
-
-        if (parent != null)
-        {
-            obj.transform.SetParent(parent);
-        }
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localScale = Vector3.one;
 
         sprite.width = (int)size.x;
         sprite.height = (int)size.y;
@@ -106,5 +123,34 @@ public class UICreate : MonoBehaviour
         }
 
         return offset *= 0.5f;
+    }
+
+    public static GameObject CreateBackground(
+        Vector2 pos, Vector2 size, int depth, Transform parent)
+    {
+        return CreateBackground(pos, size, depth, parent, UIWidget.Pivot.Center, "Background");
+    }
+
+    public static GameObject CreateBackground(
+        Vector2 pos, Vector2 size, int depth, Transform parent, UIWidget.Pivot pivot, string name)
+    {
+        GameObject obj = NGUITools.AddChild(parent, mBackground);
+        obj.name = name;
+        UISprite sprite = obj.GetComponent<UISprite>();
+        sprite.width = (int)size.x;
+        sprite.height = (int)size.y;
+        sprite.depth = depth;
+        sprite.pivot = pivot;
+        obj.transform.localPosition = pos;
+
+        return obj;
+    }
+
+    public static GameObject CreatePanel(Transform parnet, string name)
+    {
+        GameObject obj = NGUITools.AddChild(parnet, mPanel);
+        obj.name = name;
+
+        return obj;
     }
 }

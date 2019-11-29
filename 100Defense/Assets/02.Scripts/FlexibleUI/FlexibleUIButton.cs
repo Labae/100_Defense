@@ -4,7 +4,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(UISprite))]
 [RequireComponent(typeof(UIButton))]
-[RequireComponent(typeof(UIButtonScale))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class FlexibleUIButton : FlexibleUI
 {
@@ -12,12 +11,12 @@ public class FlexibleUIButton : FlexibleUI
     {
         Default,
         Exit,
-        Check
+        Check,
+        Setting
     };
 
     private UISprite mSprite;
     private UIButton mButton;
-    private UIButtonScale mButtonScale;
     private BoxCollider2D mBoxCollider;
     private UISprite iconSprite;
 
@@ -29,7 +28,6 @@ public class FlexibleUIButton : FlexibleUI
 
         mSprite = GetComponent<UISprite>();
         mButton = GetComponent<UIButton>();
-        mButtonScale = GetComponent<UIButtonScale>();
         mBoxCollider = GetComponent<BoxCollider2D>();
 
         mSprite.atlas = skinData.UIAtlas as INGUIAtlas;
@@ -67,42 +65,15 @@ public class FlexibleUIButton : FlexibleUI
                 case ButtonType.Exit:
                     iconSprite.SetSprite(skinData.IconExitSprite);
                     break;
-            }
-        }
-
-        if (mButton.state == UIButtonColor.State.Normal)
-        {
-            switch (buttonType)
-            {
-                case ButtonType.Default:
-                    mSprite.color = skinData.DefaultButtonColor;
-                    break;
-                case ButtonType.Exit:
-                    mSprite.color = skinData.ExitButtonColor;
-                    break;
-                case ButtonType.Check:
-                    mSprite.color = skinData.CheckButtonColor;
-                    break;
-                default:
+                case ButtonType.Setting:
+                    iconSprite.SetSprite(skinData.IconSettingSprite);
                     break;
             }
         }
 
         mButton.tweenTarget = null;
-        mButtonScale.tweenTarget = mButtonScale.transform;
 
         iconSprite.gameObject.SetActive(false);
         iconSprite.gameObject.SetActive(true);
-    }
-
-    public void SetButtonOnClick(EventDelegate eventDelegate)
-    {
-        if (mButton == null)
-        {
-            Debug.Log("Button is null");
-            return;
-        }
-
-        mButton.onClick.Add(eventDelegate);
     }
 }

@@ -11,6 +11,12 @@ public class FlexibleInstance : Editor
         Create("Button");
     }
 
+    [MenuItem("GameObject/Flexible UI/Background", priority =1)]
+    public static void AddBackground()
+    {
+        Create("Background");
+    }
+
     private static GameObject clickedObject;
 
     private static GameObject Create(string objectName)

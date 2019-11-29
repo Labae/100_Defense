@@ -61,6 +61,7 @@ public class MapManager : MonoBehaviour
         {
             GameObject line = new GameObject("Line" + y.ToString());
             line.transform.SetParent(transform);
+            line.transform.localPosition = Vector3.zero;
             for (int x = 0; x < mMapSizeX; x++)
             {
                 GameObject cellObj = Instantiate(cell, transform.position, Quaternion.identity);
@@ -85,6 +86,7 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        transform.position = transform.position + Vector3.forward * -0.5f;
         mStartCell = mMap[0, 0];
         mGoalCell = mMap[mMapSizeX - 1, mMapSizeY - 1];
 

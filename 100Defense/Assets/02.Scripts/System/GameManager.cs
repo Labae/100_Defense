@@ -109,22 +109,7 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
-        //// UI Scene Load
-        //AsyncOperation op = SceneManager.LoadSceneAsync("UIScene", LoadSceneMode.Additive);
-        //op.allowSceneActivation = false;
-        //while (!op.isDone)
-        //{
-        //    Debug.Log("Loading");
-        //    yield return null;
-        //}
-        //op.allowSceneActivation = true;
-        //Debug.Log("Load Complete");
-
         yield return SceneManager.LoadSceneAsync("UIScene", LoadSceneMode.Additive);
-
-        //SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
-
-        //yield return new WaitForSeconds(1.0f);
 
         mInput = gameObject.AddComponent<InputManager>();
         if (!mInput)
