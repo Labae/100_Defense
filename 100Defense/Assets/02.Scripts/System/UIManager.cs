@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    private WaveManager mWave;
+
     private GameObject mSettingBtn;
     private UIPanel mScreenPanel;
 
@@ -23,7 +25,7 @@ public class UIManager : MonoBehaviour
 
     public bool Initialize()
     {
-        WaveManager mWave = GameManager.instance.GetWaveManager();
+        mWave = GameManager.instance.GetWaveManager();
         if (!mWave)
         {
             Debug.Log("Failed Get WaveManager.");
@@ -52,6 +54,28 @@ public class UIManager : MonoBehaviour
             FlexibleUIButton.ButtonType.Setting,
             UIWidget.Pivot.TopLeft,
             "Setting Btn");
+        mSettingBtn.GetComponent<UISprite>().color = Color.black;
+
+        // Wave Start UI
+        GameObject waveStartBtn = UICreate.CreateButton(
+            new Vector2(screenSize.x * 0.5f, -screenSize.y * 0.5f),
+            new Vector2(450, 150),
+            0,
+            new EventDelegate(WaveStart),
+            screenPanel.transform,
+            FlexibleUIButton.ButtonType.Default,
+            UIWidget.Pivot.BottomRight,
+            "WaveStart Btn");
+        waveStartBtn.GetComponent<UISprite>().color = Color.cyan;
+
+        GameObject waveStartLabel = UICreate.CreateLabel(
+            Vector2.zero,
+            waveStartBtn.GetComponent<UISprite>().localSize,
+            1,
+            waveStartBtn.transform,
+            "Wave Start",
+            UIWidget.Pivot.Center,
+            "WaveStart Label");
 
         // 셋팅 패널
         GameObject settingPanel = UICreate.CreatePanel(transform, "Setting Panel");
@@ -76,6 +100,7 @@ public class UIManager : MonoBehaviour
             FlexibleUIButton.ButtonType.Exit,
             UIWidget.Pivot.TopRight,
             "Setting Exit Btn");
+        settingExitBtn.GetComponent<UISprite>().color = Color.black;
 
 
         // 터치 되는 부분을 설정하는 panel
@@ -102,5 +127,10 @@ public class UIManager : MonoBehaviour
     {
         mSettingBackground.SetActive(false);
         mCancelClickPanel.depth = 0;
+    }
+
+    private void WaveStart()
+    {
+        mWave.WaveStart();
     }
 }

@@ -7,6 +7,7 @@ public class UICreate : MonoBehaviour
     private static GameObject mButton;
     private static GameObject mBackground;
     private static GameObject mPanel;
+    private static GameObject mLabel;
     public static bool Initialize()
     {
         mButton = Resources.Load("01.Prefabs/UI/Button") as GameObject;
@@ -27,6 +28,13 @@ public class UICreate : MonoBehaviour
         if (mPanel == null)
         {
             Debug.Log("Failed Load Panel Prefab");
+            return false;
+        }
+
+        mLabel = Resources.Load("01.Prefabs/UI/Label") as GameObject;
+        if (mLabel == null)
+        {
+            Debug.Log("Failed Load Label Prefab");
             return false;
         }
 
@@ -150,6 +158,36 @@ public class UICreate : MonoBehaviour
     {
         GameObject obj = NGUITools.AddChild(parnet, mPanel);
         obj.name = name;
+
+        return obj;
+    }
+
+    public static GameObject CreateLabel(Vector2 pos, Vector2 maxSize, int depth, Transform parent, string text)
+    {
+        return CreateLabel(pos, maxSize, depth, parent, text, UIWidget.Pivot.Center, "Label");
+    }
+
+    public static GameObject CreateLabel(Vector2 pos, Vector2 maxSize, int depth, Transform parent, string text, UIWidget.Pivot pivot, string name)
+    {
+        GameObject obj = NGUITools.AddChild(parent, mLabel);
+        obj.name = name;
+        UILabel label = obj.GetComponent<UILabel>();
+        label.overflowWidth = (int)maxSize.x;
+        label.overflowHeight = (int)maxSize.y;
+        label.depth = depth;
+        label.pivot = pivot;
+        label.text = text;
+
+        UIWidget.Pivot parentPivot = UIWidget.Pivot.Center;
+        if (parent.GetComponent<UIWidget>() != null)
+        {
+            parentPivot = parent.GetComponent<UIWidget>().pivot;
+            obj.transform.localPosition = pos + GetBoxColliderOffset(parentPivot, maxSize);
+        }
+        else
+        {
+            obj.transform.localPosition = pos;
+        }
 
         return obj;
     }
