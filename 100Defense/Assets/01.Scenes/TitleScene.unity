@@ -343,7 +343,7 @@ MonoBehaviour:
   bottomType: 1
   topType: 1
   mAtlas: {fileID: 11400000, guid: 99171741a851b12469f0492f407b7d8d, type: 2}
-  mSpriteName: UI_Icon_BtnPsCross
+  mSpriteName: UI_Icon_BtnPsCrossRound
   mFixedAspect: 0
   mFillCenter: 1
 --- !u!114 &166674981
@@ -716,7 +716,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3001
+  startingRenderQueue: 3000
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 0
@@ -757,7 +757,7 @@ Transform:
   m_GameObject: {fileID: 507910137}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.00125, y: 0.00125, z: 0.00125}
+  m_LocalScale: {x: 0.0012476606, y: 0.0012476606, z: 0.0012476606}
   m_Children:
   - {fileID: 2038561996}
   - {fileID: 1236752800}
@@ -1770,7 +1770,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0, g: 0, b: 0, a: 0.21568628}
+  mColor: {r: 0, g: 0, b: 0, a: 0.11764706}
   mPivot: 4
   mWidth: 900
   mHeight: 1600
@@ -2016,17 +2016,17 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3000
+  startingRenderQueue: 3002
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 0
   mClipRange: {x: 0, y: 0, z: 300, w: 200}
   mClipSoftness: {x: 4, y: 4}
   mDepth: 0
-  mSortingOrder: 0
+  mSortingOrder: -1
   mSortingLayerName: 
   mClipOffset: {x: 0, y: 0}
-  useSortingOrder: 0
+  useSortingOrder: 1
 --- !u!1 &1941158800
 GameObject:
   m_ObjectHideFlags: 0

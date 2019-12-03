@@ -36,7 +36,10 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            BuildTower();
+            if(BuildTower())
+            {
+                GameManager.Instance.GetPlayerInfo().Gold -= 1000;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -99,19 +102,16 @@ public class InputManager : MonoBehaviour
             }
             hit.transform.GetComponent<CellClass>().Click();
         }
-
-
-        //if (UICamera.Raycast(Input.mousePosition) == true)
-        //{
-        //    return;
-        //}
     }
-    private void BuildTower()
+    private bool BuildTower()
     {
         if (mMap.GetSelectedCell() != null)
         {
             mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
+            return true;
         }
+
+        return false;
     }
 
     private void DestroyTower()

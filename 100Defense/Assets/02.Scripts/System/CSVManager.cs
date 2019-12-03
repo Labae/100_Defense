@@ -95,8 +95,102 @@ public class CSVManager : MonoBehaviour
         StreamWriter outStream = File.CreateText(filePath);
         outStream.WriteLine(sb);
         outStream.Close();
+    }
 
-        Debug.Log("Map Save.");
+    public PlayerInformation LoadPlayerInfo()
+    {
+        StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/Game/PlayerInformation.csv"));
+        bool endOfFile = false;
+        bool first = true;
+
+        PlayerInformation playerInfo = new PlayerInformation();
+
+        int x = 0;
+        int y = 0;
+        while (!endOfFile)
+        {
+            string data_string = strReader.ReadLine();
+            if (data_string == null)
+            {
+                endOfFile = true;
+                break;
+            }
+
+            if (first)
+            {
+                first = false;
+                continue;
+            }
+
+            var data_value = data_string.Split(',');
+
+            playerInfo.Gold = int.Parse(data_value[1].ToString());
+
+            x++;
+            if (x >= 1)
+            {
+                y++;
+                x = 0;
+            }
+
+            if(y >= 1)
+            {
+                endOfFile = true;
+            }
+        }
+
+        return playerInfo;
+    }
+
+    public void SavePlayerInfo(PlayerInformation info)
+    {
+        List<string[]> rowData = new List<string[]>();
+        string[] rowDataTemp = new string[2];
+        rowDataTemp[0] = "Key";
+        rowDataTemp[1] = "Value";
+        rowData.Add(rowDataTemp);
+
+        //for (int x = 0; x < 1; x++)
+        //{
+        //    for (int y = 0; y < 1; y++)
+        //    {
+        //        rowDataTemp = new string[2];
+        //        int keyValue = x * 10 + y % 10;
+        //        string key = keyValue.ToString();
+        //        rowDataTemp[0] = key;
+        //        rowDataTemp[1] = mapData[y, x];
+        //        rowData.Add(rowDataTemp);
+        //    }
+        //}
+
+        rowDataTemp = new string[2];
+        string key = "Gold";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = info.Gold.ToString();
+        rowData.Add(rowDataTemp);
+
+        string[][] output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        int length = output.GetLength(0);
+        string delimiter = ",";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+        {
+            sb.AppendLine(string.Join(delimiter, output[index]));
+        }
+
+        string filePath = getPath("/Resources/03.Datas/Game/PlayerInformation.csv");
+
+        StreamWriter outStream = File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
     }
 
     private string getPath(string path)

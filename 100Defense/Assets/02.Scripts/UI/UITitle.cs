@@ -7,10 +7,15 @@ public class UITitle : MonoBehaviour
 {
     public UIPanel TouchGuard;
     public GameObject CreditPanel;
+
+    private void Start()
+    {
+    }
+
     public void OpenCredit()
     {
         CreditPanel.transform.DOLocalMoveX(0.0f, 0.2f).SetEase(Ease.Linear);
-        TouchGuard.depth = 1;
+        TouchGuard.depth = CreditPanel.GetComponent<UIPanel>().depth;
     }
 
     public void CloseCredit()

@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     private CSVManager mCSV;
     private WaveManager mWave;
 
+    private PlayerInformation mPlayerInfo;
+
     private bool mInitializeSuccess;
 
     private void Awake()
@@ -86,6 +88,13 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Failed Get CSV Component.");
             mInitializeSuccess = false;
+            yield break;
+        }
+
+        mPlayerInfo = mCSV.LoadPlayerInfo();
+        if(mPlayerInfo == null)
+        {
+            Debug.Log("Failed Load PlayerInfo");
             yield break;
         }
 
@@ -179,5 +188,10 @@ public class GameManager : MonoBehaviour
     public WaveManager GetWaveManager()
     {
         return mWave;
+    }
+
+    public PlayerInformation GetPlayerInfo()
+    {
+        return mPlayerInfo;
     }
 }
