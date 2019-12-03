@@ -17,20 +17,20 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        if (!Initialize())
-        {
-            return;
-        }
+        //if (!Initialize())
+        //{
+        //    return;
+        //}
     }
 
     public bool Initialize()
     {
-        mWave = GameManager.instance.GetWaveManager();
-        if (!mWave)
-        {
-            Debug.Log("Failed Get WaveManager.");
-            return false;
-        }
+        //mWave = GameManager.Instance.GetWaveManager();
+        //if (!mWave)
+        //{
+        //    Debug.Log("Failed Get WaveManager.");
+        //    return false;
+        //}
 
         if (!UICreate.Initialize())
         {
@@ -131,6 +131,7 @@ public class UIManager : MonoBehaviour
 
     private void WaveStart()
     {
-        mWave.WaveStart();
+        if (mWave != null)
+            mWave.WaveStart();
     }
 }

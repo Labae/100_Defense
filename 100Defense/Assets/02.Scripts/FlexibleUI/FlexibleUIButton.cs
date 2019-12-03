@@ -43,6 +43,11 @@ public class FlexibleUIButton : FlexibleUI
 
         mSprite.type = UIBasicSprite.Type.Sliced;
 
+        if (transform.Find("Icon") == null)
+        {
+            return;
+        }
+
         iconSprite = transform.Find("Icon").GetComponent<UISprite>();
         if (iconSprite == null)
         {
@@ -70,8 +75,6 @@ public class FlexibleUIButton : FlexibleUI
                     break;
             }
         }
-
-        mButton.tweenTarget = null;
 
         iconSprite.gameObject.SetActive(false);
         iconSprite.gameObject.SetActive(true);

@@ -14,7 +14,6 @@ public class EnemyClass : MonoBehaviour, IDamagable
     public bool Initialize(MapManager map, string enemyKey, List<Vector3> path)
     {
         mMap = map;
-
         Enemy enemyData = Resources.Load("03.Datas/Game/EnemyData") as Enemy;
         if (!enemyData)
         {

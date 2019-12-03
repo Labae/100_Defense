@@ -149,6 +149,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
         if (mMap.GetCanClick())
         {
+            if (GameManager.Instance.GetWaveManager().GetIsWaveEnd() && mState == CellState.ERoad)
+            {
+                return;
+            }
+
             if (mState == CellState.ESelected)
             {
                 mMap.SetSelectedCell(null);

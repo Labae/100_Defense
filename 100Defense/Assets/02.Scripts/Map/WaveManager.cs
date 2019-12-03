@@ -8,7 +8,8 @@ public class WaveManager : MonoBehaviour
     private Wave mWaveData;
     private WaitForSeconds mWFSNextEnemySpawnTime;
     private int mWaveIndex;
-    private bool mIsWave;
+    private bool mIsWaveEnd;
+    private bool mWaveStart;
 
     public bool Initialize(MapManager map)
     {
@@ -21,7 +22,7 @@ public class WaveManager : MonoBehaviour
 
         mWaveIndex = 0;
         mMap = map;
-        mIsWave = false;
+        mIsWaveEnd = false;
         mWFSNextEnemySpawnTime = new WaitForSeconds(1.0f);
 
         return true;
@@ -29,18 +30,17 @@ public class WaveManager : MonoBehaviour
 
     public void WaveStart()
     {
-        if (!mIsWave)
+        if (!mWaveStart)
         {
             if(mWaveIndex >= mWaveData.dataArray.Length)
             {
                 return;
             }
-            mMap.SetCanClick(false);
             mMap.SetSelectedCell(null);
 
             string enemyKey = mWaveData.dataArray[mWaveIndex].Enemykey;
             int waveCount = mWaveData.dataArray[mWaveIndex].COUNT;
-            mIsWave = true;
+            mWaveStart = true;
             mWaveIndex++;
 
             List<TowerClass> towers = mMap.GetTowers();
@@ -70,7 +70,16 @@ public class WaveManager : MonoBehaviour
 
             yield return mWFSNextEnemySpawnTime;
         }
-        mIsWave = false;
-        mMap.SetCanClick(true);
+        mWaveStart = false;
+    }
+
+    public bool GetIsWaveEnd()
+    {
+        if (mWaveStart)
+        {
+            mIsWaveEnd = mMap.GetmEnemies().Count > 0 ? true : false;
+            return mIsWaveEnd;
+        }
+        return mWaveStart;
     }
 }

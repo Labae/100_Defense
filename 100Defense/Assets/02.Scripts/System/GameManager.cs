@@ -4,8 +4,34 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance = null;
+    public static GameManager instance; 
+    public static GameManager Instance
+    {
+        get
+        {
+            if(instance == null)
+            {
+                GameManager[] objs = FindObjectsOfType<GameManager>();
+                if(objs.Length > 0)
+                {
+                    instance = objs[0];
+                }
 
+                if(objs.Length > 1)
+                {
+                    Debug.LogError("GameManager Error");
+                }
+
+                if(instance == null)
+                {
+                    GameObject obj = new GameObject("GameManager");
+                    obj.AddComponent<GameManager>();
+                }
+            }
+
+            return instance;
+        }
+    }
     private InputManager mInput;
     private GameObject mMapPrefab;
     private MapManager mMap;
