@@ -7,8 +7,9 @@ public class UIManager : MonoBehaviour
 {
     public GameObject SettingPanel;
     public UIPanel TouchGuard;
-    public UILabel GoldLabel;
-    private CoinLabel mCoinLabel;
+    public WaveLabel WaveLabel;
+    public CoinLabel CoinLabel;
+    private WaveManager mWaveManager;
 
     private PlayerInformation mPlayerInfo;
 
@@ -29,15 +30,15 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        mCoinLabel = GoldLabel.GetComponent<CoinLabel>();
-        if(mCoinLabel == null)
+        mPlayerInfo = GameManager.Instance.GetPlayerInfo();
+        mPlayerInfo.AddObserver(CoinLabel);
+
+        mWaveManager = GameManager.Instance.GetWaveManager();
+        if(!mWaveManager)
         {
-            Debug.Log("Failed Get CoinLabel");
+            Debug.Log("Failed Get Wave Manager");
             return false;
         }
-
-        mPlayerInfo = GameManager.Instance.GetPlayerInfo();
-        mPlayerInfo.AddObserver(mCoinLabel);
 
         return true;
     }
@@ -52,5 +53,16 @@ public class UIManager : MonoBehaviour
     {
         SettingPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
         TouchGuard.depth = 0;
+    }
+
+    public void WaveStart()
+    {
+        if(!mWaveManager)
+        {
+            return;
+        }
+
+        mWaveManager.WaveStart();
+        WaveLabel.UpdateWaveIndex();
     }
 }

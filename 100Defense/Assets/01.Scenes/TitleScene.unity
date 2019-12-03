@@ -2100,7 +2100,7 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 12800000, guid: a2e55349b0ba4ea41b27039318696a91, type: 3}
   mFont: {fileID: 0}
-  mText: " \uC81C\uC791\uC790 : \uB77C\uBC30\n \uC774\uBA54\uC77C : rabae0985@gmail.com"
+  mText: " \uC81C\uC791\uC790 : \uB77C\uBC30\n\n \uC774\uBA54\uC77C : rabae0985@gmail.com"
   mFontSize: 50
   mFontStyle: 1
   mAlignment: 1

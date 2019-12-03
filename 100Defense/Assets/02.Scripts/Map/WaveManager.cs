@@ -90,4 +90,10 @@ public class WaveManager : MonoBehaviour
 
         return mIsWaving;
     }
+
+    public int GetWaveIndex()
+    {
+        return mWaveIndex;
+    }
+
 }

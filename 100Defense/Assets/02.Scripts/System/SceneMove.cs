@@ -9,4 +9,9 @@ public class SceneMove : MonoBehaviour
     {
         SceneManager.LoadScene("GameScene");
     }
+
+    public void MoveTitleScene()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class CoinLabel : MonoBehaviour, IObserver
 {
     private UILabel mLabel;
-
     private void Start()
     {
         mLabel = GetComponent<UILabel>();

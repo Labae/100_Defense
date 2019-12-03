@@ -147,13 +147,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             return;
         }
 
-        //if (UICamera.hoveredObject != null)
-        //{
-        //    return;
-        //}
-
-        Debug.Log("Click");
-
         if (GameManager.Instance.GetWaveManager().GetIsWaving() && mState == CellState.ERoad)
         {
             return;
