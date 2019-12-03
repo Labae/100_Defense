@@ -36,10 +36,7 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            if(BuildTower())
-            {
-                GameManager.Instance.GetPlayerInfo().Gold -= 1000;
-            }
+            BuildTower();
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -103,15 +100,12 @@ public class InputManager : MonoBehaviour
             hit.transform.GetComponent<CellClass>().Click();
         }
     }
-    private bool BuildTower()
+    private void BuildTower()
     {
         if (mMap.GetSelectedCell() != null)
         {
             mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
-            return true;
         }
-
-        return false;
     }
 
     private void DestroyTower()

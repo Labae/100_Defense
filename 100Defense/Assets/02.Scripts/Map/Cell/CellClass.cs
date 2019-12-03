@@ -207,11 +207,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return tower;
     }
 
-    public bool BuildTower(TowerType type)
+    public void BuildTower(TowerType type)
     {
         if (mTower != null)
         {
-            return false;
+            return;
         }
         else
         {
@@ -219,7 +219,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             if (!mTower.Build(this, type))
             {
                 Debug.Log("Failed Tower Initialize.");
-                return false;
+                return;
             }
 
             mWalkable = false;
@@ -229,10 +229,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             {
                 mTower.Destroyimmediately(this);
                 mWalkable = true;
-                return false;
+                return;
             }
 
-            return true;
+            GameManager.Instance.GetPlayerInfo().Gold -= mTower.GetPrice();
         }
     }
 

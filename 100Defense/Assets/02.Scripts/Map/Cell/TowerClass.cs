@@ -18,6 +18,7 @@ public class TowerClass : MonoBehaviour
     private float mTowerRange;
 
     private float mRotateSpeed = 2.0f;
+    private int mPrice;
 
     public bool Initialize(CellClass cell, string cellData)
     {
@@ -71,6 +72,7 @@ public class TowerClass : MonoBehaviour
         }
 
         mTowerRange = towerData.Range;
+        mPrice = towerData.Price;
 
         return true;
     }
@@ -243,5 +245,10 @@ public class TowerClass : MonoBehaviour
 
         Destroy(this.gameObject);
 
+    }
+
+    public int GetPrice()
+    {
+        return mPrice;
     }
 }
