@@ -140,35 +140,39 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         StartCoroutine(ApperanceAnimationCoroutine());
     }
 
-    private void OnClick()
+    public void Click()
     {
         if (mState == CellState.EStart || mState == CellState.EGoal)
         {
             return;
         }
 
-        if (mMap.GetCanClick())
+        //if (UICamera.hoveredObject != null)
+        //{
+        //    return;
+        //}
+
+        Debug.Log("Click");
+
+        if (GameManager.Instance.GetWaveManager().GetIsWaving() && mState == CellState.ERoad)
         {
-            if (GameManager.Instance.GetWaveManager().GetIsWaveEnd() && mState == CellState.ERoad)
-            {
-                return;
-            }
-
-            if (mState == CellState.ESelected)
-            {
-                mMap.SetSelectedCell(null);
-            }
-            else
-            {
-                mPrevState = mState;
-                mState = CellState.ESelected;
-                mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
-                mMap.SetSelectedCell(this);
-            }
-
-            StopCoroutine(ApperanceAnimationCoroutine());
-            StartCoroutine(ApperanceAnimationCoroutine());
+            return;
         }
+
+        if (mState == CellState.ESelected)
+        {
+            mMap.SetSelectedCell(null);
+        }
+        else
+        {
+            mPrevState = mState;
+            mState = CellState.ESelected;
+            mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
+            mMap.SetSelectedCell(this);
+        }
+
+        StopCoroutine(ApperanceAnimationCoroutine());
+        StartCoroutine(ApperanceAnimationCoroutine());
     }
 
     public void ReleaseSelected()

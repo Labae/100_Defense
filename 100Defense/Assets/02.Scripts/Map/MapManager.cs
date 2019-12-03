@@ -222,7 +222,7 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
-    public int GetLayerMask()
+    public int GetCellLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");
     }

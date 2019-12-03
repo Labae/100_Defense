@@ -9,7 +9,8 @@ public class WaveManager : MonoBehaviour
     private WaitForSeconds mWFSNextEnemySpawnTime;
     private int mWaveIndex;
     private bool mIsWaveEnd;
-    private bool mWaveStart;
+    private bool mIsWaveStart;
+    private bool mIsWaving;
 
     public bool Initialize(MapManager map)
     {
@@ -30,9 +31,9 @@ public class WaveManager : MonoBehaviour
 
     public void WaveStart()
     {
-        if (!mWaveStart)
+        if (!mIsWaveStart)
         {
-            if(mWaveIndex >= mWaveData.dataArray.Length)
+            if (mWaveIndex >= mWaveData.dataArray.Length)
             {
                 return;
             }
@@ -40,7 +41,7 @@ public class WaveManager : MonoBehaviour
 
             string enemyKey = mWaveData.dataArray[mWaveIndex].Enemykey;
             int waveCount = mWaveData.dataArray[mWaveIndex].COUNT;
-            mWaveStart = true;
+            mIsWaveStart = true;
             mWaveIndex++;
 
             List<TowerClass> towers = mMap.GetTowers();
@@ -70,16 +71,23 @@ public class WaveManager : MonoBehaviour
 
             yield return mWFSNextEnemySpawnTime;
         }
-        mWaveStart = false;
+        mIsWaveStart = false;
     }
 
-    public bool GetIsWaveEnd()
+    public bool GetIsWaving()
     {
-        if (mWaveStart)
+        mIsWaveEnd = mMap.GetmEnemies().Count > 0 ? false : true;
+
+        if(!mIsWaveStart && mIsWaveEnd)
         {
-            mIsWaveEnd = mMap.GetmEnemies().Count > 0 ? true : false;
-            return mIsWaveEnd;
+            mIsWaving = false;
         }
-        return mWaveStart;
+
+        if(mIsWaveStart && !mIsWaveEnd)
+        {
+            mIsWaving = true;
+        }
+
+        return mIsWaving;
     }
 }

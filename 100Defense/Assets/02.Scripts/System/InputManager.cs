@@ -6,15 +6,30 @@ public class InputManager : MonoBehaviour
 {
     private MapManager mMap;
     private WaveManager mWave;
+    private Camera mMainCamera;
+
+    private int mCellLayerMask;
 
     public bool Initlaize(MapManager map)
     {
         mMap = map;
+        mMainCamera = Camera.main;
+        if (!mMainCamera)
+        {
+            Debug.Log("Failed Find Main Camera");
+            return false;
+        }
+
+        mCellLayerMask = mMap.GetCellLayerMask();
         return true;
     }
 
     public void MouseEvent()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            ClickCell();
+        }
     }
 
     public void KeyboardEvent()
@@ -41,7 +56,7 @@ public class InputManager : MonoBehaviour
                 mWave = GetComponent<WaveManager>();
             }
 
-            if(mMap.GetPathFinding().GetPathSuccess() == false)
+            if (mMap.GetPathFinding().GetPathSuccess() == false)
             {
                 return;
             }
@@ -50,6 +65,47 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    private void ClickCell()
+    {
+        if (mMap == null)
+        {
+            mMap = GetComponent<GameManager>().GetMap();
+        }
+
+        if (!mMap.GetIsFinishedCellsAnim())
+        {
+            return;
+        }
+
+        if (!mMap.GetCanClick())
+        {
+            return;
+        }
+
+        if (UICamera.hoveredObject != null && UICamera.hoveredObject.name != "UI Root")
+        {
+            return;
+        }
+
+        Ray ray = mMainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mCellLayerMask))
+        {
+            if (hit.transform == null)
+            {
+                Debug.Log("hit is null");
+                return;
+            }
+            hit.transform.GetComponent<CellClass>().Click();
+        }
+
+
+        //if (UICamera.Raycast(Input.mousePosition) == true)
+        //{
+        //    return;
+        //}
+    }
     private void BuildTower()
     {
         if (mMap.GetSelectedCell() != null)
