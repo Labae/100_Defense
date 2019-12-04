@@ -160,8 +160,6 @@ public class EnemyClass : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        mMap.RemoveEnemy(this);
-
         yield return StartCoroutine(DestroyEnemy());
     }
 
@@ -191,6 +189,9 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
     private IEnumerator DestroyEnemy()
     {
+        GameManager.Instance.GetPlayerInfo().Life--;
+
+
         Vector3 originScale = mModel.transform.localScale;
         float x = mModel.transform.localScale.x;
         float y = mModel.transform.localScale.y;
@@ -209,6 +210,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
         mModel.transform.localScale = Vector3.zero;
 
+        mMap.RemoveEnemy(this);
         Destroy(this.gameObject);
     }
 

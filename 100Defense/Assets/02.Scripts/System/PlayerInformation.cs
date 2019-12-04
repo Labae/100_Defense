@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerInformation : IObservable
 {
     private int mGold;
+    private int mWaveIndex;
+    private int mLife;
 
     public int Gold
     {
@@ -23,7 +25,39 @@ public class PlayerInformation : IObservable
         }
     }
 
-    public List<IObserver> observers = new List<IObserver>();
+    public int WaveIndex
+    {
+        get
+        {
+            return mWaveIndex;
+        }
+        set
+        {
+            if (mWaveIndex != value)
+            {
+                mWaveIndex = value;
+                Notify();
+            }
+        }
+    }
+
+    public int Life
+    {
+        get
+        {
+            return mLife;
+        }
+        set
+        {
+            if (mLife != value)
+            {
+                mLife = value;
+                Notify();
+            }
+        }
+    }
+
+    List<IObserver> observers = new List<IObserver>();
 
     public void AddObserver(IObserver ob)
     {

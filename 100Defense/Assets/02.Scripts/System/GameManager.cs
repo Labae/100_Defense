@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
 
     private bool mInitializeSuccess;
 
+    [Header("Max Size (10, 10)")]
+    public Vector2 MapSize;
+
     private void Awake()
     {
         if (instance == null)
@@ -122,7 +125,7 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
-        if (!mMap.Initialize(mCSV))
+        if (!mMap.Initialize(mCSV, MapSize))
         {
             Debug.Log("Failed Initialize Map Component.");
             mInitializeSuccess = false;

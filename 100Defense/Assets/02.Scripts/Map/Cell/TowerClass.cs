@@ -161,6 +161,7 @@ public class TowerClass : MonoBehaviour
         }
 
         mTowerRange = towerData.Range;
+        mPrice = towerData.Price;
 
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), towerData.Key);
         StartCoroutine(ApperanceAnim());

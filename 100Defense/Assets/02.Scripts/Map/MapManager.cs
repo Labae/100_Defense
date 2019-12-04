@@ -13,8 +13,8 @@ public class MapManager : MonoBehaviour
     private List<TowerClass> mTowers;
     private List<EnemyClass> mEnemies;
 
-    private const int mMapSizeX = 10;
-    private const int mMapSizeY = 10;
+    private int mMapSizeX;
+    private int mMapSizeY;
 
     private WaitForSeconds mWFSCellApperanceSquareAnimTime;
     private WaitForSeconds mWFSCellStartGoalAnimTime;
@@ -26,8 +26,10 @@ public class MapManager : MonoBehaviour
 
     private bool mCanClick = false;
 
-    public bool Initialize(CSVManager csv)
+    public bool Initialize(CSVManager csv, Vector2 mapSize)
     {
+        mMapSizeX = (int)mapSize.x;
+        mMapSizeY = (int)mapSize.y;
         mMap = new CellClass[mMapSizeX, mMapSizeY];
         if (mMap.Length <= 0)
         {
@@ -37,7 +39,7 @@ public class MapManager : MonoBehaviour
 
         mCSV = csv;
 
-        mMapData = mCSV.LoadMap();
+        mMapData = mCSV.LoadMap(mMapSizeX, mMapSizeY);
         if (mMapData == null)
         {
             Debug.Log("Failed Load MapData.csv");
@@ -86,7 +88,7 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        transform.position = transform.position + Vector3.forward * -0.5f;
+        //transform.position = transform.position + Vector3.forward * -0.5f;
         mStartCell = mMap[0, 0];
         mGoalCell = mMap[mMapSizeX - 1, mMapSizeY - 1];
 
@@ -128,55 +130,67 @@ public class MapManager : MonoBehaviour
     }
     private IEnumerator CellApperanceAnimationCoroutine()
     {
-        for (int x = 4; x < 6; x++)
+        // 짝수
+        if(mMapSizeX % 2 == 0)
         {
-            for (int y = 4; y < 6; y++)
+            for (int animCount = 0; animCount < mMapSizeX / 2; animCount++)
             {
-                mMap[y, x].ApperanceAnimation();
-                mMap[x, y].ApperanceAnimation();
-            }
-        }
-        yield return mWFSCellApperanceSquareAnimTime;
+                int index = mMapSizeX / 2 + -(animCount + 1);
+                int maxIndex = mMapSizeX / 2 + animCount + 1;
 
-        for (int x = 3; x < 7; x++)
-        {
-            for (int y = 3; y < 7; y++)
-            {
-                mMap[y, x].ApperanceAnimation();
-                mMap[x, y].ApperanceAnimation();
-            }
-        }
-        yield return mWFSCellApperanceSquareAnimTime;
+                if (index < 0)
+                {
+                    yield break;
+                }
+                if (maxIndex > mMapSizeX)
+                {
+                    yield break;
+                }
 
-        for (int x = 2; x < 8; x++)
-        {
-            for (int y = 2; y < 8; y++)
-            {
-                mMap[y, x].ApperanceAnimation();
-                mMap[x, y].ApperanceAnimation();
+                for (int x = index; x < maxIndex; x++)
+                {
+                    for (int y = index; y < maxIndex; y++)
+                    {
+                        mMap[x, y].ApperanceAnimation();
+                        mMap[y, x].ApperanceAnimation();
+                    }
+                }
+                yield return mWFSCellApperanceSquareAnimTime;
             }
         }
-        yield return mWFSCellApperanceSquareAnimTime;
+        // 홀수
+        else
+        {
+            // Center
+            mMap[mMapSizeX / 2, mMapSizeY / 2].ApperanceAnimation();
 
-        for (int x = 1; x < 9; x++)
-        {
-            for (int y = 1; y < 9; y++)
-            {
-                mMap[y, x].ApperanceAnimation();
-                mMap[x, y].ApperanceAnimation();
-            }
-        }
-        yield return mWFSCellApperanceSquareAnimTime;
+            yield return mWFSCellApperanceSquareAnimTime;
 
-        for (int x = 0; x < 10; x++)
-        {
-            for (int y = 0; y < 10; y++)
+            for (int animCount = 0; animCount < mMapSizeX / 2; animCount++)
             {
-                mMap[y, x].ApperanceAnimation();
-                mMap[x, y].ApperanceAnimation();
+                int index = mMapSizeX / 2 + - (animCount + 1);
+                int maxIndex = mMapSizeX / 2 + animCount + 2;
+
+                if (index < 0)
+                {
+                    yield break;
+                }
+                if (maxIndex > mMapSizeX)
+                {
+                    yield break;
+                }
+
+                for (int x = index; x < maxIndex; x++)
+                {
+                    for (int y = index; y < maxIndex; y++)
+                    {
+                        mMap[x, y].ApperanceAnimation();
+                        mMap[y, x].ApperanceAnimation();
+                    }
+                }
+                yield return mWFSCellApperanceSquareAnimTime;
             }
         }
-        yield return mWFSCellApperanceSquareAnimTime;
 
         mIsFinishedCellAnim = true;
     }

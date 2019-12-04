@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaveLabel : MonoBehaviour
+public class WaveLabel : MonoBehaviour, IObserver
 {
     private UILabel mLabel;
-    void Start()
+    private void Start()
     {
         mLabel = GetComponent<UILabel>();
-        mLabel.text = "WAVE : " + GameManager.Instance.GetWaveManager().GetWaveIndex().ToString();
+        mLabel.text = "WAVE " + GameManager.Instance.GetPlayerInfo().WaveIndex.ToString();
     }
 
-    public void UpdateWaveIndex()
+    public void OnNotify(IObservable ob)
     {
-        mLabel.text = "WAVE : " + GameManager.Instance.GetWaveManager().GetWaveIndex().ToString();
+        PlayerInformation info = ob as PlayerInformation;
+
+        if (info != null)
+        {
+            mLabel.text =  "WAVE " + info.WaveIndex.ToString();
+        }
     }
 }

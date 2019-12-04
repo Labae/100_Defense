@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public UIPanel TouchGuard;
     public WaveLabel WaveLabel;
     public CoinLabel CoinLabel;
+    public LifeManager LifeSet;
     private WaveManager mWaveManager;
 
     private PlayerInformation mPlayerInfo;
@@ -40,6 +41,9 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
+        mPlayerInfo.AddObserver(WaveLabel);
+        mPlayerInfo.AddObserver(LifeSet);
+
         return true;
     }
 
@@ -63,6 +67,5 @@ public class UIManager : MonoBehaviour
         }
 
         mWaveManager.WaveStart();
-        WaveLabel.UpdateWaveIndex();
     }
 }

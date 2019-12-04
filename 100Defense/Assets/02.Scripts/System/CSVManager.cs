@@ -6,12 +6,15 @@ using System.Text;
 
 public class CSVManager : MonoBehaviour
 {
-    public string[,] LoadMap()
+    private int mMapX, mMapY;
+    public string[,] LoadMap(int sizeX, int sizeY)
     {
+        mMapX = sizeX;
+        mMapY = sizeY;
         StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/Game/MapData.csv"));
         bool endOfFile = false;
 
-        string[,] retval = new string[10,10];
+        string[,] retval = new string[mMapX, mMapY];
 
         int x = 0;
         int y = 0;
@@ -36,13 +39,13 @@ public class CSVManager : MonoBehaviour
             retval[x, y] = data_value[1].ToString();
 
             x++;
-            if(x >= 10)
+            if(x >= mMapX)
             {
                 y++;
                 x = 0;
             }
 
-            if(y >= 10)
+            if(y >= mMapY)
             {
                 endOfFile = true;
                 break;
@@ -60,12 +63,12 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[1] = "TowerName";
         rowData.Add(rowDataTemp);
 
-        for (int x = 0; x < 10; x++)
+        for (int x = 0; x < mMapX; x++)
         {
-            for (int y = 0; y < 10; y++)
+            for (int y = 0; y < mMapY; y++)
             {
                 rowDataTemp = new string[2];
-                int keyValue = x * 10 + y % 10;
+                int keyValue = x * mMapX + y % mMapY;
                 string key = keyValue.ToString();
                 rowDataTemp[0] = key;
                 rowDataTemp[1] = mapData[y, x];
@@ -105,6 +108,8 @@ public class CSVManager : MonoBehaviour
 
         PlayerInformation playerInfo = new PlayerInformation();
 
+        string[] datas = new string[3];
+
         int x = 0;
         int y = 0;
         while (!endOfFile)
@@ -124,8 +129,7 @@ public class CSVManager : MonoBehaviour
 
             var data_value = data_string.Split(',');
 
-            playerInfo.Gold = int.Parse(data_value[1].ToString());
-
+            datas[y] = data_value[1].ToString();
             x++;
             if (x >= 1)
             {
@@ -133,11 +137,15 @@ public class CSVManager : MonoBehaviour
                 x = 0;
             }
 
-            if(y >= 1)
+            if(y > 2)
             {
                 endOfFile = true;
             }
         }
+
+        playerInfo.Gold = int.Parse(datas[0]);
+        playerInfo.WaveIndex = int.Parse(datas[1]);
+        playerInfo.Life = int.Parse(datas[2]);
 
         return playerInfo;
     }
@@ -150,23 +158,20 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[1] = "Value";
         rowData.Add(rowDataTemp);
 
-        //for (int x = 0; x < 1; x++)
-        //{
-        //    for (int y = 0; y < 1; y++)
-        //    {
-        //        rowDataTemp = new string[2];
-        //        int keyValue = x * 10 + y % 10;
-        //        string key = keyValue.ToString();
-        //        rowDataTemp[0] = key;
-        //        rowDataTemp[1] = mapData[y, x];
-        //        rowData.Add(rowDataTemp);
-        //    }
-        //}
-
         rowDataTemp = new string[2];
         string key = "Gold";
         rowDataTemp[0] = key;
         rowDataTemp[1] = info.Gold.ToString();
+        rowData.Add(rowDataTemp);
+
+        key = "WaveIndex";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = info.WaveIndex.ToString();
+        rowData.Add(rowDataTemp);
+
+        key = "Life";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = info.Life.ToString();
         rowData.Add(rowDataTemp);
 
         string[][] output = new string[rowData.Count][];

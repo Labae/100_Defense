@@ -757,7 +757,7 @@ Transform:
   m_GameObject: {fileID: 507910137}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0012476606, y: 0.0012476606, z: 0.0012476606}
+  m_LocalScale: {x: 0.0012492193, y: 0.0012492193, z: 0.0012492193}
   m_Children:
   - {fileID: 2038561996}
   - {fileID: 1236752800}
@@ -2100,7 +2100,8 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 12800000, guid: a2e55349b0ba4ea41b27039318696a91, type: 3}
   mFont: {fileID: 0}
-  mText: " \uC81C\uC791\uC790 : \uB77C\uBC30\n\n \uC774\uBA54\uC77C : rabae0985@gmail.com"
+  mText: " \uC81C\uC791\uC790 : \uB77C\uBC30\n\n \uC774\uBA54\uC77C : rabae0985@gmail.com\n\n
+    \uC81C\uC791\uC790 : \uCD5C\uD604\uC6B0\n\n \uC774\uBA54\uC77C : a@aa.com"
   mFontSize: 50
   mFontStyle: 1
   mAlignment: 1

@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class UISplash : MonoBehaviour
 {
-    public UILabel mLabel;
+    public GameObject TextSet;
     public void SetTextColorWhite()
     {
-        mLabel.color = Color.white;
+        UILabel[] uILabels = TextSet.GetComponentsInChildren<UILabel>();
+        for (int i = 0; i < uILabels.Length; i++)
+        {
+            uILabels[i].color = Color.white;
+        }
     }
 }
