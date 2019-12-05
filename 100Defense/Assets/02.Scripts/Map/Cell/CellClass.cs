@@ -209,11 +209,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
     public void BuildTower(TowerType type)
     {
-        if (mTower != null)
-        {
-            return;
-        }
-        else
+        if (mTower == null)
         {
             mTower = CreateTower(GetTowerName(type));
             if (!mTower.Build(this, type))

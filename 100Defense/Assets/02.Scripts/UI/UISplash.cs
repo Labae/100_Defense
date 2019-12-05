@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UISplash : MonoBehaviour
 {
-    public GameObject TextSet;
+    [SerializeField] private GameObject TextSet;
     public void SetTextColorWhite()
     {
         UILabel[] uILabels = TextSet.GetComponentsInChildren<UILabel>();

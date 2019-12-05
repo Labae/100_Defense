@@ -236,7 +236,7 @@ Transform:
   m_GameObject: {fileID: 4030497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0012476606, y: 0.0012476606, z: 0.0012476606}
+  m_LocalScale: {x: 0.00125, y: 0.00125, z: 0.00125}
   m_Children:
   - {fileID: 1160140051}
   - {fileID: 429131654}
@@ -258,11 +258,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61030ab87795f644ac301861315ee33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingPanel: {fileID: 1202218948}
-  TouchGuard: {fileID: 547636226}
-  WaveLabel: {fileID: 1357541318}
-  CoinLabel: {fileID: 1590788691}
-  LifeSet: {fileID: 940008796}
+  mSettingPanel: {fileID: 1202218948}
+  mTouchGuard: {fileID: 547636226}
+  mWaveLabel: {fileID: 1357541318}
+  mCoinLabel: {fileID: 1590788691}
+  mLifeSet: {fileID: 940008796}
 --- !u!1 &16521835
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,7 +670,7 @@ GameObject:
   - component: {fileID: 480211247}
   - component: {fileID: 480211248}
   m_Layer: 5
-  m_Name: Set Gold
+  m_Name: Set Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

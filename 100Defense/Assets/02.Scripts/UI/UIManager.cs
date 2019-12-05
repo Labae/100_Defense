@@ -5,11 +5,11 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject SettingPanel;
-    public UIPanel TouchGuard;
-    public WaveLabel WaveLabel;
-    public CoinLabel CoinLabel;
-    public LifeManager LifeSet;
+    [SerializeField] private GameObject mSettingPanel;
+    [SerializeField] private UIPanel mTouchGuard;
+    [SerializeField] private WaveLabel mWaveLabel;
+    [SerializeField] private CoinLabel mCoinLabel;
+    [SerializeField] private LifeManager mLifeSet;
     private WaveManager mWaveManager;
 
     private PlayerInformation mPlayerInfo;
@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
         }
 
         mPlayerInfo = GameManager.Instance.GetPlayerInfo();
-        mPlayerInfo.AddObserver(CoinLabel);
+        mPlayerInfo.AddObserver(mCoinLabel);
 
         mWaveManager = GameManager.Instance.GetWaveManager();
         if(!mWaveManager)
@@ -41,26 +41,26 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
-        mPlayerInfo.AddObserver(WaveLabel);
-        mPlayerInfo.AddObserver(LifeSet);
+        mPlayerInfo.AddObserver(mWaveLabel);
+        mPlayerInfo.AddObserver(mLifeSet);
 
-        TouchGuard.gameObject.SetActive(false);
+        mTouchGuard.gameObject.SetActive(false);
 
         return true;
     }
 
     public void OpenSettingPanel()
     {
-        TouchGuard.gameObject.SetActive(true);
-        SettingPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
-        TouchGuard.depth = SettingPanel.GetComponent<UIPanel>().depth;
+        mTouchGuard.gameObject.SetActive(true);
+        mSettingPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
+        mTouchGuard.depth = mSettingPanel.GetComponent<UIPanel>().depth;
     }
 
     public void CloseSettingPanel()
     {
-        TouchGuard.gameObject.SetActive(false);
-        SettingPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
-        TouchGuard.depth = 0;
+        mTouchGuard.gameObject.SetActive(false);
+        mSettingPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
+        mTouchGuard.depth = 0;
     }
 
     public void WaveStart()
