@@ -7,7 +7,6 @@ public class WaveManager : MonoBehaviour
     private MapManager mMap;
     private Wave mWaveData;
     private WaitForSeconds mWFSNextEnemySpawnTime;
-    private bool mIsWaveEnd;
     private bool mIsWaveStart;
     private bool mIsWaving;
 
@@ -21,7 +20,6 @@ public class WaveManager : MonoBehaviour
         }
 
         mMap = map;
-        mIsWaveEnd = false;
         mWFSNextEnemySpawnTime = new WaitForSeconds(1.0f);
 
         return true;
@@ -75,14 +73,14 @@ public class WaveManager : MonoBehaviour
 
     public bool GetIsWaving()
     {
-        mIsWaveEnd = mMap.GetmEnemies().Count > 0 ? false : true;
+        bool isWaveEnd = mMap.GetmEnemies().Count > 0 ? false : true;
 
-        if(!mIsWaveStart && mIsWaveEnd)
+        if(!mIsWaveStart && isWaveEnd)
         {
             mIsWaving = false;
         }
 
-        if(mIsWaveStart && !mIsWaveEnd)
+        if(mIsWaveStart && !isWaveEnd)
         {
             mIsWaving = true;
         }

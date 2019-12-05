@@ -88,7 +88,6 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        //transform.position = transform.position + Vector3.forward * -0.5f;
         mStartCell = mMap[0, 0];
         mGoalCell = mMap[mMapSizeX - 1, mMapSizeY - 1];
 

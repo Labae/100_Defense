@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e9a5a355f3c8c44eb0f23efc5dac309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapSize: {x: 7, y: 7}
+  mMapSize: {x: 7, y: 7}
 --- !u!4 &481475159
 Transform:
   m_ObjectHideFlags: 0

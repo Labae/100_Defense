@@ -25,7 +25,6 @@ public class CSVManager : MonoBehaviour
             string data_string = strReader.ReadLine();
             if(data_string == null)
             {
-                endOfFile = true;
                 break;
             }
 
@@ -47,7 +46,6 @@ public class CSVManager : MonoBehaviour
 
             if(y >= mMapY)
             {
-                endOfFile = true;
                 break;
             }
         }
@@ -117,7 +115,6 @@ public class CSVManager : MonoBehaviour
             string data_string = strReader.ReadLine();
             if (data_string == null)
             {
-                endOfFile = true;
                 break;
             }
 
@@ -129,7 +126,7 @@ public class CSVManager : MonoBehaviour
 
             var data_value = data_string.Split(',');
 
-            datas[y] = data_value[1].ToString();
+            datas[y] = data_value[1];
             x++;
             if (x >= 1)
             {
@@ -139,7 +136,7 @@ public class CSVManager : MonoBehaviour
 
             if(y > 2)
             {
-                endOfFile = true;
+                break;
             }
         }
 

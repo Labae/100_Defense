@@ -84,7 +84,6 @@ public class InputManager : MonoBehaviour
 
         if (UICamera.hoveredObject != null)
         {
-            Debug.Log(UICamera.hoveredObject.name);
             if (UICamera.hoveredObject.name != "UI Root")
             {
                 return;
