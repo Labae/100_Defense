@@ -82,9 +82,13 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        if (UICamera.hoveredObject != null && UICamera.hoveredObject.name != "UI Root")
+        if (UICamera.hoveredObject != null)
         {
-            return;
+            Debug.Log(UICamera.hoveredObject.name);
+            if (UICamera.hoveredObject.name != "UI Root")
+            {
+                return;
+            }
         }
 
         Ray ray = mMainCamera.ScreenPointToRay(Input.mousePosition);

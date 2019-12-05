@@ -44,17 +44,21 @@ public class UIManager : MonoBehaviour
         mPlayerInfo.AddObserver(WaveLabel);
         mPlayerInfo.AddObserver(LifeSet);
 
+        TouchGuard.gameObject.SetActive(false);
+
         return true;
     }
 
     public void OpenSettingPanel()
     {
+        TouchGuard.gameObject.SetActive(true);
         SettingPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
         TouchGuard.depth = SettingPanel.GetComponent<UIPanel>().depth;
     }
 
     public void CloseSettingPanel()
     {
+        TouchGuard.gameObject.SetActive(false);
         SettingPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
         TouchGuard.depth = 0;
     }

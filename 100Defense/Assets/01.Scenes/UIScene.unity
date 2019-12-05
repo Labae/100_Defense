@@ -1849,7 +1849,7 @@ GameObject:
   - component: {fileID: 1338767101}
   - component: {fileID: 1338767100}
   m_Layer: 5
-  m_Name: Background
+  m_Name: TouchGuard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1924,7 +1924,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0, g: 0, b: 0, a: 0.11764706}
+  mColor: {r: 0, g: 0, b: 0, a: 0.003921569}
   mPivot: 4
   mWidth: 900
   mHeight: 1600
@@ -1963,7 +1963,7 @@ GameObject:
   - component: {fileID: 1357541317}
   - component: {fileID: 1357541318}
   m_Layer: 5
-  m_Name: Description
+  m_Name: WaveLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2224,7 +2224,7 @@ GameObject:
   - component: {fileID: 1590788690}
   - component: {fileID: 1590788691}
   m_Layer: 5
-  m_Name: Label
+  m_Name: CoinLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
