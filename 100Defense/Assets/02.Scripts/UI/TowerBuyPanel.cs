@@ -11,17 +11,16 @@ public class TowerBuyPanel : MonoBehaviour
     [SerializeField] private UIButton mBuyButton;
 
     private TowerData mTowerData;
-    private GameObject mModel;
 
     public void SetData(TowerData towerData)
     {
         mTowerData = towerData;
-        mModel = Resources.Load("01.Prefabs/UI/3D_Model/" + mTowerData.Modelname) as GameObject;
-        if (mModel == null)
+        GameObject model = Resources.Load("01.Prefabs/UI/3D_Model/" + mTowerData.Modelname) as GameObject;
+        if (model == null)
         {
             return;
         }
-        GameObject uiSetTower = Instantiate(mModel, mTowerObjectParent);
+        GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
         uiSetTower.transform.GetChild(0).localScale = uiSetTower.transform.GetChild(0).localScale * 250.0f;
         uiSetTower.GetComponent<UITowerRotation>().RotateTower();
 

@@ -160,7 +160,7 @@ public class CSVManager : MonoBehaviour
 
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
         {
-            if(i + 3 > dataLength)
+            if (i + 3 > dataLength)
             {
                 break;
             }
@@ -194,11 +194,12 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[1] = info.Life.ToString();
         rowData.Add(rowDataTemp);
 
-        Tower mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
         if (!mTowerData)
         {
+            mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
             Debug.Log("Tower data not load");
         }
+
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
         {
             key = mTowerData.dataArray[i].Modelname;
