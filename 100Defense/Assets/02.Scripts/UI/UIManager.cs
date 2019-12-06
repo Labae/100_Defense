@@ -215,15 +215,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void WaveStart()
     {
-        if(!mWaveManager)
+        if(mWaveManager)
         {
-            return;
-        }
-
-        if(!mWaveManager.WaveStart())
-        {
-            Debug.Log("Failed Wave to start");
-            return;
+            if (!mWaveManager.WaveStart())
+            {
+                Debug.Log("Failed Wave to start");
+            }
         }
     }
 

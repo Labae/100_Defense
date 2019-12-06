@@ -56,6 +56,7 @@ public class CSVManager : MonoBehaviour
             }
         }
 
+        strReader.Dispose();
         return retval;
     }
 
@@ -167,6 +168,7 @@ public class CSVManager : MonoBehaviour
             playerInfo.ContainTowerData.Add(mTowerData.dataArray[i], int.Parse(datas[i + 3]));
         }
 
+        strReader.Dispose();
         return playerInfo;
     }
 
