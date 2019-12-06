@@ -208,6 +208,7 @@ public class MapManager : MonoBehaviour
     public void Save()
     {
         mCSV.MapSave(mMapData);
+        mCSV.SavePlayerInfo(GameManager.Instance.GetPlayerInfo());
     }
     #endregion
 

@@ -22,7 +22,6 @@ public class TowerLabel : MonoBehaviour, IObserver
     public void OnNotify(IObservable ob)
     {
         PlayerInformation info = ob as PlayerInformation;
-
         if (info != null)
         {
             mLabel.text = info.ContainTowerData[mTowerData].ToString();

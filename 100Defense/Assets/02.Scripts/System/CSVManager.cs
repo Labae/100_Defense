@@ -184,11 +184,13 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[1] = info.Gold.ToString();
         rowData.Add(rowDataTemp);
 
+        rowDataTemp = new string[2];
         key = "WaveIndex";
         rowDataTemp[0] = key;
         rowDataTemp[1] = info.WaveIndex.ToString();
         rowData.Add(rowDataTemp);
 
+        rowDataTemp = new string[2];
         key = "Life";
         rowDataTemp[0] = key;
         rowDataTemp[1] = info.Life.ToString();
@@ -202,6 +204,7 @@ public class CSVManager : MonoBehaviour
 
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
         {
+            rowDataTemp = new string[2];
             key = mTowerData.dataArray[i].Modelname;
             rowDataTemp[0] = key;
             rowDataTemp[1] = info.ContainTowerData[mTowerData.dataArray[i]].ToString();

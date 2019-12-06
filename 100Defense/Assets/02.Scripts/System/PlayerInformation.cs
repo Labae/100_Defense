@@ -18,7 +18,7 @@ public class PlayerInformation : IObservable
         }
         set
         {
-            if(mGold != value)
+            if (mGold != value)
             {
                 mGold = value;
                 Notify();
@@ -91,7 +91,7 @@ public class PlayerInformation : IObservable
 
     public void RemoveObserver(IObserver ob)
     {
-        if(observers.Contains(ob))
+        if (observers.Contains(ob))
         {
             observers.Remove(ob);
         }
