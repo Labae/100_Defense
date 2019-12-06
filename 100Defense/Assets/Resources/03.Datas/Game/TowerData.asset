@@ -30,21 +30,21 @@ MonoBehaviour:
     range: 2
     attackspeed: 0
   - key: ID_TOWER03
-    modelname: Tower01
+    modelname: Tower03
     type: Attack
     price: 0
     damage: 0
     range: 0
     attackspeed: 0
   - key: ID_TOWER04
-    modelname: Tower01
+    modelname: Tower04
     type: Attack
     price: 0
     damage: 0
     range: 0
     attackspeed: 0
   - key: ID_TOWER05
-    modelname: Tower01
+    modelname: Tower05
     type: Attack
     price: 0
     damage: 0

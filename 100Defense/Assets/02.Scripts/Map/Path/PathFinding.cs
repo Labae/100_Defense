@@ -142,6 +142,12 @@ public class PathFinding : MonoBehaviour
 
     public List<Vector3> GetPath()
     {
+        if(mPath == null)
+        {
+            Debug.Log("Path is null");
+            return null;
+        }
+
         List<Vector3> path = new List<Vector3>();
         for (int i = 0; i < mPath.Length; i++)
         {

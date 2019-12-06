@@ -25,14 +25,19 @@ public class WaveManager : MonoBehaviour
         return true;
     }
 
-    public void WaveStart()
+    public bool WaveStart()
     {
+        if(!mMap.GetPathFinding().GetPathSuccess())
+        {
+            return false;
+        }
+
         if (!mIsWaveStart)
         {
             int waveIndex = GameManager.Instance.GetPlayerInfo().WaveIndex;
             if (waveIndex >= mWaveData.dataArray.Length)
             {
-                return;
+                return false;
             }
             mMap.SetSelectedCell(null);
 
@@ -54,11 +59,20 @@ public class WaveManager : MonoBehaviour
             }
 
             StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount));
+
+            return true;
         }
+
+        return false;
     }
 
     private IEnumerator CreateEnemyCoroutine(string enemyKey, List<Vector3> path, int waveNumber)
     {
+        if(path == null)
+        {
+            yield break;
+        }
+
         for (int i = 0; i < waveNumber; i++)
         {
             GameObject enemyObject = new GameObject();
