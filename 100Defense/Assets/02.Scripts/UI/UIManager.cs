@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
 
     private readonly List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
     private const float mOffsetX = 350.0f;
+    private float mPanelOffsetX;
 
     private void Start()
     {
@@ -30,10 +31,15 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if(mStoreScrollView.isDragging)
+        VisibleTowerUIRotation();
+    }
+
+    private void VisibleTowerUIRotation()
+    {
+        if(mPanelOffsetX != mUIStorePanel.clipOffset.x)
         {
-            float offsetX = mUIStorePanel.clipOffset.x;
-            int value = Mathf.RoundToInt(offsetX / mOffsetX) - 1;
+            mPanelOffsetX = mUIStorePanel.clipOffset.x;
+            int value = Mathf.RoundToInt(mPanelOffsetX / mOffsetX) - 1;
             for (int i = 0; i < uiTowerRotations.Count; i++)
             {
                 if (i >= value && i < value + 3)
