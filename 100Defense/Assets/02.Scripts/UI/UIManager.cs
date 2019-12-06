@@ -16,10 +16,8 @@ public class UIManager : MonoBehaviour
     private WaveManager mWaveManager;
 
     private PlayerInformation mPlayerInfo;
-    private Tower mTowerData;
-    private GameObject mTowerSet;
 
-    private List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
+    private readonly List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
     private const float mOffsetX = 350.0f;
 
     private void Start()
@@ -72,8 +70,8 @@ public class UIManager : MonoBehaviour
         mPlayerInfo.AddObserver(mWaveLabel);
         mPlayerInfo.AddObserver(mLifeSet);
 
-        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-        if (!mTowerData)
+        Tower towerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
+        if (!towerData)
         {
             Debug.Log("Tower data not load");
             return false;
@@ -81,7 +79,7 @@ public class UIManager : MonoBehaviour
 
 
         mStoreGrid.repositionNow = true;
-        for (int i = 0; i < mTowerData.dataArray.Length; i++)
+        for (int i = 0; i < towerData.dataArray.Length; i++)
         {
             GameObject setTower = Resources.Load("01.Prefabs/UI/Set Tower") as GameObject;
             if(setTower == null)
@@ -90,14 +88,14 @@ public class UIManager : MonoBehaviour
             }
             GameObject uiSetTower = Instantiate(setTower, mStoreGrid.transform);
 
-            string modelName = mTowerData.dataArray[i].Modelname;
-            mTowerSet = Resources.Load("01.Prefabs/UI/3D_Model/" + modelName) as GameObject;
-            if(mTowerSet == null)
+            string modelName = towerData.dataArray[i].Modelname;
+            GameObject towerSet = Resources.Load("01.Prefabs/UI/3D_Model/" + modelName) as GameObject;
+            if(towerSet == null)
             {
                 return false;
             }
 
-            GameObject tower = Instantiate(mTowerSet, uiSetTower.transform);
+            GameObject tower = Instantiate(towerSet, uiSetTower.transform);
             tower.transform.GetChild(0).localScale = tower.transform.GetChild(0).localScale * 250.0f;
             uiTowerRotations.Add(tower.GetComponent<UITowerRotation>());
         }

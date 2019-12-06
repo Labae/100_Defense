@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class UITowerRotation : MonoBehaviour
 {
-    private float mRotateSpeed = 50.0f;
-    private bool mIsRotate = false;
+    private readonly float mRotateSpeed = 50.0f;
+    private bool mIsRotate;
 
     public void RotateTower()
     {
