@@ -10,6 +10,8 @@ public class CSVManager : MonoBehaviour
     /// 맵의 크기.
     /// </summary>
     private int mMapX, mMapY;
+    private Tower mTowerData;
+
     #region Load Save Map
     public string[,] LoadMap(int sizeX, int sizeY)
     {
@@ -24,15 +26,15 @@ public class CSVManager : MonoBehaviour
         int y = 0;
         bool first = true;
 
-        while(!endOfFile)
+        while (!endOfFile)
         {
             string data_string = strReader.ReadLine();
-            if(data_string == null)
+            if (data_string == null)
             {
                 break;
             }
 
-            if(first)
+            if (first)
             {
                 first = false;
                 continue;
@@ -42,13 +44,13 @@ public class CSVManager : MonoBehaviour
             retval[x, y] = data_value[1].ToString();
 
             x++;
-            if(x >= mMapX)
+            if (x >= mMapX)
             {
                 y++;
                 x = 0;
             }
 
-            if(y >= mMapY)
+            if (y >= mMapY)
             {
                 break;
             }
@@ -111,8 +113,14 @@ public class CSVManager : MonoBehaviour
         bool first = true;
 
         PlayerInformation playerInfo = new PlayerInformation();
+        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
+        if (!mTowerData)
+        {
+            Debug.Log("Tower data not load");
+        }
 
-        string[] datas = new string[3];
+        int dataLength = mTowerData.dataArray.Length + 3;
+        string[] datas = new string[dataLength];
 
         int x = 0;
         int y = 0;
@@ -140,7 +148,7 @@ public class CSVManager : MonoBehaviour
                 x = 0;
             }
 
-            if(y > 2)
+            if (y >= dataLength)
             {
                 break;
             }
@@ -149,6 +157,15 @@ public class CSVManager : MonoBehaviour
         playerInfo.Gold = int.Parse(datas[0]);
         playerInfo.WaveIndex = int.Parse(datas[1]);
         playerInfo.Life = int.Parse(datas[2]);
+
+        for (int i = 0; i < mTowerData.dataArray.Length; i++)
+        {
+            if(i + 3 > dataLength)
+            {
+                break;
+            }
+            playerInfo.ContainTowerData.Add(mTowerData.dataArray[i], int.Parse(datas[i + 3]));
+        }
 
         return playerInfo;
     }
@@ -176,6 +193,19 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[0] = key;
         rowDataTemp[1] = info.Life.ToString();
         rowData.Add(rowDataTemp);
+
+        Tower mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
+        if (!mTowerData)
+        {
+            Debug.Log("Tower data not load");
+        }
+        for (int i = 0; i < mTowerData.dataArray.Length; i++)
+        {
+            key = mTowerData.dataArray[i].Modelname;
+            rowDataTemp[0] = key;
+            rowDataTemp[1] = info.ContainTowerData[mTowerData.dataArray[i]].ToString();
+            rowData.Add(rowDataTemp);
+        }
 
         string[][] output = new string[rowData.Count][];
 
@@ -213,5 +243,10 @@ public class CSVManager : MonoBehaviour
 #else
         return Application.dataPath +"/"+"path;
 #endif
+    }
+
+    public Tower GetTowerData()
+    {
+        return mTowerData;
     }
 }

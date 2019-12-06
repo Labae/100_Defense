@@ -6,6 +6,7 @@ public class WaveManager : MonoBehaviour
 {
     private MapManager mMap;
     private Wave mWaveData;
+    private Enemy mEnemyData;
     private WaitForSeconds mWFSNextEnemySpawnTime;
     private bool mIsWaveStart;
     private bool mIsWaving;
@@ -16,6 +17,13 @@ public class WaveManager : MonoBehaviour
         if (!mWaveData)
         {
             Debug.Log("Failed load wave data");
+            return false;
+        }
+
+        mEnemyData = Resources.Load("03.Datas/Game/EnemyData") as Enemy;
+        if (!mEnemyData)
+        {
+            Debug.Log("Enemy data not load");
             return false;
         }
 
@@ -58,7 +66,7 @@ public class WaveManager : MonoBehaviour
                 canon.SetAttackTimerZero();
             }
 
-            StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount));
+            StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveCount]));
 
             return true;
         }
@@ -66,7 +74,7 @@ public class WaveManager : MonoBehaviour
         return false;
     }
 
-    private IEnumerator CreateEnemyCoroutine(string enemyKey, List<Vector3> path, int waveNumber)
+    private IEnumerator CreateEnemyCoroutine(string enemyKey, List<Vector3> path, int waveNumber, EnemyData enemyData)
     {
         if(path == null)
         {
@@ -78,7 +86,7 @@ public class WaveManager : MonoBehaviour
             GameObject enemyObject = new GameObject();
             EnemyClass enemy = enemyObject.AddComponent<EnemyClass>();
 
-            enemy.Initialize(mMap, enemyKey, path);
+            enemy.Initialize(mMap, enemyKey, path, enemyData);
 
             yield return mWFSNextEnemySpawnTime;
         }

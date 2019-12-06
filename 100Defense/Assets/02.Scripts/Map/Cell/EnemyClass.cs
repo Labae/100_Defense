@@ -11,33 +11,9 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
     public int Health { get; set; }
 
-    public bool Initialize(MapManager map, string enemyKey, List<Vector3> path)
+    public bool Initialize(MapManager map, string enemyKey, List<Vector3> path, EnemyData data)
     {
         mMap = map;
-        Enemy enemyData = Resources.Load("03.Datas/Game/EnemyData") as Enemy;
-        if (!enemyData)
-        {
-            Debug.Log("Enemy data not load");
-            return false;
-        }
-
-        int enemyIndex = -1;
-        for (int i = 0; i < enemyData.dataArray.Length; i++)
-        {
-            if(enemyKey == enemyData.dataArray[i].Key)
-            {
-                enemyIndex = i;
-                break;
-            }
-        }
-
-        if(enemyIndex == -1)
-        {
-            Debug.Log("Failed find enemy index");
-            return false;
-        }
-
-        EnemyData data = enemyData.dataArray[enemyIndex];
 
         transform.name = data.Name;
         mSpeed = data.Movespeed;
@@ -58,7 +34,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
         }
 
         MeshRenderer meshRenderer = mModel.GetComponent<MeshRenderer>();
-        Material mat = Resources.Load("02.Materials/02.Enemys/" + enemyData.dataArray[enemyIndex].Name) as Material;
+        Material mat = Resources.Load("02.Materials/02.Enemys/" + data.Name) as Material;
         if (!mat)
         {
             Debug.Log("Enemy Material not load");

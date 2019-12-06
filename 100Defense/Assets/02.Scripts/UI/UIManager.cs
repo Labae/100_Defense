@@ -34,6 +34,10 @@ public class UIManager : MonoBehaviour
     /// UI Store Panel
     /// </summary>
     [SerializeField] private UIPanel mUIStorePanel;
+    /// <summary>
+    /// Tower Buy Panel Class
+    /// </summary>
+    [SerializeField] private TowerBuyPanel mTowerBuyPanel;
     #endregion
 
     #region Private Value
@@ -105,13 +109,7 @@ public class UIManager : MonoBehaviour
         mPlayerInfo.AddObserver(mWaveLabel);
         mPlayerInfo.AddObserver(mLifeSet);
 
-        Tower towerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-        if (!towerData)
-        {
-            Debug.Log("Tower data not load");
-            return false;
-        }
-
+        Tower towerData = GameManager.Instance.GetMap().GetTowerData();
 
         mStoreGrid.repositionNow = true;
         for (int i = 0; i < towerData.dataArray.Length; i++)
@@ -122,6 +120,11 @@ public class UIManager : MonoBehaviour
                 return false;
             }
             GameObject uiSetTower = Instantiate(setTower, mStoreGrid.transform);
+
+            TowerLabel towerLabel = uiSetTower.GetComponentInChildren<TowerLabel>();
+            towerLabel.Initialize(towerData.dataArray[i]);
+
+            mPlayerInfo.AddObserver(towerLabel);
 
             string modelName = towerData.dataArray[i].Modelname;
             GameObject towerSet = Resources.Load("01.Prefabs/UI/3D_Model/" + modelName) as GameObject;
@@ -146,6 +149,15 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             uiTowerRotations[i].RotateTower();
+        }
+
+        UIButton[] buyButtons = mStoreGrid.GetComponentsInChildren<UIButton>();
+
+        for (int i = 0; i < buyButtons.Length; i++)
+        {
+            EventDelegate eventBtn = new EventDelegate(this, "OpenTowerBuyPanel");
+            eventBtn.parameters[0].value = towerData.dataArray[i];
+            buyButtons[i].onClick.Add(eventBtn);
         }
 
         mTouchGuard.gameObject.SetActive(false);
@@ -213,6 +225,21 @@ public class UIManager : MonoBehaviour
             Debug.Log("Failed Wave to start");
             return;
         }
+    }
+
+    public void OpenTowerBuyPanel(TowerData towerData)
+    {
+        mTouchGuard.gameObject.SetActive(true);
+        mTowerBuyPanel.SetData(towerData);
+        mTowerBuyPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
+        mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth;
+    }
+
+    public void CloseTowerBuyPanel()
+    {
+        mTouchGuard.gameObject.SetActive(false);
+        mTowerBuyPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
+        mTouchGuard.depth = 0;
     }
     #endregion
 }

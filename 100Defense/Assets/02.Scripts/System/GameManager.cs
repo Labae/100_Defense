@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Singleton
     public static GameManager instance; 
     public static GameManager Instance
     {
@@ -32,6 +33,8 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
+    #endregion
+
     private InputManager mInput;
     private GameObject mMapPrefab;
     private MapManager mMap;

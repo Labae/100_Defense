@@ -28,12 +28,7 @@ public class TowerClass : MonoBehaviour
         transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
 
-        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-        if (!mTowerData)
-        {
-            Debug.Log("Tower data not load");
-            return false;
-        }
+        mTowerData = cell.GetMap().GetTowerData();
 
         int towerIndex = -1;
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
@@ -124,12 +119,7 @@ public class TowerClass : MonoBehaviour
         transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
 
-        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-        if (!mTowerData)
-        {
-            Debug.Log("Tower data not load");
-            return false;
-        }
+        mTowerData = cell.GetMap().GetTowerData();
 
         int towerIndex = -1;
         mTowerType = type;

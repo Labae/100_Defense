@@ -8,6 +8,7 @@ public class PlayerInformation : IObservable
     private int mGold;
     private int mWaveIndex;
     private int mLife;
+    private Dictionary<TowerData, int> mContainTowerData = new Dictionary<TowerData, int>();
 
     public int Gold
     {
@@ -52,6 +53,22 @@ public class PlayerInformation : IObservable
             if (mLife != value)
             {
                 mLife = value;
+                Notify();
+            }
+        }
+    }
+
+    public Dictionary<TowerData, int> ContainTowerData
+    {
+        get
+        {
+            return mContainTowerData;
+        }
+        set
+        {
+            if (mContainTowerData != value)
+            {
+                mContainTowerData = value;
                 Notify();
             }
         }

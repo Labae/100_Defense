@@ -35,6 +35,8 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private List<EnemyClass> mEnemies;
 
+    private Tower mTowerData;
+
     /// <summary>
     /// 맵 사이즈
     /// </summary>
@@ -82,6 +84,8 @@ public class MapManager : MonoBehaviour
         }
 
         mCSV = csv;
+
+        mTowerData = mCSV.GetTowerData();
 
         mMapData = mCSV.LoadMap(mMapSizeX, mMapSizeY);
         if (mMapData == null)
@@ -334,6 +338,21 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
+    public Tower GetTowerData()
+    {
+        if(mTowerData == null)
+        {
+            mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
+            if (!mTowerData)
+            {
+                Debug.Log("Tower data not load");
+                return null;
+            }
+
+            return mTowerData;
+        }
+        return mTowerData;
+    }
     public int GetCellLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");

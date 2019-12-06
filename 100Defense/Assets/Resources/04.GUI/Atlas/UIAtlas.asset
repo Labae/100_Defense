@@ -19,10 +19,10 @@ MonoBehaviour:
     y: 275
     width: 60
     height: 68
-    borderLeft: 10
-    borderRight: 10
-    borderTop: 10
-    borderBottom: 10
+    borderLeft: 30
+    borderRight: 30
+    borderTop: 34
+    borderBottom: 34
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -45,10 +45,10 @@ MonoBehaviour:
     y: 180
     width: 60
     height: 68
-    borderLeft: 10
-    borderRight: 10
-    borderTop: 10
-    borderBottom: 10
+    borderLeft: 30
+    borderRight: 30
+    borderTop: 34
+    borderBottom: 34
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
