@@ -8,7 +8,6 @@ public class PathFinding : MonoBehaviour
     private MapManager mMap;
     private PathRequestManager mPathRequsetManager;
     private CellClass[] mPath;
-    private int mTargetIndex;
     private CellClass mStartCell;
     private CellClass mGoalCell;
 

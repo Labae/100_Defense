@@ -5,7 +5,6 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private MapManager mMap;
-    private WaveManager mWave;
     private Camera mMainCamera;
 
     private int mCellLayerMask;
@@ -48,19 +47,6 @@ public class InputManager : MonoBehaviour
         {
             mMap.Save();
         }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            if (!mWave)
-            {
-                mWave = GetComponent<WaveManager>();
-            }
-
-            if(!mWave.WaveStart())
-            {
-                return;
-            }
-        }
     }
 
     private void ClickCell()
@@ -70,7 +56,7 @@ public class InputManager : MonoBehaviour
             mMap = GetComponent<GameManager>().GetMap();
         }
 
-        if (!mMap.GetIsFinishedCellsAnim())
+        if (!mMap.GetIsFinishedApperanceMapAnim())
         {
             return;
         }

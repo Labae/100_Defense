@@ -72,12 +72,12 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (mInput)
+        if (mInput != null)
         {
             mInput.MouseEvent();
             mInput.KeyboardEvent();
         }
-        if (mMap)
+        if (mMap != null)
         {
             mMap.TowerUpdate();
         }

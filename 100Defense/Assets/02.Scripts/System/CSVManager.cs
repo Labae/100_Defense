@@ -6,7 +6,11 @@ using System.Text;
 
 public class CSVManager : MonoBehaviour
 {
+    /// <summary>
+    /// 맵의 크기.
+    /// </summary>
     private int mMapX, mMapY;
+    #region Load Save Map
     public string[,] LoadMap(int sizeX, int sizeY)
     {
         mMapX = sizeX;
@@ -97,7 +101,9 @@ public class CSVManager : MonoBehaviour
         outStream.WriteLine(sb);
         outStream.Close();
     }
+    #endregion
 
+    #region Load Save PlayerInfo
     public PlayerInformation LoadPlayerInfo()
     {
         StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/Game/PlayerInformation.csv"));
@@ -194,6 +200,7 @@ public class CSVManager : MonoBehaviour
         outStream.WriteLine(sb);
         outStream.Close();
     }
+    #endregion
 
     private string getPath(string path)
     {

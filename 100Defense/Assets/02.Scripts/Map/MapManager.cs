@@ -4,28 +4,72 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
+    #region Private Value
+    /// <summary>
+    /// CellClass로 만든 맵.
+    /// </summary>
     private CellClass[,] mMap;
+    /// <summary>
+    /// Read Csv Map Data
+    /// </summary>
     private string[,] mMapData;
+    /// <summary>
+    /// 선택된 Cell
+    /// </summary>
     private CellClass mSelectedCell;
+    /// <summary>
+    /// 시작 Cell
+    /// </summary>
     private CellClass mStartCell;
+    /// <summary>
+    /// 골인 지점 Cell
+    /// </summary>
     private CellClass mGoalCell;
 
+    /// <summary>
+    /// 현재 맵에 있는 타워 List
+    /// </summary>
     private List<TowerClass> mTowers;
+    /// <summary>
+    /// 현재 맵에 있는 적 List
+    /// </summary>
     private List<EnemyClass> mEnemies;
 
+    /// <summary>
+    /// 맵 사이즈
+    /// </summary>
     private int mMapSizeX;
     private int mMapSizeY;
 
+    /// <summary>
+    /// Cell 출현 애니메이션 대기 시간.
+    /// </summary>
     private WaitForSeconds mWFSCellApperanceSquareAnimTime;
+    /// <summary>
+    /// Cell Start Goal 애니메이션 시작 시간.
+    /// </summary>
     private WaitForSeconds mWFSCellStartGoalAnimTime;
-    private int mLayerMask;
-    private bool mIsFinishedCellAnim;
+    /// <summary>
+    /// Cell의 애니메이션이 끝났는지 확인.
+    /// </summary>
+    private bool mIsFinishedApperanceMapAnim;
 
+    /// <summary>
+    /// Path Finding Class
+    /// </summary>
     private PathFinding mPathFind;
+    /// <summary>
+    /// Csv Class
+    /// </summary>
     private CSVManager mCSV;
 
-    private bool mCanClick = false;
+    /// <summary>
+    /// Cell을 클릭할 수 있는지.
+    /// </summary>
+    private bool mCanClick;
+    #endregion
 
+    #region Method
     public bool Initialize(CSVManager csv, Vector2 mapSize)
     {
         mMapSizeX = (int)mapSize.x;
@@ -59,6 +103,7 @@ public class MapManager : MonoBehaviour
         float offsetXY = cell.transform.localScale.x * 0.1f;
         int index = mMapSizeX / 2;
 
+        // Make Map
         for (int y = 0; y < mMapSizeY; y++)
         {
             GameObject line = new GameObject("Line" + y.ToString());
@@ -88,6 +133,7 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        // Set Start, End Cell
         mStartCell = mMap[0, 0];
         mGoalCell = mMap[mMapSizeX - 1, mMapSizeY - 1];
 
@@ -109,6 +155,57 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
+    #region Tower Function
+    public void AddTower(TowerClass tower)
+    {
+        mTowers.Add(tower);
+    }
+
+    public void RemoveTower(TowerClass tower)
+    {
+        mTowers.Remove(tower);
+    }
+
+    public List<TowerClass> GetTowers()
+    {
+        return mTowers;
+    }
+
+    public void TowerUpdate()
+    {
+        for (int i = 0; i < mTowers.Count; i++)
+        {
+            mTowers[i].Loop(this);
+        }
+    }
+
+    #endregion
+
+    #region Enemy Function
+
+    public void AddEnemy(EnemyClass enemy)
+    {
+        mEnemies.Add(enemy);
+    }
+
+    public void RemoveEnemy(EnemyClass enemy)
+    {
+        mEnemies.Remove(enemy);
+    }
+
+    public List<EnemyClass> GetmEnemies()
+    {
+        return mEnemies;
+    }
+
+
+    #endregion
+
+    public void Save()
+    {
+        mCSV.MapSave(mMapData);
+    }
+    #endregion
 
     #region Coroutine
     public IEnumerator MapAnimCoroutine()
@@ -191,7 +288,7 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        mIsFinishedCellAnim = true;
+        mIsFinishedApperanceMapAnim = true;
     }
 
     private IEnumerator CellStartGoalAnimationCoroutine()
@@ -203,6 +300,7 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
+    #region Get Set SelectedCell
     public void SetSelectedCell(CellClass cell)
     {
         if (mSelectedCell != null)
@@ -217,6 +315,7 @@ public class MapManager : MonoBehaviour
     {
         return mSelectedCell;
     }
+    #endregion
 
     #region Get Map Size
     public int GetMapSizeX()
@@ -254,12 +353,12 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
-    public bool GetIsFinishedCellsAnim()
+    public bool GetIsFinishedApperanceMapAnim()
     {
-        return mIsFinishedCellAnim;
+        return mIsFinishedApperanceMapAnim;
     }
 
-    #region Path Find Function
+    #region Get PathFinding
     public PathFinding GetPathFinding()
     {
         return mPathFind;
@@ -323,58 +422,6 @@ public class MapManager : MonoBehaviour
     {
         return mMapData;
     }
-
-    #endregion
-
-    public void Save()
-    {
-        mCSV.MapSave(mMapData);
-    }
-
-
-    #region Tower Function
-    public void AddTower(TowerClass tower)
-    {
-        mTowers.Add(tower);
-    }
-
-    public void RemoveTower(TowerClass tower)
-    {
-        mTowers.Remove(tower);
-    }
-
-    public List<TowerClass> GetTowers()
-    {
-        return mTowers;
-    }
-
-    public void TowerUpdate()
-    {
-        for (int i = 0; i < mTowers.Count; i++)
-        {
-            mTowers[i].Loop(this);
-        }
-    }
-
-    #endregion
-
-    #region Enemy Function
-
-    public void AddEnemy(EnemyClass enemy)
-    {
-        mEnemies.Add(enemy);
-    }
-
-    public void RemoveEnemy(EnemyClass enemy)
-    {
-        mEnemies.Remove(enemy);
-    }
-
-    public List<EnemyClass> GetmEnemies()
-    {
-        return mEnemies;
-    }
-
 
     #endregion
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 {
+    /// <summary>
+    /// Cell의 상태들.
+    /// </summary>
     public enum CellState
     {
         EDefault,
@@ -14,26 +17,86 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         End
     };
 
-    private bool mApperance;
-
-    private MapManager mMap;
+    #region SerializeFiled Value
+    /// <summary>
+    /// 현재 Cell의 상태.
+    /// </summary>
     [SerializeField]
     private CellState mState;
-    private Material[] mMaterials;
-    private MeshRenderer mMeshRenderer;
-    private TowerClass mTower;
-    private CellState mPrevState;
+    #endregion
 
+    #region Private Value
+    /// <summary>
+    /// Cell이 소환되었는지.
+    /// </summary>
+    private bool mApperance;
+    /// <summary>
+    /// Map Manager
+    /// </summary>
+    private MapManager mMap;
+    /// <summary>
+    /// Cell의 상태에 따른 Material들.
+    /// </summary>
+    private Material[] mMaterials;
+    /// <summary>
+    /// Cell의 MeshRenderer.
+    /// </summary>
+    private MeshRenderer mMeshRenderer;
+    /// <summary>
+    /// Cell이 가지고 있는 TowerClass. 없으면 null
+    /// </summary>
+    private TowerClass mTower;
+    /// <summary>
+    /// 이전 상태의 Cell 상태.
+    /// </summary>
+    private CellState mPrevState;
+    /// <summary>
+    /// Map에서 Cell Index값.
+    /// </summary>
     private int mCellIndexX;
     private int mCellIndexY;
-
+    /// <summary>
+    /// AStar Algorithm Value
+    /// </summary>
     private bool mWalkable;
     private CellClass mParent;
     private int mGCost;
     private int mHCost;
     private int mHeapIndex;
 
-    public bool Initialize(int x, int y, string data)
+    #endregion
+
+    #region Property
+    public int HeapIndex
+    {
+        get
+        {
+            return mHeapIndex;
+        }
+        set
+        {
+            mHeapIndex = value;
+        }
+    }
+
+    public int FCost
+    {
+        get
+        {
+            return mGCost + mHCost;
+        }
+    }
+    #endregion
+
+    #region Method
+    /// <summary>
+    /// Cell Class Initialize
+    /// </summary>
+    /// <param name="x"> cell index x</param>
+    /// <param name="y"> cell index y</param>
+    /// <param name="towerData">tower data</param>
+    /// <returns></returns>
+    public bool Initialize(int x, int y, string towerData)
     {
         mCellIndexX = x;
         mCellIndexY = y;
@@ -107,14 +170,14 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         mMeshRenderer.material = mMaterials[(int)mState];
 
-        if (data == "0")
+        if (towerData == "0")
         {
             mTower = null;
         }
         else
         {
-            mTower = CreateTower(data);
-            if (!mTower.Initialize(this, data))
+            mTower = CreateTower(towerData);
+            if (!mTower.Initialize(this, towerData))
             {
                 Debug.Log("Failed Tower Initialize");
                 return false;
@@ -124,7 +187,9 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
         return true;
     }
-
+    /// <summary>
+    /// 출현 애니메이션.
+    /// </summary>
     public void ApperanceAnimation()
     {
         if (!mApperance)
@@ -134,12 +199,16 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             StartCoroutine(ApperanceAnimationCoroutine());
         }
     }
-
+    /// <summary>
+    /// Cell 애니메이션.
+    /// </summary>
     public void Anim()
     {
         StartCoroutine(ApperanceAnimationCoroutine());
     }
-
+    /// <summary>
+    /// Cell Click Event Method
+    /// </summary>
     public void Click()
     {
         if (mState == CellState.EStart || mState == CellState.EGoal)
@@ -167,7 +236,9 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         StopCoroutine(ApperanceAnimationCoroutine());
         StartCoroutine(ApperanceAnimationCoroutine());
     }
-
+    /// <summary>
+    /// 선택된 Cell상태를 해제함.
+    /// </summary>
     public void ReleaseSelected()
     {
         if (mState == CellState.ESelected)
@@ -177,26 +248,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
     }
 
-    public int GetCellX()
-    {
-        return mCellIndexX;
-    }
-
-    public int GetCellY()
-    {
-        return mCellIndexY;
-    }
-
-    public TowerClass GetTower()
-    {
-        return mTower;
-    }
-
-    public MapManager GetMap()
-    {
-        return mMap;
-    }
-
+    /// <summary>
+    /// Create Tower Class
+    /// </summary>
+    /// <param name="towerName"></param>
+    /// <returns></returns>
     private TowerClass CreateTower(string towerName)
     {
         GameObject towerObject = new GameObject(towerName);
@@ -207,6 +263,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return tower;
     }
 
+    /// <summary>
+    /// Build Tower
+    /// </summary>
+    /// <param name="type"></param>
     public void BuildTower(TowerType type)
     {
         if (mTower == null)
@@ -232,6 +292,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
     }
 
+    /// <summary>
+    /// Destory Tower
+    /// </summary>
+    /// <returns></returns>
     public bool DestoryTower()
     {
         if (mTower == null)
@@ -247,6 +311,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
     }
 
+    /// <summary>
+    ///  Coroutine 출현 애니메이션
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ApperanceAnimationCoroutine()
     {
         float angle = 180.0f;
@@ -264,26 +332,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
     }
 
-    public int HeapIndex
-    {
-        get
-        {
-            return mHeapIndex;
-        }
-        set
-        {
-            mHeapIndex = value;
-        }
-    }
-
-    public int FCost
-    {
-        get
-        {
-            return mGCost + mHCost;
-        }
-    }
-
     public int CompareTo(CellClass cellToCompare)
     {
         int compare = FCost.CompareTo(cellToCompare.FCost);
@@ -293,6 +341,41 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
 
         return -compare;
+    }
+
+    #endregion
+
+    #region Get Set
+    /// <summary>
+    /// Get Cell index X
+    /// </summary>
+    public int GetCellX()
+    {
+        return mCellIndexX;
+    }
+
+    /// <summary>
+    /// Get Cell index y
+    /// </summary>
+    public int GetCellY()
+    {
+        return mCellIndexY;
+    }
+
+    /// <summary>
+    /// Get Tower Class
+    /// </summary>
+    public TowerClass GetTower()
+    {
+        return mTower;
+    }
+
+    /// <summary>
+    /// Get Map Class
+    /// </summary>
+    public MapManager GetMap()
+    {
+        return mMap;
     }
 
     public bool GetWalkable()
@@ -353,8 +436,15 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
                 return "ID_TOWER01";
             case TowerType.ID_TOWER02:
                 return "ID_TOWER02";
+            case TowerType.ID_TOWER03:
+                return "ID_TOWER03";
+            case TowerType.ID_TOWER04:
+                return "ID_TOWER04";
+            case TowerType.ID_TOWER05:
+                return "ID_TOWER05";
             default:
                 return string.Empty;
         }
     }
+    #endregion
 }

@@ -5,22 +5,65 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
+    #region SerializeField Vale
+    /// <summary>
+    /// Setting Panel GameObject
+    /// </summary>
     [SerializeField] private GameObject mSettingPanel;
+    /// <summary>
+    /// TouchGuard Panel
+    /// </summary>
     [SerializeField] private UIPanel mTouchGuard;
+    /// <summary>
+    /// Wave Label
+    /// </summary>
     [SerializeField] private WaveLabel mWaveLabel;
+    /// <summary>
+    /// Coin Label
+    /// </summary>
     [SerializeField] private CoinLabel mCoinLabel;
+    /// <summary>
+    /// Life Manager
+    /// </summary>
     [SerializeField] private LifeManager mLifeSet;
+    /// <summary>
+    /// Store Grid
+    /// </summary>
     [SerializeField] private UIGrid mStoreGrid;
+    /// <summary>
+    /// UI Store Panel
+    /// </summary>
     [SerializeField] private UIPanel mUIStorePanel;
+    #endregion
+
+    #region Private Value
+    /// <summary>
+    /// Store ScrollView
+    /// </summary>
     private UIScrollView mStoreScrollView;
+    /// <summary>
+    /// Wave Manager
+    /// </summary>
     private WaveManager mWaveManager;
-
+    /// <summary>
+    /// Player Information
+    /// </summary>
     private PlayerInformation mPlayerInfo;
-
+    /// <summary>
+    /// 회전하는 3d 타워 오브젝트들.
+    /// </summary>
     private readonly List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
+    /// <summary>
+    /// 이 값은 상점에서 3개의 타워 UI만 회전하게 하기 위한 값.
+    /// </summary>
     private const float mOffsetX = 350.0f;
+    /// <summary>
+    /// Store Panel Offset X 값.
+    /// </summary>
     private float mPanelOffsetX;
+    #endregion
 
+    #region Unity Function
     private void Start()
     {
         if(!Initialize())
@@ -33,27 +76,13 @@ public class UIManager : MonoBehaviour
     {
         VisibleTowerUIRotation();
     }
+    #endregion
 
-    private void VisibleTowerUIRotation()
-    {
-        if(mPanelOffsetX != mUIStorePanel.clipOffset.x)
-        {
-            mPanelOffsetX = mUIStorePanel.clipOffset.x;
-            int value = Mathf.RoundToInt(mPanelOffsetX / mOffsetX) - 1;
-            for (int i = 0; i < uiTowerRotations.Count; i++)
-            {
-                if (i >= value && i < value + 3)
-                {
-                    uiTowerRotations[i].RotateTower();
-                }
-                else
-                {
-                    uiTowerRotations[i].StopRotateTower();
-                }
-            }
-        }
-    }
-
+    #region Method
+    /// <summary>
+    /// UI manager 초기화 함수.
+    /// </summary>
+    /// <returns></returns>
     private bool Initialize()
     {
         mPlayerInfo = GameManager.Instance.GetPlayerInfo();
@@ -124,6 +153,34 @@ public class UIManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 현재 보이는 타워 UI만 회전하게 만드는 함수.
+    /// </summary>
+    private void VisibleTowerUIRotation()
+    {
+        if (mPanelOffsetX != mUIStorePanel.clipOffset.x)
+        {
+            mPanelOffsetX = mUIStorePanel.clipOffset.x;
+            int value = Mathf.RoundToInt(mPanelOffsetX / mOffsetX) - 1;
+            for (int i = 0; i < uiTowerRotations.Count; i++)
+            {
+                if (i >= value && i < value + 3)
+                {
+                    uiTowerRotations[i].RotateTower();
+                }
+                else
+                {
+                    uiTowerRotations[i].StopRotateTower();
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Button Event Method
+    /// <summary>
+    /// Setting Panel 열기.
+    /// </summary>
     public void OpenSettingPanel()
     {
         mTouchGuard.gameObject.SetActive(true);
@@ -131,6 +188,9 @@ public class UIManager : MonoBehaviour
         mTouchGuard.depth = mSettingPanel.GetComponent<UIPanel>().depth;
     }
 
+    /// <summary>
+    /// Setting Panel 닫기.
+    /// </summary>
     public void CloseSettingPanel()
     {
         mTouchGuard.gameObject.SetActive(false);
@@ -138,6 +198,9 @@ public class UIManager : MonoBehaviour
         mTouchGuard.depth = 0;
     }
 
+    /// <summary>
+    /// Wave Start 버튼.
+    /// </summary>
     public void WaveStart()
     {
         if(!mWaveManager)
@@ -151,4 +214,5 @@ public class UIManager : MonoBehaviour
             return;
         }
     }
+    #endregion
 }
