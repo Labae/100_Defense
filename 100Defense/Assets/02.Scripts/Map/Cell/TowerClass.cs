@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TowerClass : MonoBehaviour
 {
-    private TowerKey mTowerType;
     private Tower mTowerData;
     private Vector3 mOriginScale;
     private GameObject mModel;
@@ -26,7 +25,6 @@ public class TowerClass : MonoBehaviour
         {
             if (cellData == StringGetTowerKey(mTowerData.dataArray[i].TOWERKEY))
             {
-                mTowerType = (TowerKey)i;
                 towerIndex = i;
                 break;
             }
@@ -113,7 +111,6 @@ public class TowerClass : MonoBehaviour
         mTowerData = cell.GetMap().GetTowerData();
 
         int towerIndex = -1;
-        mTowerType = type;
         towerIndex = (int)type;
 
         if (towerIndex == -1)
