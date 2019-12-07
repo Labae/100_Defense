@@ -85,7 +85,7 @@ public class MapManager : MonoBehaviour
 
         mCSV = csv;
 
-        mTowerData = mCSV.GetTowerData();
+        mTowerData = GetTowerData();
 
         mMapData = mCSV.LoadMap(mMapSizeX, mMapSizeY);
         if (mMapData == null)

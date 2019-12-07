@@ -11,10 +11,13 @@ public class TowerBuyPanel : MonoBehaviour
     [SerializeField] private UIButton mBuyButton;
 
     private TowerData mTowerData;
+    private UIManager mUIManager;
 
-    public void SetData(TowerData towerData)
+    public void SetData(TowerData towerData, UIManager uiManager)
     {
         mTowerData = towerData;
+        mUIManager = uiManager;
+
         GameObject model = Resources.Load("01.Prefabs/UI/3D_Model/" + mTowerData.Modelname) as GameObject;
         if (model == null)
         {
@@ -28,7 +31,7 @@ public class TowerBuyPanel : MonoBehaviour
 
         StringBuilder sb = new StringBuilder();
         sb.Append("Type : ");
-        sb.AppendLine(mTowerData.Type);
+        sb.AppendLine(StringTowerType(mTowerData.TOWERTYPE));
         sb.Append("Range : ");
         sb.AppendLine(mTowerData.Range.ToString());
         sb.Append("Damage : ");
@@ -38,21 +41,27 @@ public class TowerBuyPanel : MonoBehaviour
         sb.Append("Price : ");
         sb.AppendLine(mTowerData.Price.ToString());
         mTowerDescription.text = sb.ToString();
+
         mBuyButton.onClick.Add(new EventDelegate(BuyButton));
     }
 
-    private void BuyButton()
+    public void BuyButton()
     {
-        if(GameManager.Instance.GetPlayerInfo().Gold < mTowerData.Price)
+        if (GameManager.Instance.GetPlayerInfo().Gold < mTowerData.Price)
         {
             return;
         }
 
-        GameManager.Instance.GetPlayerInfo().Gold -= mTowerData.Price;
-        if (GameManager.Instance.GetPlayerInfo().ContainTowerData.ContainsKey(mTowerData))
+        if(GameManager.Instance.GetMap().GetSelectedCell() == null)
         {
-            GameManager.Instance.GetPlayerInfo().ContainTowerData[mTowerData]++;
+            return;
         }
+
+
+        GameManager.Instance.GetMap().GetSelectedCell().BuildTower(mTowerData.TOWERKEY);
+        GameManager.Instance.GetMap().SetSelectedCell(null);
+        mUIManager.CloseTowerBuyPanel();
+        ExitButton();
     }
 
     public void ExitButton()
@@ -61,5 +70,18 @@ public class TowerBuyPanel : MonoBehaviour
         mTowerTitle.text = string.Empty;
         mTowerDescription.text = string.Empty;
         mBuyButton.onClick.Clear();
+    }
+
+    private string StringTowerType(TowerType towerType)
+    {
+        switch (towerType)
+        {
+            case TowerType.Attack:
+                return "Attack";
+            case TowerType.Buff:
+                return "Buff";
+            default:
+                return "NULL";
+        }
     }
 }

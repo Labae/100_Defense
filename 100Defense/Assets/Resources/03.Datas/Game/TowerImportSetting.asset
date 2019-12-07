@@ -18,16 +18,16 @@ MonoBehaviour:
   sheetName: MySpreadSheet
   workSheetName: Tower
   columnHeaderList:
-  - type: 1
-    name: Key
+  - type: 7
+    name: TowerKey
     isEnable: 0
     isArray: 0
   - type: 1
     name: ModelName
     isEnable: 0
     isArray: 0
-  - type: 1
-    name: Type
+  - type: 7
+    name: TowerType
     isEnable: 0
     isArray: 0
   - type: 3

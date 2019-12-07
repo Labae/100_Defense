@@ -9,16 +9,16 @@ using System.Collections;
 public class TowerData
 {
   [SerializeField]
-  string key;
-  public string Key { get {return key; } set { key = value;} }
+  TowerKey towerkey;
+  public TowerKey TOWERKEY { get {return towerkey; } set { towerkey = value;} }
   
   [SerializeField]
   string modelname;
   public string Modelname { get {return modelname; } set { modelname = value;} }
   
   [SerializeField]
-  string type;
-  public string Type { get {return type; } set { type = value;} }
+  TowerType towertype;
+  public TowerType TOWERTYPE { get {return towertype; } set { towertype = value;} }
   
   [SerializeField]
   int price;

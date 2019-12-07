@@ -66,7 +66,7 @@ public class WaveManager : MonoBehaviour
                 canon.SetAttackTimerZero();
             }
 
-            StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveCount]));
+            StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveIndex]));
 
             return true;
         }

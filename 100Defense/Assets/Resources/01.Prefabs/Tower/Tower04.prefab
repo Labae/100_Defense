@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3880391682804312938}
   - component: {fileID: 4290705861320654656}
   - component: {fileID: 6888900088414707245}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 8485935386970454076}
   - component: {fileID: 8485935386970454079}
   - component: {fileID: 8485935386970454078}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8485935387142162394}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Tower04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +200,8 @@ GameObject:
   - component: {fileID: 8485935388234071947}
   - component: {fileID: 8485935388234071942}
   - component: {fileID: 8485935388234071941}
-  m_Layer: 9
+  - component: {fileID: 60000802306816987}
+  m_Layer: 0
   m_Name: Canon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,3 +268,15 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &60000802306816987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485935388234071946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1d5dac981159047a42c773ec54c227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

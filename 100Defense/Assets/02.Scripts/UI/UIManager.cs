@@ -121,11 +121,6 @@ public class UIManager : MonoBehaviour
             }
             GameObject uiSetTower = Instantiate(setTower, mStoreGrid.transform);
 
-            TowerLabel towerLabel = uiSetTower.GetComponentInChildren<TowerLabel>();
-            towerLabel.Initialize(towerData.dataArray[i]);
-
-            mPlayerInfo.AddObserver(towerLabel);
-
             string modelName = towerData.dataArray[i].Modelname;
             GameObject towerSet = Resources.Load("01.Prefabs/UI/3D_Model/" + modelName) as GameObject;
             if(towerSet == null)
@@ -227,7 +222,7 @@ public class UIManager : MonoBehaviour
     public void OpenTowerBuyPanel(TowerData towerData)
     {
         mTouchGuard.gameObject.SetActive(true);
-        mTowerBuyPanel.SetData(towerData);
+        mTowerBuyPanel.SetData(towerData, this);
         mTowerBuyPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
         mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth;
     }

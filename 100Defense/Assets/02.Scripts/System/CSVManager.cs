@@ -10,7 +10,6 @@ public class CSVManager : MonoBehaviour
     /// 맵의 크기.
     /// </summary>
     private int mMapX, mMapY;
-    private Tower mTowerData;
 
     #region Load Save Map
     public string[,] LoadMap(int sizeX, int sizeY)
@@ -114,13 +113,7 @@ public class CSVManager : MonoBehaviour
         bool first = true;
 
         PlayerInformation playerInfo = new PlayerInformation();
-        mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-        if (!mTowerData)
-        {
-            Debug.Log("Tower data not load");
-        }
-
-        int dataLength = mTowerData.dataArray.Length + 3;
+        int dataLength = 3;
         string[] datas = new string[dataLength];
 
         int x = 0;
@@ -159,15 +152,6 @@ public class CSVManager : MonoBehaviour
         playerInfo.WaveIndex = int.Parse(datas[1]);
         playerInfo.Life = int.Parse(datas[2]);
 
-        for (int i = 0; i < mTowerData.dataArray.Length; i++)
-        {
-            if (i + 3 > dataLength)
-            {
-                break;
-            }
-            playerInfo.ContainTowerData.Add(mTowerData.dataArray[i], int.Parse(datas[i + 3]));
-        }
-
         strReader.Dispose();
         return playerInfo;
     }
@@ -197,21 +181,6 @@ public class CSVManager : MonoBehaviour
         rowDataTemp[0] = key;
         rowDataTemp[1] = info.Life.ToString();
         rowData.Add(rowDataTemp);
-
-        if (!mTowerData)
-        {
-            mTowerData = Resources.Load("03.Datas/Game/TowerData") as Tower;
-            Debug.Log("Tower data not load");
-        }
-
-        for (int i = 0; i < mTowerData.dataArray.Length; i++)
-        {
-            rowDataTemp = new string[2];
-            key = mTowerData.dataArray[i].Modelname;
-            rowDataTemp[0] = key;
-            rowDataTemp[1] = info.ContainTowerData[mTowerData.dataArray[i]].ToString();
-            rowData.Add(rowDataTemp);
-        }
 
         string[][] output = new string[rowData.Count][];
 
@@ -249,10 +218,5 @@ public class CSVManager : MonoBehaviour
 #else
         return Application.dataPath +"/"+"path;
 #endif
-    }
-
-    public Tower GetTowerData()
-    {
-        return mTowerData;
     }
 }

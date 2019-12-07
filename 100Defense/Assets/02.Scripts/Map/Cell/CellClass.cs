@@ -267,7 +267,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     /// Build Tower
     /// </summary>
     /// <param name="type"></param>
-    public void BuildTower(TowerType type)
+    public bool BuildTower(TowerKey type)
     {
         if (mTower == null)
         {
@@ -275,7 +275,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             if (!mTower.Build(this, type))
             {
                 Debug.Log("Failed Tower Initialize.");
-                return;
+                return false;
             }
 
             mWalkable = false;
@@ -285,11 +285,13 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             {
                 mTower.Destroyimmediately(this);
                 mWalkable = true;
-                return;
+                return false;
             }
 
             GameManager.Instance.GetPlayerInfo().Gold -= mTower.GetPrice();
+            return true;
         }
+        return false;
     }
 
     /// <summary>
@@ -428,19 +430,19 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         mMeshRenderer.material = mMaterials[(int)state];
     }
 
-    public string GetTowerName(TowerType type)
+    public string GetTowerName(TowerKey type)
     {
         switch (type)
         {
-            case TowerType.ID_TOWER01:
+            case TowerKey.ID_TOWER01:
                 return "ID_TOWER01";
-            case TowerType.ID_TOWER02:
+            case TowerKey.ID_TOWER02:
                 return "ID_TOWER02";
-            case TowerType.ID_TOWER03:
+            case TowerKey.ID_TOWER03:
                 return "ID_TOWER03";
-            case TowerType.ID_TOWER04:
+            case TowerKey.ID_TOWER04:
                 return "ID_TOWER04";
-            case TowerType.ID_TOWER05:
+            case TowerKey.ID_TOWER05:
                 return "ID_TOWER05";
             default:
                 return string.Empty;

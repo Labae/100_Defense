@@ -92,7 +92,7 @@ public class InputManager : MonoBehaviour
     {
         if (mMap.GetSelectedCell() != null)
         {
-            mMap.GetSelectedCell().BuildTower(TowerType.ID_TOWER01);
+            mMap.GetSelectedCell().BuildTower(TowerKey.ID_TOWER01);
         }
     }
 

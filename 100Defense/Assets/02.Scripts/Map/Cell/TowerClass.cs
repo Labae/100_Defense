@@ -2,18 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TowerType
-{
-    ID_TOWER01,
-    ID_TOWER02,
-    ID_TOWER03,
-    ID_TOWER04,
-    ID_TOWER05
-};
-
 public class TowerClass : MonoBehaviour
 {
-    private TowerType mTowerType;
+    private TowerKey mTowerType;
     private Tower mTowerData;
     private Vector3 mOriginScale;
     private GameObject mModel;
@@ -33,9 +24,9 @@ public class TowerClass : MonoBehaviour
         int towerIndex = -1;
         for (int i = 0; i < mTowerData.dataArray.Length; i++)
         {
-            if (cellData == mTowerData.dataArray[i].Key)
+            if (cellData == StringGetTowerKey(mTowerData.dataArray[i].TOWERKEY))
             {
-                mTowerType = (TowerType)i;
+                mTowerType = (TowerKey)i;
                 towerIndex = i;
                 break;
             }
@@ -114,7 +105,7 @@ public class TowerClass : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
     }
 
-    public bool Build(CellClass cell, TowerType type)
+    public bool Build(CellClass cell, TowerKey type)
     {
         transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
@@ -156,7 +147,7 @@ public class TowerClass : MonoBehaviour
         mTowerRange = towerData.Range;
         mPrice = towerData.Price;
 
-        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), towerData.Key);
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), StringGetTowerKey(towerData.TOWERKEY));
         StartCoroutine(ApperanceAnim());
 
         return true;
@@ -244,5 +235,24 @@ public class TowerClass : MonoBehaviour
     public int GetPrice()
     {
         return mPrice;
+    }
+
+    private string StringGetTowerKey(TowerKey key)
+    {
+        switch (key)
+        {
+            case TowerKey.ID_TOWER01:
+                return "ID_TOWER01";
+            case TowerKey.ID_TOWER02:
+                return "ID_TOWER02";
+            case TowerKey.ID_TOWER03:
+                return "ID_TOWER03";
+            case TowerKey.ID_TOWER04:
+                return "ID_TOWER04";
+            case TowerKey.ID_TOWER05:
+                return "ID_TOWER05";
+            default:
+                return "0";
+        }
     }
 }
