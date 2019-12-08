@@ -6,9 +6,9 @@ public class ObjectPool : MonoBehaviour
 {
     public class Pool
     {
-        private string key;
-        private GameObject prefab;
-        private int size;
+        private readonly string key;
+        private readonly GameObject prefab;
+        private readonly int size;
 
         public Pool(string _key, GameObject _prefab, int _size)
         {
