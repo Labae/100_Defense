@@ -6,16 +6,38 @@ public class ObjectPool : MonoBehaviour
 {
     public class Pool
     {
-        public string key;
-        public GameObject prefab;
-        public int size;
+        private string key;
+        private GameObject prefab;
+        private int size;
+
+        public Pool(string _key, GameObject _prefab, int _size)
+        {
+            key = _key;
+            prefab = _prefab;
+            size = _size;
+        }
+
+        public string GetKey()
+        {
+            return key;
+        }
+
+        public GameObject GetPrefab()
+        {
+            return prefab;
+        }
+
+        public int GetSize()
+        {
+            return size;
+        }
     };
 
     #region Dictionary
     /// <summary>
     /// 맵에 설치될 타워의 오브젝트 풀.
     /// </summary>
-    public Dictionary<string, Queue<GameObject>> TowerObjectPoolDictionary;
+    private Dictionary<string, Queue<GameObject>> TowerObjectPoolDictionary;
     /// <summary>
     /// 오브젝트들이 Active가 false일때 저장될 부모 Transform.
     /// </summary>
@@ -23,16 +45,18 @@ public class ObjectPool : MonoBehaviour
     /// <summary>
     /// Tower Data Dictionary
     /// </summary>
-    public Dictionary<string, TowerData> TowerDataDictionary;
+    private Dictionary<string, TowerData> mTowerDataDictionary;
     #endregion
 
     private Tower mTowerData;
+
+    public Dictionary<string, TowerData> TowerDataDictionary { get => mTowerDataDictionary;}
 
     #region Method
     public bool Initialize(Vector2 mapSize)
     {
         TowerObjectPoolDictionary = new Dictionary<string, Queue<GameObject>>();
-        TowerDataDictionary = new Dictionary<string, TowerData>();
+        mTowerDataDictionary = new Dictionary<string, TowerData>();
         mTowerObjectPoolParentChildDictionary = new Dictionary<string, Transform>();
 
         GameObject objectPoolParnet = new GameObject("Object Pool Parent");
@@ -47,10 +71,9 @@ public class ObjectPool : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            Pool pool = new Pool();
-            pool.key = mTowerData.dataArray[i].Towerkey;
-            pool.prefab = Resources.Load("01.Prefabs/Tower/" + mTowerData.dataArray[i].Modelname) as GameObject;
-            pool.size = poolSize;
+            Pool pool = new Pool(mTowerData.dataArray[i].Towerkey,
+                Resources.Load("01.Prefabs/Tower/" + mTowerData.dataArray[i].Modelname) as GameObject,
+                poolSize);
 
             GameObject objectPoolParnetChild = new GameObject("Object Pool Parent" + i.ToString());
             objectPoolParnetChild.transform.SetParent(objectPoolParentTrs);
@@ -58,16 +81,16 @@ public class ObjectPool : MonoBehaviour
             objectPoolParnetChild.transform.rotation = Quaternion.identity;
             objectPoolParnetChild.transform.localScale = Vector3.one;
 
-            for (int index = 0; index < pool.size; index++)
+            for (int index = 0; index < pool.GetSize(); index++)
             {
-                GameObject obj = Instantiate(pool.prefab, objectPoolParnetChild.transform);
+                GameObject obj = Instantiate(pool.GetPrefab(), objectPoolParnetChild.transform);
                 obj.SetActive(false);
                 obj.transform.localScale = Vector3.zero;
                 objectPool.Enqueue(obj);
             }
 
-            TowerObjectPoolDictionary.Add(pool.key, objectPool);
-            mTowerObjectPoolParentChildDictionary.Add(pool.key, objectPoolParnetChild.transform);
+            TowerObjectPoolDictionary.Add(pool.GetKey(), objectPool);
+            mTowerObjectPoolParentChildDictionary.Add(pool.GetKey(), objectPoolParnetChild.transform);
             TowerDataDictionary.Add(mTowerData.dataArray[i].Towerkey, mTowerData.dataArray[i]);
         }
 
