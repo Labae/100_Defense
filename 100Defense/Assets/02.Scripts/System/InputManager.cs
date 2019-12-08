@@ -33,11 +33,6 @@ public class InputManager : MonoBehaviour
 
     public void KeyboardEvent()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            BuildTower();
-        }
-
         if (Input.GetKeyDown(KeyCode.D))
         {
             DestroyTower();
@@ -86,13 +81,6 @@ public class InputManager : MonoBehaviour
                 return;
             }
             hit.transform.GetComponent<CellClass>().Click();
-        }
-    }
-    private void BuildTower()
-    {
-        if (mMap.GetSelectedCell() != null)
-        {
-            mMap.GetSelectedCell().BuildTower(TowerKey.ID_TOWER01);
         }
     }
 

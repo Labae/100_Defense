@@ -4,46 +4,35 @@ using UnityEngine;
 
 public class TowerClass : MonoBehaviour
 {
-    private Tower mTowerData;
     private Vector3 mOriginScale;
-    private GameObject mModel;
     private Canon mCanon;
+    private ObjectPool mObjectPool;
+    private TowerData mTowerData;
     private float mTowerRange;
 
     private float mRotateSpeed = 2.0f;
     private int mPrice;
 
-    public bool Initialize(CellClass cell, string cellData)
+    public bool Initialize(string cellData)
     {
-        transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
+        mOriginScale = Vector3.one * 2.0f;
 
-        mTowerData = cell.GetMap().GetTowerData();
-
-        int towerIndex = -1;
-        for (int i = 0; i < mTowerData.dataArray.Length; i++)
+        mObjectPool = GameManager.Instance.GetObjectPool();
+        if(mObjectPool == null)
         {
-            if (cellData == StringGetTowerKey(mTowerData.dataArray[i].TOWERKEY))
-            {
-                towerIndex = i;
-                break;
-            }
-        }
-
-        if (towerIndex == -1)
-        {
-            Debug.Log("Failed TowerIndex Initilaize.");
+            Debug.Log("Failed Get Object Pool");
             return false;
         }
 
-        TowerData towerData = mTowerData.dataArray[towerIndex];
-
-        mModel = CreateModel(towerData.Modelname);
-        if (!mModel)
+        mTowerData = null;
+        if (!mObjectPool.TowerDataDictionary.ContainsKey(cellData))
         {
-            Debug.Log("Failed Create Tower Model");
+            Debug.Log("Failed Find TowerData in TowerDataDictionary");
             return false;
         }
+
+        mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
         mCanon = GetComponentInChildren<Canon>();
         if(!mCanon)
@@ -52,14 +41,14 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        if(!mCanon.Initialize(towerData.Attackspeed, towerData.Damage))
+        if(!mCanon.Initialize(mTowerData))
         {
             Debug.Log("Failed Initialize Canon");
             return false;
         }
 
-        mTowerRange = towerData.Range;
-        mPrice = towerData.Price;
+        mTowerRange = mTowerData.Range;
+        mPrice = mTowerData.Price;
 
         return true;
     }
@@ -103,30 +92,26 @@ public class TowerClass : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
     }
 
-    public bool Build(CellClass cell, TowerKey type)
+    public bool Build(CellClass cell, string cellData)
     {
-        transform.SetParent(cell.transform);
         transform.localPosition = Vector3.zero;
+        mOriginScale = Vector3.one * 2.0f;
 
-        mTowerData = cell.GetMap().GetTowerData();
-
-        int towerIndex = -1;
-        towerIndex = (int)type;
-
-        if (towerIndex == -1)
+        ObjectPool pool = GameManager.Instance.GetObjectPool();
+        if (pool == null)
         {
-            Debug.Log("Failed TowerIndex Initilaize.");
+            Debug.Log("Failed Get Object Pool");
             return false;
         }
 
-        TowerData towerData = mTowerData.dataArray[towerIndex];
-
-        mModel = CreateModel(towerData.Modelname);
-        if (!mModel)
+        mTowerData = null;
+        if (!pool.TowerDataDictionary.ContainsKey(cellData))
         {
-            Debug.Log("Failed Create Tower Model");
+            Debug.Log("Failed Find TowerData in TowerDataDictionary");
             return false;
         }
+
+        mTowerData = pool.TowerDataDictionary[cellData];
 
         mCanon = GetComponentInChildren<Canon>();
         if (!mCanon)
@@ -135,16 +120,17 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        if (!mCanon.Initialize(towerData.Attackspeed, towerData.Damage))
+        if (!mCanon.Initialize(mTowerData))
         {
             Debug.Log("Failed Initialize Canon");
             return false;
         }
 
-        mTowerRange = towerData.Range;
-        mPrice = towerData.Price;
+        mTowerRange = mTowerData.Range;
+        mPrice = mTowerData.Price;
 
-        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), StringGetTowerKey(towerData.TOWERKEY));
+        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.Towerkey);
+        StopCoroutine(ApperanceAnim());
         StartCoroutine(ApperanceAnim());
 
         return true;
@@ -161,95 +147,54 @@ public class TowerClass : MonoBehaviour
     {
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
         cell.GetMap().RemoveTower(this);
-        Destroy(this.gameObject);
-    }
-
-    private GameObject CreateModel(string modelName)
-    {
-        GameObject modelData = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
-        if (!modelData)
-        {
-            return null;
-        }
-        GameObject model = Instantiate(modelData, transform.position, Quaternion.identity);
-        model.transform.SetParent(this.transform);
-        model.transform.localPosition = Vector3.zero;
-        mOriginScale = model.transform.localScale;
-        model.transform.localScale = Vector3.zero;
-
-        return model;
-    }
-
-    public Tower GetTowerData()
-    {
-        return mTowerData;
+        mObjectPool.HideTower(mTowerData.Towerkey, gameObject);
     }
 
     public IEnumerator ApperanceAnim()
     {
-        mModel.transform.localScale = Vector3.zero;
+        transform.localScale = Vector3.zero;
         float x = 0;
         float y = 0;
         float z = 0;
-        float speed = 6.0f;
+        float speed = 5.0f;
         float deltaSpeed;
-        while (mModel.transform.localScale != mOriginScale)
+        while (transform.localScale != mOriginScale)
         {
             deltaSpeed = speed * Time.deltaTime;
             x = Mathf.MoveTowards(x, mOriginScale.x, deltaSpeed);
             y = Mathf.MoveTowards(y, mOriginScale.y, deltaSpeed);
             z = Mathf.MoveTowards(z, mOriginScale.z, deltaSpeed);
-            mModel.transform.localScale = new Vector3(x, y, z);
+            transform.localScale = new Vector3(x, y, z);
 
             yield return null;
         }
 
-        mModel.transform.localScale = mOriginScale;
+        transform.localScale = mOriginScale;
     }
 
     public IEnumerator DestoryCoroutine()
     {
-        float x = mModel.transform.localScale.x;
-        float y = mModel.transform.localScale.y;
-        float z = mModel.transform.localScale.z;
+        float x = transform.localScale.x;
+        float y = transform.localScale.y;
+        float z = transform.localScale.z;
         float speed = 6.0f;
         float deltaSpeed;
-        while (mModel.transform.localScale != Vector3.zero)
+        while (transform.localScale != Vector3.zero)
         {
             deltaSpeed = speed * Time.deltaTime;
             x = Mathf.MoveTowards(x, 0, deltaSpeed);
             y = Mathf.MoveTowards(y, 0, deltaSpeed);
             z = Mathf.MoveTowards(z, 0, deltaSpeed);
-            mModel.transform.localScale = new Vector3(x, y, z);
+            transform.localScale = new Vector3(x, y, z);
 
             yield return null;
         }
 
-        Destroy(this.gameObject);
-
+        mObjectPool.HideTower(mTowerData.Towerkey, gameObject);
     }
 
     public int GetPrice()
     {
         return mPrice;
-    }
-
-    private string StringGetTowerKey(TowerKey key)
-    {
-        switch (key)
-        {
-            case TowerKey.ID_TOWER01:
-                return "ID_TOWER01";
-            case TowerKey.ID_TOWER02:
-                return "ID_TOWER02";
-            case TowerKey.ID_TOWER03:
-                return "ID_TOWER03";
-            case TowerKey.ID_TOWER04:
-                return "ID_TOWER04";
-            case TowerKey.ID_TOWER05:
-                return "ID_TOWER05";
-            default:
-                return "0";
-        }
     }
 }

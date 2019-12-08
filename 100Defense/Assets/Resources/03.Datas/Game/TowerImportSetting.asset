@@ -18,7 +18,7 @@ MonoBehaviour:
   sheetName: MySpreadSheet
   workSheetName: Tower
   columnHeaderList:
-  - type: 7
+  - type: 1
     name: TowerKey
     isEnable: 0
     isArray: 0

@@ -62,7 +62,7 @@ public class PathFinding : MonoBehaviour
         mPathSuccess = false;
         if (start.GetWalkable() && goal.GetWalkable())
         {
-            Heap<CellClass> openSet = new Heap<CellClass>(mMap.GetMapMaxSize());
+            Heap<CellClass> openSet = new Heap<CellClass>(mMap.GetMaxSize());
             HashSet<CellClass> closeSet = new HashSet<CellClass>();
 
             openSet.Add(start);

@@ -15,35 +15,35 @@ MonoBehaviour:
   SheetName: MySpreadSheet
   WorksheetName: Tower
   dataArray:
-  - towerkey: 0
+  - towerkey: ID_TOWER01
     modelname: Tower01
     towertype: 0
     price: 100
     damage: 10
     range: 1
     attackspeed: 5
-  - towerkey: 1
+  - towerkey: ID_TOWER02
     modelname: Tower02
     towertype: 0
     price: 500
     damage: 20
     range: 2
     attackspeed: 12
-  - towerkey: 2
+  - towerkey: ID_TOWER03
     modelname: Tower03
     towertype: 0
     price: 1000
     damage: 30
     range: 3
     attackspeed: 123
-  - towerkey: 3
+  - towerkey: ID_TOWER04
     modelname: Tower04
     towertype: 0
     price: 1500
     damage: 40
     range: 4
     attackspeed: 4
-  - towerkey: 4
+  - towerkey: ID_TOWER05
     modelname: Tower05
     towertype: 0
     price: 2000

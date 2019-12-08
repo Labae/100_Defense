@@ -9,8 +9,8 @@ using System.Collections;
 public class TowerData
 {
   [SerializeField]
-  TowerKey towerkey;
-  public TowerKey TOWERKEY { get {return towerkey; } set { towerkey = value;} }
+  string towerkey;
+  public string Towerkey { get {return towerkey; } set { towerkey = value;} }
   
   [SerializeField]
   string modelname;

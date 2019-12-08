@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     private MapManager mMap;
     private CSVManager mCSV;
     private WaveManager mWave;
+    private ObjectPool mObjectPool;
 
     private PlayerInformation mPlayerInfo;
 
@@ -102,6 +103,21 @@ public class GameManager : MonoBehaviour
         if(mPlayerInfo == null)
         {
             Debug.Log("Failed Load PlayerInfo");
+            yield break;
+        }
+
+        mObjectPool = gameObject.AddComponent<ObjectPool>();
+        if (!mObjectPool)
+        {
+            Debug.Log("Failed AddComponent ObjectPool Component.");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        if (!mObjectPool.Initialize(mMapSize))
+        {
+            Debug.Log("Failed Initialize ObjectPool Component.");
+            mInitializeSuccess = false;
             yield break;
         }
 
@@ -201,4 +217,20 @@ public class GameManager : MonoBehaviour
     {
         return mPlayerInfo;
     }
+
+    public ObjectPool GetObjectPool()
+    {
+        return mObjectPool;
+    }
+
+    #region Static
+    public static void ChangeLayerMaskRecursively(Transform trans, string name)
+    {
+        trans.gameObject.layer = LayerMask.NameToLayer(name);
+        foreach (Transform child in trans)
+        {
+            ChangeLayerMaskRecursively(child, name);
+        }
+    }
+    #endregion
 }

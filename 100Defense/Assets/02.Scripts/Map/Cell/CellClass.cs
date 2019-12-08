@@ -177,7 +177,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         else
         {
             mTower = CreateTower(towerData);
-            if (!mTower.Initialize(this, towerData))
+            if (!mTower.Initialize(towerData))
             {
                 Debug.Log("Failed Tower Initialize");
                 return false;
@@ -255,9 +255,12 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     /// <returns></returns>
     private TowerClass CreateTower(string towerName)
     {
-        GameObject towerObject = new GameObject(towerName);
-        towerObject.transform.position = Vector3.zero;
-        TowerClass tower = towerObject.AddComponent<TowerClass>();
+        GameObject towerObject = GameManager.Instance.GetObjectPool().SpawnTowerFromPool(towerName, transform);
+        TowerClass tower = GetComponent<TowerClass>();
+        if (tower == null)
+        {
+            tower = towerObject.AddComponent<TowerClass>();
+        }
         mMap.AddTower(tower);
 
         return tower;
@@ -267,11 +270,11 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     /// Build Tower
     /// </summary>
     /// <param name="type"></param>
-    public bool BuildTower(TowerKey type)
+    public bool BuildTower(string type)
     {
         if (mTower == null)
         {
-            mTower = CreateTower(GetTowerName(type));
+            mTower = CreateTower(type);
             if (!mTower.Build(this, type))
             {
                 Debug.Log("Failed Tower Initialize.");
@@ -428,25 +431,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         mState = state;
         mMeshRenderer.material = mMaterials[(int)state];
-    }
-
-    public string GetTowerName(TowerKey type)
-    {
-        switch (type)
-        {
-            case TowerKey.ID_TOWER01:
-                return "ID_TOWER01";
-            case TowerKey.ID_TOWER02:
-                return "ID_TOWER02";
-            case TowerKey.ID_TOWER03:
-                return "ID_TOWER03";
-            case TowerKey.ID_TOWER04:
-                return "ID_TOWER04";
-            case TowerKey.ID_TOWER05:
-                return "ID_TOWER05";
-            default:
-                return string.Empty;
-        }
     }
     #endregion
 }

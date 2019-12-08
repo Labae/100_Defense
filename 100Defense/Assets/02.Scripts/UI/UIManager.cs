@@ -86,7 +86,7 @@ public class UIManager : MonoBehaviour
     private bool Initialize()
     {
         mPlayerInfo = GameManager.Instance.GetPlayerInfo();
-        if(mPlayerInfo == null)
+        if (mPlayerInfo == null)
         {
             Debug.Log("Failed Get PlayerInfo");
             return false;
@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour
         mPlayerInfo.AddObserver(mCoinLabel);
 
         mWaveManager = GameManager.Instance.GetWaveManager();
-        if(!mWaveManager)
+        if (!mWaveManager)
         {
             Debug.Log("Failed Get Wave Manager");
             return false;
@@ -106,13 +106,13 @@ public class UIManager : MonoBehaviour
         mPlayerInfo.AddObserver(mLifeSet);
         mTouchGuard.gameObject.SetActive(false);
 
-        Tower towerData = GameManager.Instance.GetMap().GetTowerData();
+        Tower towerData = GameManager.Instance.GetObjectPool().GetTowerData();
 
         mStoreGrid.repositionNow = true;
         for (int i = 0; i < towerData.dataArray.Length; i++)
         {
             GameObject setTower = Resources.Load("01.Prefabs/UI/Set Tower") as GameObject;
-            if(setTower == null)
+            if (setTower == null)
             {
                 return false;
             }
@@ -121,7 +121,7 @@ public class UIManager : MonoBehaviour
 
             string modelName = towerData.dataArray[i].Modelname;
             GameObject towerModel = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
-            if(towerModel == null)
+            if (towerModel == null)
             {
                 return false;
             }
@@ -143,7 +143,7 @@ public class UIManager : MonoBehaviour
             eventBtn.parameters[1].value = uiTowerRotations[i].gameObject;
             btn.onClick.Add(eventBtn);
 
-            ChangeLayerMaskRecursively(tower.transform, "3D UI");
+            GameManager.ChangeLayerMaskRecursively(tower.transform, "3D UI");
         }
 
         mStoreGrid.Reposition();
@@ -152,7 +152,6 @@ public class UIManager : MonoBehaviour
         {
             uiTowerRotations[i].RotateTower();
         }
-
 
         return true;
     }
@@ -180,14 +179,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public static void ChangeLayerMaskRecursively(Transform trans, string name)
-    {
-        trans.gameObject.layer = LayerMask.NameToLayer(name);
-        foreach (Transform child in trans)
-        {
-            ChangeLayerMaskRecursively(child, name);
-        }
-    }
     #endregion
 
     #region Button Event Method

@@ -10,11 +10,18 @@ public class Canon : MonoBehaviour
 
     private GameObject mBulletPrefab;
 
-    public bool Initialize(float _speed, int _damage)
+    private bool mIsInitialize;
+
+    public bool Initialize(TowerData towerData)
     {
-        mAttackSpeed = _speed;
+        if(mIsInitialize)
+        {
+            return mIsInitialize;
+        }
+
+        mAttackSpeed = towerData.Attackspeed;
         mAttackSpeedTimer = 0.0f;
-        mAttackDamage = _damage;
+        mAttackDamage = towerData.Damage;
 
         mBulletPrefab = Resources.Load("01.Prefabs/Bullet/Bullet") as GameObject;
         if (!mBulletPrefab)
@@ -23,7 +30,8 @@ public class Canon : MonoBehaviour
             return false;
         }
 
-        return true;
+        mIsInitialize = true;
+        return mIsInitialize;
     }
 
     public void Loop(Transform target)
@@ -57,5 +65,10 @@ public class Canon : MonoBehaviour
     public void SetAttackTimerZero()
     {
         mAttackSpeedTimer = 0.0f;
+    }
+
+    public bool IsInitialize()
+    {
+        return mIsInitialize;
     }
 }

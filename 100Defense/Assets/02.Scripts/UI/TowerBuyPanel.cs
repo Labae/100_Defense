@@ -44,16 +44,17 @@ public class TowerBuyPanel : MonoBehaviour
     {
         if (GameManager.Instance.GetPlayerInfo().Gold < mTowerData.Price)
         {
+            // TODO : 가격 부족 알려주는 Image.
             return;
         }
 
         if(GameManager.Instance.GetMap().GetSelectedCell() == null)
         {
+            // TODO : Cell 선택 알려주는 Image.
             return;
         }
 
-
-        GameManager.Instance.GetMap().GetSelectedCell().BuildTower(mTowerData.TOWERKEY);
+        GameManager.Instance.GetMap().GetSelectedCell().BuildTower(mTowerData.Towerkey);
         GameManager.Instance.GetMap().SetSelectedCell(null);
         mUIManager.CloseTowerBuyPanel();
         ExitButton();
