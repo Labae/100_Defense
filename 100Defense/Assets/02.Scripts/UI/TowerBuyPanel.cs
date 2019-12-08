@@ -13,19 +13,14 @@ public class TowerBuyPanel : MonoBehaviour
     private TowerData mTowerData;
     private UIManager mUIManager;
 
-    public void SetData(TowerData towerData, UIManager uiManager)
+    public void SetData(TowerData towerData, GameObject model, UIManager uiManager)
     {
         mTowerData = towerData;
         mUIManager = uiManager;
 
-        GameObject model = Resources.Load("01.Prefabs/UI/3D_Model/" + mTowerData.Modelname) as GameObject;
-        if (model == null)
-        {
-            return;
-        }
         GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
-        uiSetTower.transform.GetChild(0).localScale = uiSetTower.transform.GetChild(0).localScale * 250.0f;
-        uiSetTower.GetComponent<UITowerRotation>().RotateTower();
+        UITowerRotation towrRotation = uiSetTower.GetComponent<UITowerRotation>();
+        towrRotation.RotateTower();
 
         mTowerTitle.text = mTowerData.Modelname;
 

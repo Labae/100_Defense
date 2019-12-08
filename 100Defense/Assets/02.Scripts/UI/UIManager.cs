@@ -42,10 +42,6 @@ public class UIManager : MonoBehaviour
 
     #region Private Value
     /// <summary>
-    /// Store ScrollView
-    /// </summary>
-    private UIScrollView mStoreScrollView;
-    /// <summary>
     /// Wave Manager
     /// </summary>
     private WaveManager mWaveManager;
@@ -108,6 +104,7 @@ public class UIManager : MonoBehaviour
 
         mPlayerInfo.AddObserver(mWaveLabel);
         mPlayerInfo.AddObserver(mLifeSet);
+        mTouchGuard.gameObject.SetActive(false);
 
         Tower towerData = GameManager.Instance.GetMap().GetTowerData();
 
@@ -121,41 +118,41 @@ public class UIManager : MonoBehaviour
             }
             GameObject uiSetTower = Instantiate(setTower, mStoreGrid.transform);
 
+
             string modelName = towerData.dataArray[i].Modelname;
-            GameObject towerSet = Resources.Load("01.Prefabs/UI/3D_Model/" + modelName) as GameObject;
-            if(towerSet == null)
+            GameObject towerModel = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
+            if(towerModel == null)
             {
                 return false;
             }
 
-            GameObject tower = Instantiate(towerSet, uiSetTower.transform);
+            GameObject tower = Instantiate(towerModel, uiSetTower.transform);
             tower.transform.GetChild(0).localScale = tower.transform.GetChild(0).localScale * 250.0f;
-            uiTowerRotations.Add(tower.GetComponent<UITowerRotation>());
+            UITowerRotation towerRotation = tower.AddComponent<UITowerRotation>();
+            uiTowerRotations.Add(towerRotation);
+            Canon canon = tower.GetComponentInChildren<Canon>();
+            if (canon == null)
+            {
+                break;
+            }
+            Destroy(canon);
+
+            UIButton btn = uiSetTower.GetComponentInChildren<UIButton>();
+            EventDelegate eventBtn = new EventDelegate(this, "OpenTowerBuyPanel");
+            eventBtn.parameters[0].value = towerData.dataArray[i];
+            eventBtn.parameters[1].value = uiTowerRotations[i].gameObject;
+            btn.onClick.Add(eventBtn);
+
+            ChangeLayerMaskRecursively(tower.transform, "3D UI");
         }
 
         mStoreGrid.Reposition();
-        mStoreScrollView = mUIStorePanel.GetComponent<UIScrollView>();
-        if(mStoreScrollView == null)
-        {
-            Debug.Log("Failed Get UIScrollView");
-            return false;
-        }
 
         for (int i = 0; i < 3; i++)
         {
             uiTowerRotations[i].RotateTower();
         }
 
-        UIButton[] buyButtons = mStoreGrid.GetComponentsInChildren<UIButton>();
-
-        for (int i = 0; i < buyButtons.Length; i++)
-        {
-            EventDelegate eventBtn = new EventDelegate(this, "OpenTowerBuyPanel");
-            eventBtn.parameters[0].value = towerData.dataArray[i];
-            buyButtons[i].onClick.Add(eventBtn);
-        }
-
-        mTouchGuard.gameObject.SetActive(false);
 
         return true;
     }
@@ -180,6 +177,15 @@ public class UIManager : MonoBehaviour
                     uiTowerRotations[i].StopRotateTower();
                 }
             }
+        }
+    }
+
+    public static void ChangeLayerMaskRecursively(Transform trans, string name)
+    {
+        trans.gameObject.layer = LayerMask.NameToLayer(name);
+        foreach (Transform child in trans)
+        {
+            ChangeLayerMaskRecursively(child, name);
         }
     }
     #endregion
@@ -219,10 +225,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OpenTowerBuyPanel(TowerData towerData)
+    public void OpenTowerBuyPanel(TowerData towerData, GameObject model)
     {
         mTouchGuard.gameObject.SetActive(true);
-        mTowerBuyPanel.SetData(towerData, this);
+        mTowerBuyPanel.SetData(towerData, model, this);
         mTowerBuyPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
         mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth;
     }
