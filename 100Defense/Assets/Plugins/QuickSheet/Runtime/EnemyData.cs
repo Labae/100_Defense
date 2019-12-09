@@ -21,7 +21,7 @@ public class EnemyData
   public int Health { get {return health; } set { health = value;} }
   
   [SerializeField]
-  int movespeed;
-  public int Movespeed { get {return movespeed; } set { movespeed = value;} }
+  float movespeed;
+  public float Movespeed { get {return movespeed; } set { movespeed = value;} }
   
 }

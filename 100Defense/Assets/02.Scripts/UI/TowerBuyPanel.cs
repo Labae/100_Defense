@@ -5,10 +5,10 @@ using System.Text;
 
 public class TowerBuyPanel : MonoBehaviour
 {
-    [SerializeField] private Transform mTowerObjectParent;
-    [SerializeField] private UILabel mTowerTitle;
-    [SerializeField] private UILabel mTowerDescription;
-    [SerializeField] private UIButton mBuyButton;
+    [SerializeField] private Transform mTowerObjectParent = null;
+    [SerializeField] private UILabel mTowerTitle = null;
+    [SerializeField] private UILabel mTowerDescription = null;
+    [SerializeField] private UIButton mBuyButton = null;
 
     private TowerData mTowerData;
     private UIManager mUIManager;

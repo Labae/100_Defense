@@ -98,7 +98,7 @@ public class ObjectPool : MonoBehaviour
     }
 
     /// <summary>
-    /// return gameobject doesn't active.
+    /// return object pool gameobject
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>

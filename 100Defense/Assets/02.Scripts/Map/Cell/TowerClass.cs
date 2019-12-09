@@ -10,7 +10,7 @@ public class TowerClass : MonoBehaviour
     private TowerData mTowerData;
     private float mTowerRange;
 
-    private float mRotateSpeed = 2.0f;
+    private float mRotateSpeed = 1.0f;
     private int mPrice;
 
     public bool Initialize(string cellData)
@@ -19,7 +19,7 @@ public class TowerClass : MonoBehaviour
         mOriginScale = Vector3.one * 2.0f;
 
         mObjectPool = GameManager.Instance.GetObjectPool();
-        if(mObjectPool == null)
+        if (mObjectPool == null)
         {
             Debug.Log("Failed Get Object Pool");
             return false;
@@ -35,13 +35,13 @@ public class TowerClass : MonoBehaviour
         mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
         mCanon = GetComponentInChildren<Canon>();
-        if(!mCanon)
+        if (!mCanon)
         {
             Debug.Log("Failed Get Canon Component");
             return false;
         }
 
-        if(!mCanon.Initialize(mTowerData))
+        if (!mCanon.Initialize(mTowerData))
         {
             Debug.Log("Failed Initialize Canon");
             return false;
@@ -57,8 +57,8 @@ public class TowerClass : MonoBehaviour
     {
         List<EnemyClass> enemies = map.GetmEnemies();
         Transform target = null;
-        target = GetTargetedEnemy(enemies);
-        if(target == null)
+        target = GetWithinRange(enemies);
+        if (target == null)
         {
             return;
         }
@@ -67,7 +67,7 @@ public class TowerClass : MonoBehaviour
         mCanon.Loop(target);
     }
 
-    private Transform GetTargetedEnemy(List<EnemyClass> enemies)
+    private Transform GetWithinRange(List<EnemyClass> enemies)
     {
         Transform retVal = null;
 
@@ -80,6 +80,7 @@ public class TowerClass : MonoBehaviour
                 break;
             }
         }
+
 
         return retVal;
     }
@@ -97,21 +98,21 @@ public class TowerClass : MonoBehaviour
         transform.localPosition = Vector3.zero;
         mOriginScale = Vector3.one * 2.0f;
 
-        ObjectPool pool = GameManager.Instance.GetObjectPool();
-        if (pool == null)
+        mObjectPool= GameManager.Instance.GetObjectPool();
+        if (mObjectPool == null)
         {
             Debug.Log("Failed Get Object Pool");
             return false;
         }
 
         mTowerData = null;
-        if (!pool.TowerDataDictionary.ContainsKey(cellData))
+        if (!mObjectPool.TowerDataDictionary.ContainsKey(cellData))
         {
             Debug.Log("Failed Find TowerData in TowerDataDictionary");
             return false;
         }
 
-        mTowerData = pool.TowerDataDictionary[cellData];
+        mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
         mCanon = GetComponentInChildren<Canon>();
         if (!mCanon)

@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Max Size (10, 10)")]
     [SerializeField]
-    private Vector2 mMapSize;
+    private Vector2 mMapSize = Vector2.zero;
 
     private void Awake()
     {

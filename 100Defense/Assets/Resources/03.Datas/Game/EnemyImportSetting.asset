@@ -18,7 +18,7 @@ MonoBehaviour:
   sheetName: MySpreadSheet
   workSheetName: Enemy
   columnHeaderList:
-  - type: 7
+  - type: 1
     name: Key
     isEnable: 0
     isArray: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     name: Health
     isEnable: 0
     isArray: 0
-  - type: 3
+  - type: 5
     name: MoveSpeed
     isEnable: 0
     isArray: 0

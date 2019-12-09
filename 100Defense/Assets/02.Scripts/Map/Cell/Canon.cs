@@ -12,9 +12,11 @@ public class Canon : MonoBehaviour
 
     private bool mIsInitialize;
 
+    private const float mAngle = 30.0f;
+
     public bool Initialize(TowerData towerData)
     {
-        if(mIsInitialize)
+        if (mIsInitialize)
         {
             return mIsInitialize;
         }
@@ -36,25 +38,37 @@ public class Canon : MonoBehaviour
 
     public void Loop(Transform target)
     {
-        if (target != null)
+        mAttackSpeedTimer -= Time.deltaTime;
+
+        Vector3 dir = target.position - transform.position;
+        dir.y = 0.0f;
+
+        Vector3 arcTan = dir - transform.forward;
+
+        float angle = Mathf.Atan2(arcTan.z, arcTan.x) * Mathf.Rad2Deg;
+        bool canShoot = ((angle <= mAngle && angle >= 0.0f) || (angle <= mAngle - 180.0f && angle < 0.0f)) ? true : false;
+
+        if(!canShoot)
         {
-            mAttackSpeedTimer -= Time.deltaTime * 5.0f;
-            if (mAttackSpeedTimer <= 0)
+            return;
+        }
+
+        if (mAttackSpeedTimer <= 0)
+        {
+            mAttackSpeedTimer = mAttackSpeed;
+            if (!CreateBullet(target))
             {
-                mAttackSpeedTimer = mAttackSpeed;
-                if(!CreateBullet(target))
-                {
-                    return;
-                }
+                return;
             }
         }
+
     }
 
     private bool CreateBullet(Transform target)
     {
         GameObject bulletObj = Instantiate(mBulletPrefab, transform.position, Quaternion.identity);
         BulletClass bullet = bulletObj.AddComponent<BulletClass>();
-        if(!bullet.Initialize(target, mAttackDamage))
+        if (!bullet.Initialize(target, mAttackDamage))
         {
             Debug.Log("Failed Initialize bulletClass");
             return false;

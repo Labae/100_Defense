@@ -19,34 +19,34 @@ MonoBehaviour:
     modelname: Tower01
     towertype: 0
     price: 100
-    damage: 10
-    range: 1
-    attackspeed: 5
+    damage: 5
+    range: 5
+    attackspeed: 1
   - towerkey: ID_TOWER02
     modelname: Tower02
     towertype: 0
     price: 500
-    damage: 20
-    range: 2
-    attackspeed: 12
+    damage: 1
+    range: 1.5
+    attackspeed: 0.8
   - towerkey: ID_TOWER03
     modelname: Tower03
     towertype: 0
     price: 1000
     damage: 30
-    range: 3
-    attackspeed: 123
+    range: 1.5
+    attackspeed: 0.5
   - towerkey: ID_TOWER04
     modelname: Tower04
     towertype: 0
     price: 1500
     damage: 40
     range: 4
-    attackspeed: 4
+    attackspeed: 0.3
   - towerkey: ID_TOWER05
     modelname: Tower05
     towertype: 0
     price: 2000
     damage: 50
     range: 5
-    attackspeed: 5
+    attackspeed: 0.1

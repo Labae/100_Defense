@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LifeManager : MonoBehaviour, IObserver
 {
-    [SerializeField] private UIGrid LifeGrid;
+    [SerializeField] private UIGrid LifeGrid = null;
     private GameObject mLife;
     private void Start()
     {

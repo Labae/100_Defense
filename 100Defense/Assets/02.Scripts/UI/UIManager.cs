@@ -9,35 +9,35 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Setting Panel GameObject
     /// </summary>
-    [SerializeField] private GameObject mSettingPanel;
+    [SerializeField] private GameObject mSettingPanel = null;
     /// <summary>
     /// TouchGuard Panel
     /// </summary>
-    [SerializeField] private UIPanel mTouchGuard;
+    [SerializeField] private UIPanel mTouchGuard = null;
     /// <summary>
     /// Wave Label
     /// </summary>
-    [SerializeField] private WaveLabel mWaveLabel;
+    [SerializeField] private WaveLabel mWaveLabel = null;
     /// <summary>
     /// Coin Label
     /// </summary>
-    [SerializeField] private CoinLabel mCoinLabel;
+    [SerializeField] private CoinLabel mCoinLabel = null;
     /// <summary>
     /// Life Manager
     /// </summary>
-    [SerializeField] private LifeManager mLifeSet;
+    [SerializeField] private LifeManager mLifeSet = null;
     /// <summary>
     /// Store Grid
     /// </summary>
-    [SerializeField] private UIGrid mStoreGrid;
+    [SerializeField] private UIGrid mStoreGrid = null;
     /// <summary>
     /// UI Store Panel
     /// </summary>
-    [SerializeField] private UIPanel mUIStorePanel;
+    [SerializeField] private UIPanel mUIStorePanel = null;
     /// <summary>
     /// Tower Buy Panel Class
     /// </summary>
-    [SerializeField] private TowerBuyPanel mTowerBuyPanel;
+    [SerializeField] private TowerBuyPanel mTowerBuyPanel = null;
     #endregion
 
     #region Private Value
