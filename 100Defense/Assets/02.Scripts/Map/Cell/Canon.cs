@@ -9,16 +9,19 @@ public class Canon : MonoBehaviour
     private int mAttackDamage;
 
     private ObjectPool mObjectPool;
+    private TowerClass tower;
 
     private bool mIsInitialize;
 
-    private const float mAngle = 10.0f;
+    private const float mAngle = 30.0f;
 
     public bool Initialize(TowerData towerData)
     {
         mAttackSpeed = towerData.Attackspeed;
         mAttackSpeedTimer = 0.0f;
         mAttackDamage = towerData.Damage;
+
+        tower = GetComponentInParent<TowerClass>();
 
         mObjectPool = GameManager.Instance.GetObjectPool();
         if(!mObjectPool)
@@ -31,23 +34,24 @@ public class Canon : MonoBehaviour
         return mIsInitialize;
     }
 
-    public void Loop(Transform target)
+    public void Loop(Transform target, float towerRotationY)
     {
         mAttackSpeedTimer -= Time.deltaTime;
+        if (target == null)
+        {
+            return;
+        }
+        Vector3 dir = target.position - transform.position;
+        dir.y = 0.0f;
 
-        //Vector3 dir = target.position - transform.position;
-        //dir.y = 0.0f;
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
+        float finalAngle = towerRotationY - angle;
 
-        //float angle = Quaternion.FromToRotation(transform.forward, dir).eulerAngles.y;
-        //if(angle >= 180.0f)
-        //{
-        //    angle -= 180.0f;
-        //    angle = 180.0f - angle;
-        //}
-        //if(angle > mAngle)
-        //{
-        //    return;
-        //}
+        if(finalAngle > mAngle)
+        {
+            Debug.DrawRay(transform.position, transform.forward * 10.0f, Color.red);
+            return;
+        }
 
         if (mAttackSpeedTimer <= 0)
         {

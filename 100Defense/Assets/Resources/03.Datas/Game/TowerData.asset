@@ -26,8 +26,8 @@ MonoBehaviour:
     modelname: Tower02
     towertype: 0
     price: 500
-    damage: 1
-    range: 10
+    damage: 0
+    range: 2
     attackspeed: 0.5
   - towerkey: ID_TOWER03
     modelname: Tower03

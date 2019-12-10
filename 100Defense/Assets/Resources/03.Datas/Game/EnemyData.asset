@@ -18,7 +18,7 @@ MonoBehaviour:
   - key: ID_ENEMY01
     name: Red_Caterpillars
     health: 50
-    movespeed: 2
+    movespeed: 1
   - key: ID_ENEMY02
     name: Earthworm
     health: 30

@@ -313,9 +313,13 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         {
             mTower.DestroyTower(this);
             mWalkable = true;
-            //mMap.GetPathFinding().PathFind();
             mMap.SetSelectedCell(null);
             mTower = null;
+
+            if(!GameManager.Instance.GetWaveManager().GetIsWaving())
+            {
+                mMap.GetPathFinding().PathFind();
+            }
             return true;
         }
     }

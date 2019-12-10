@@ -10,7 +10,7 @@ public class TowerClass : MonoBehaviour
     private TowerData mTowerData;
     private float mAttackRange;
 
-    private float mRotateSpeed = 1.0f;
+    private float mRotateSpeed = 5.0f;
     private int mPrice;
 
     public bool Initialize(string cellData)
@@ -41,7 +41,7 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        if(!mCanon.IsInitialize())
+        if (!mCanon.IsInitialize())
         {
             if (!mCanon.Initialize(mTowerData))
             {
@@ -60,13 +60,8 @@ public class TowerClass : MonoBehaviour
     {
         Transform target = null;
         target = GetWithinRange(enemies);
-        if (target == null)
-        {
-            return;
-        }
-
         Rotate(enemies, target);
-        mCanon.Loop(target);
+        mCanon.Loop(target, transform.eulerAngles.y);
     }
 
     private Transform GetWithinRange(List<EnemyClass> enemies)
@@ -97,6 +92,10 @@ public class TowerClass : MonoBehaviour
 
     private void Rotate(List<EnemyClass> enemies, Transform target)
     {
+        if (target == null)
+        {
+            return;
+        }
         Vector3 dir = target.position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
@@ -108,7 +107,7 @@ public class TowerClass : MonoBehaviour
         transform.localPosition = Vector3.zero;
         mOriginScale = Vector3.one * 2.0f;
 
-        mObjectPool= GameManager.Instance.GetObjectPool();
+        mObjectPool = GameManager.Instance.GetObjectPool();
         if (mObjectPool == null)
         {
             Debug.Log("Failed Get Object Pool");
