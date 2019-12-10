@@ -338,6 +338,11 @@ public class MapManager : MonoBehaviour
         return 1 << LayerMask.NameToLayer("Cell");
     }
 
+    public CellClass GetStartCell()
+    {
+        return mStartCell;
+    }
+
     #region Get Set CanClick
 
     public bool GetCanClick()

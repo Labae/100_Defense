@@ -67,39 +67,40 @@ public class TowerClass : MonoBehaviour
     private Transform GetWithinRange(List<EnemyClass> enemies)
     {
         Transform nearestEnemy = null;
-        float shortestDist = Mathf.Infinity;
 
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
-            if (dist <= shortestDist)
+            if (dist <= mAttackRange)
             {
-                shortestDist = dist;
                 nearestEnemy = enemies[i].transform;
                 break;
             }
         }
 
-        if (shortestDist <= mAttackRange)
-        {
-            return nearestEnemy;
-        }
-        else
-        {
-            return null;
-        }
+        return nearestEnemy;
     }
 
     private void Rotate(List<EnemyClass> enemies, Transform target)
     {
         if (target == null)
         {
+            if (!GameManager.Instance.GetWaveManager().GetIsWaving())
+            {
+                Vector3 dir = GameManager.Instance.GetMap().GetStartCell().transform.position - transform.position;
+                Quaternion lookRotation = Quaternion.LookRotation(dir);
+                Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
+                transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
+            }
             return;
         }
-        Vector3 dir = target.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
-        transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
+        else
+        {
+            Vector3 dir = target.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
+            transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
+        }
     }
 
     public bool Build(CellClass cell, string cellData)

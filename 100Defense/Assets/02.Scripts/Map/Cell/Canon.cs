@@ -9,8 +9,6 @@ public class Canon : MonoBehaviour
     private int mAttackDamage;
 
     private ObjectPool mObjectPool;
-    private TowerClass tower;
-
     private bool mIsInitialize;
 
     private const float mAngle = 30.0f;
@@ -20,8 +18,6 @@ public class Canon : MonoBehaviour
         mAttackSpeed = towerData.Attackspeed;
         mAttackSpeedTimer = 0.0f;
         mAttackDamage = towerData.Damage;
-
-        tower = GetComponentInParent<TowerClass>();
 
         mObjectPool = GameManager.Instance.GetObjectPool();
         if(!mObjectPool)
@@ -36,22 +32,35 @@ public class Canon : MonoBehaviour
 
     public void Loop(Transform target, float towerRotationY)
     {
-        mAttackSpeedTimer -= Time.deltaTime;
         if (target == null)
         {
             return;
         }
+        mAttackSpeedTimer -= Time.deltaTime;
+
+        // TODO : 이거 이상함.
         Vector3 dir = target.position - transform.position;
         dir.y = 0.0f;
 
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        float finalAngle = towerRotationY - angle;
+        Debug.Log(transform.parent.parent.parent.name + "A" + angle);
+        Debug.Log(transform.parent.parent.parent.name + towerRotationY);
 
-        if(finalAngle > mAngle)
+        if(towerRotationY >= 180.0f)
+        {
+            angle += 180.0f;
+            towerRotationY -= 180.0f;
+        }
+
+        float finalAngle = (towerRotationY >= angle) ? towerRotationY - angle : angle - towerRotationY;
+
+        if (finalAngle > mAngle)
         {
             Debug.DrawRay(transform.position, transform.forward * 10.0f, Color.red);
             return;
         }
+
+        // 요기까지.
 
         if (mAttackSpeedTimer <= 0)
         {

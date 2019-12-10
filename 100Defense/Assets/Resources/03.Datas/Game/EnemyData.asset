@@ -22,12 +22,12 @@ MonoBehaviour:
   - key: ID_ENEMY02
     name: Earthworm
     health: 30
-    movespeed: 2
+    movespeed: 1.1
   - key: ID_ENEMY03
     name: Turtle
     health: 45
-    movespeed: 3
+    movespeed: 1.2
   - key: ID_ENEMY04
     name: Sloth
     health: 60
-    movespeed: 4
+    movespeed: 1.3
