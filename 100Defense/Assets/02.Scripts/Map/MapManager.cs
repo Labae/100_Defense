@@ -173,7 +173,7 @@ public class MapManager : MonoBehaviour
     {
         for (int i = 0; i < mTowers.Count; i++)
         {
-            mTowers[i].Loop(this);
+            mTowers[i].Loop(GetEnemies());
         }
     }
 
@@ -191,7 +191,7 @@ public class MapManager : MonoBehaviour
         mEnemies.Remove(enemy);
     }
 
-    public List<EnemyClass> GetmEnemies()
+    public List<EnemyClass> GetEnemies()
     {
         return mEnemies;
     }

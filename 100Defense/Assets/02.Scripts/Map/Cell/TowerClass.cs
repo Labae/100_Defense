@@ -8,7 +8,7 @@ public class TowerClass : MonoBehaviour
     private Canon mCanon;
     private ObjectPool mObjectPool;
     private TowerData mTowerData;
-    private float mTowerRange;
+    private float mAttackRange;
 
     private float mRotateSpeed = 1.0f;
     private int mPrice;
@@ -41,21 +41,23 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        if (!mCanon.Initialize(mTowerData))
+        if(!mCanon.IsInitialize())
         {
-            Debug.Log("Failed Initialize Canon");
-            return false;
+            if (!mCanon.Initialize(mTowerData))
+            {
+                Debug.Log("Failed Initialize Canon");
+                return false;
+            }
         }
 
-        mTowerRange = mTowerData.Range;
+        mAttackRange = mTowerData.Range;
         mPrice = mTowerData.Price;
 
         return true;
     }
 
-    public void Loop(MapManager map)
+    public void Loop(List<EnemyClass> enemies)
     {
-        List<EnemyClass> enemies = map.GetmEnemies();
         Transform target = null;
         target = GetWithinRange(enemies);
         if (target == null)
@@ -69,20 +71,28 @@ public class TowerClass : MonoBehaviour
 
     private Transform GetWithinRange(List<EnemyClass> enemies)
     {
-        Transform retVal = null;
+        Transform nearestEnemy = null;
+        float shortestDist = Mathf.Infinity;
 
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
-            if (dist <= mTowerRange)
+            if (dist <= shortestDist)
             {
-                retVal = enemies[i].transform;
+                shortestDist = dist;
+                nearestEnemy = enemies[i].transform;
                 break;
             }
         }
 
-
-        return retVal;
+        if (shortestDist <= mAttackRange)
+        {
+            return nearestEnemy;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private void Rotate(List<EnemyClass> enemies, Transform target)
@@ -127,7 +137,7 @@ public class TowerClass : MonoBehaviour
             return false;
         }
 
-        mTowerRange = mTowerData.Range;
+        mAttackRange = mTowerData.Range;
         mPrice = mTowerData.Price;
 
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.Towerkey);

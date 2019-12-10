@@ -8,27 +8,22 @@ public class Canon : MonoBehaviour
     private float mAttackSpeedTimer;
     private int mAttackDamage;
 
-    private GameObject mBulletPrefab;
+    private ObjectPool mObjectPool;
 
     private bool mIsInitialize;
 
-    private const float mAngle = 30.0f;
+    private const float mAngle = 10.0f;
 
     public bool Initialize(TowerData towerData)
     {
-        if (mIsInitialize)
-        {
-            return mIsInitialize;
-        }
-
         mAttackSpeed = towerData.Attackspeed;
         mAttackSpeedTimer = 0.0f;
         mAttackDamage = towerData.Damage;
 
-        mBulletPrefab = Resources.Load("01.Prefabs/Bullet/Bullet") as GameObject;
-        if (!mBulletPrefab)
+        mObjectPool = GameManager.Instance.GetObjectPool();
+        if(!mObjectPool)
         {
-            Debug.Log("Failed load bulletObj");
+            Debug.Log("Failed Get mObjectPool");
             return false;
         }
 
@@ -40,40 +35,26 @@ public class Canon : MonoBehaviour
     {
         mAttackSpeedTimer -= Time.deltaTime;
 
-        Vector3 dir = target.position - transform.position;
-        dir.y = 0.0f;
+        //Vector3 dir = target.position - transform.position;
+        //dir.y = 0.0f;
 
-        Vector3 arcTan = dir - transform.forward;
-
-        float angle = Mathf.Atan2(arcTan.z, arcTan.x) * Mathf.Rad2Deg;
-        bool canShoot = ((angle <= mAngle && angle >= 0.0f) || (angle <= mAngle - 180.0f && angle < 0.0f)) ? true : false;
-
-        if(!canShoot)
-        {
-            return;
-        }
+        //float angle = Quaternion.FromToRotation(transform.forward, dir).eulerAngles.y;
+        //if(angle >= 180.0f)
+        //{
+        //    angle -= 180.0f;
+        //    angle = 180.0f - angle;
+        //}
+        //if(angle > mAngle)
+        //{
+        //    return;
+        //}
 
         if (mAttackSpeedTimer <= 0)
         {
             mAttackSpeedTimer = mAttackSpeed;
-            if (!CreateBullet(target))
-            {
-                return;
-            }
+            mObjectPool.SpawnBulletFromPool(target, transform.position, mAttackDamage);
         }
 
-    }
-
-    private bool CreateBullet(Transform target)
-    {
-        GameObject bulletObj = Instantiate(mBulletPrefab, transform.position, Quaternion.identity);
-        BulletClass bullet = bulletObj.AddComponent<BulletClass>();
-        if (!bullet.Initialize(target, mAttackDamage))
-        {
-            Debug.Log("Failed Initialize bulletClass");
-            return false;
-        }
-        return true;
     }
 
     public void SetAttackTimerZero()

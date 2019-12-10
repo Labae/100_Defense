@@ -7,9 +7,10 @@ public class BulletClass : MonoBehaviour
     private float mSpeed = 10.0f;
     private int mAttackDamage;
     private Transform mTargetTrs;
-    private GameObject mBulletEffectObj;
+    private GameObject mBulletImpact;
+    private ObjectPool mObjectPool;
 
-    public bool Initialize(Transform target, int damage)
+    public bool Initialize(Transform target, int damage, GameObject impact)
     {
         if(target == null)
         {
@@ -23,10 +24,17 @@ public class BulletClass : MonoBehaviour
         mAttackDamage = damage;
 
 
-        mBulletEffectObj = Resources.Load("01.Prefabs/Bullet/BulletEffectImpact") as GameObject;
-        if (!mBulletEffectObj)
+        mBulletImpact = impact;
+        if (!mBulletImpact)
         {
             Debug.Log("Failed load bulletEffect");
+            return false;
+        }
+
+        mObjectPool = GameManager.Instance.GetObjectPool();
+        if (!mObjectPool)
+        {
+            Debug.Log("Failed Get ObjectPool");
             return false;
         }
         StartCoroutine(MoveCoroutine(mTargetTrs));
@@ -46,7 +54,7 @@ public class BulletClass : MonoBehaviour
 
         if(target == null)
         {
-            Destroy(this.gameObject);
+            mObjectPool.HideBullet(gameObject);
             yield break;
         }
     }
@@ -58,17 +66,18 @@ public class BulletClass : MonoBehaviour
             IDamagable damagable = other.GetComponentInParent<IDamagable>();
             if (damagable != null)
             {
-                GameObject obj = Instantiate(mBulletEffectObj, transform.position, Quaternion.identity) as GameObject;
-                if (!obj)
-                {
-                    Debug.Log("Failed Instantiate bulletEffect");
-                    return;
-                }
-
-                Destroy(obj, 2.0f);
                 damagable.Damage(mAttackDamage);
-                Destroy(this.gameObject);
+                mBulletImpact.transform.position = other.transform.position;
+                mBulletImpact.SetActive(true);
+                ParticleSystem ps = mBulletImpact.GetComponent<ParticleSystem>();
+                ps.Play();
+                mObjectPool.HideBullet(gameObject);
             }
         }
+    }
+
+    public GameObject GetBulletImpact()
+    {
+        return mBulletImpact;
     }
 }

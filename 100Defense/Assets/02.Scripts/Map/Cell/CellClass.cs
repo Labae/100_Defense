@@ -274,20 +274,22 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     {
         if (mTower == null)
         {
+            mWalkable = false;
+
+            if(!GameManager.Instance.GetWaveManager().GetIsWaving())
+            {
+                mMap.GetPathFinding().PathFind();
+                if (!mMap.GetPathFinding().GetPathSuccess())
+                {
+                    mWalkable = true;
+                    return false;
+                }
+            }
+
             mTower = CreateTower(type);
             if (!mTower.Build(this, type))
             {
                 Debug.Log("Failed Tower Initialize.");
-                return false;
-            }
-
-            mWalkable = false;
-
-            mMap.GetPathFinding().PathFind();
-            if (!mMap.GetPathFinding().GetPathSuccess())
-            {
-                mTower.Destroyimmediately(this);
-                mWalkable = true;
                 return false;
             }
 
@@ -311,7 +313,9 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         {
             mTower.DestroyTower(this);
             mWalkable = true;
-            mMap.GetPathFinding().PathFind();
+            //mMap.GetPathFinding().PathFind();
+            mMap.SetSelectedCell(null);
+            mTower = null;
             return true;
         }
     }

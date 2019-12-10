@@ -10,6 +10,7 @@ public class WaveManager : MonoBehaviour
     private WaitForSeconds mWFSNextEnemySpawnTime;
     private bool mIsWaveStart;
     private bool mIsWaving;
+    private bool mIsUpdatePath;
 
     public bool Initialize(MapManager map)
     {
@@ -31,6 +32,15 @@ public class WaveManager : MonoBehaviour
         mWFSNextEnemySpawnTime = new WaitForSeconds(1.0f);
 
         return true;
+    }
+
+    public void Loop()
+    {
+        if(!GetIsWaving() && !mIsUpdatePath)
+        {
+            mIsUpdatePath = true;
+            mMap.GetPathFinding().PathFind();
+        }
     }
 
     public bool WaveStart()
@@ -67,6 +77,7 @@ public class WaveManager : MonoBehaviour
             }
 
             StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveIndex]));
+            mIsUpdatePath = false;
 
             return true;
         }
@@ -95,7 +106,7 @@ public class WaveManager : MonoBehaviour
 
     public bool GetIsWaving()
     {
-        bool isWaveEnd = mMap.GetmEnemies().Count > 0 ? false : true;
+        bool isWaveEnd = mMap.GetEnemies().Count > 0 ? false : true;
 
         if(!mIsWaveStart && isWaveEnd)
         {

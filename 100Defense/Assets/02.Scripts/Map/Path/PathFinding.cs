@@ -141,7 +141,7 @@ public class PathFinding : MonoBehaviour
 
     public List<Vector3> GetPath()
     {
-        if(mPath == null)
+        if (mPath == null)
         {
             Debug.Log("Path is null");
             return null;
@@ -188,7 +188,9 @@ public class PathFinding : MonoBehaviour
             {
                 mPath[i].SetState(CellClass.CellState.ERoad);
             }
+
             mPath[i].Anim();
+
             yield return null;
         }
 

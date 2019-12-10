@@ -17,8 +17,8 @@ MonoBehaviour:
   dataArray:
   - key: ID_ENEMY01
     name: Red_Caterpillars
-    health: 10
-    movespeed: 1
+    health: 50
+    movespeed: 2
   - key: ID_ENEMY02
     name: Earthworm
     health: 30

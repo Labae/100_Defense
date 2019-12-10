@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    public class Pool
+    public class TowerPool
     {
         private readonly string key;
         private readonly GameObject prefab;
         private readonly int size;
 
-        public Pool(string _key, GameObject _prefab, int _size)
+        public TowerPool(string _key, GameObject _prefab, int _size)
         {
             key = _key;
             prefab = _prefab;
@@ -46,9 +46,19 @@ public class ObjectPool : MonoBehaviour
     /// Tower Data Dictionary
     /// </summary>
     private Dictionary<string, TowerData> mTowerDataDictionary;
+    /// <summary>
+    /// bullet object pool.
+    /// </summary>
+    public Queue<GameObject> BulletObjectPoolQueue;
+    private Queue<GameObject> mBulletImactPoolQueue;
     #endregion
 
     private Tower mTowerData;
+
+    private int mBulletAndImpactPoolLength = 250;
+    private Transform mBulletPoolParent;
+    private Transform mBulletImpactPoolParent;
+    private WaitForSeconds mWFSImpactHide;
 
     public Dictionary<string, TowerData> TowerDataDictionary { get => mTowerDataDictionary;}
 
@@ -58,6 +68,9 @@ public class ObjectPool : MonoBehaviour
         TowerObjectPoolDictionary = new Dictionary<string, Queue<GameObject>>();
         mTowerDataDictionary = new Dictionary<string, TowerData>();
         mTowerObjectPoolParentChildDictionary = new Dictionary<string, Transform>();
+        BulletObjectPoolQueue = new Queue<GameObject>();
+        mBulletImactPoolQueue = new Queue<GameObject>();
+        mWFSImpactHide = new WaitForSeconds(2.0f);
 
         GameObject objectPoolParnet = new GameObject("Object Pool Parent");
         Transform objectPoolParentTrs = objectPoolParnet.transform;
@@ -71,7 +84,7 @@ public class ObjectPool : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            Pool pool = new Pool(mTowerData.dataArray[i].Towerkey,
+            TowerPool pool = new TowerPool(mTowerData.dataArray[i].Towerkey,
                 Resources.Load("01.Prefabs/Tower/" + mTowerData.dataArray[i].Modelname) as GameObject,
                 poolSize);
 
@@ -92,6 +105,28 @@ public class ObjectPool : MonoBehaviour
             TowerObjectPoolDictionary.Add(pool.GetKey(), objectPool);
             mTowerObjectPoolParentChildDictionary.Add(pool.GetKey(), objectPoolParnetChild.transform);
             TowerDataDictionary.Add(mTowerData.dataArray[i].Towerkey, mTowerData.dataArray[i]);
+        }
+
+        GameObject bulletPrefab = Resources.Load("01.Prefabs/Bullet/Bullet") as GameObject;
+        GameObject bulletImapct = Resources.Load("01.Prefabs/Bullet/BulletImpact") as GameObject;
+        GameObject bulletPoolParent = new GameObject("Bullet Pool Parent");
+        GameObject bulletImpactPoolParent = new GameObject("BulletImpact Pool Parent");
+
+        mBulletPoolParent = bulletPoolParent.transform;
+        mBulletImpactPoolParent = bulletImpactPoolParent.transform;
+        mBulletPoolParent.SetParent(objectPoolParentTrs);
+        mBulletImpactPoolParent.SetParent(objectPoolParentTrs);
+
+        for (int i = 0; i < mBulletAndImpactPoolLength; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, mBulletPoolParent);
+            bullet.AddComponent<BulletClass>();
+            bullet.SetActive(false);
+            BulletObjectPoolQueue.Enqueue(bullet);
+
+            GameObject imapct = Instantiate(bulletImapct, mBulletImpactPoolParent);
+            imapct.SetActive(false);
+            mBulletImactPoolQueue.Enqueue(imapct);
         }
 
         return true;
@@ -135,6 +170,42 @@ public class ObjectPool : MonoBehaviour
         tower.SetActive(false);
         tower.transform.GetChild(0).localScale = Vector3.zero;
         tower.transform.SetParent(mTowerObjectPoolParentChildDictionary[key]);
+    }
+
+    public void SpawnBulletFromPool(Transform target, Vector3 position, int damage)
+    {
+        if(BulletObjectPoolQueue.Count < 0 || mBulletImactPoolQueue.Count < 0)
+        {
+            Debug.Log("BulletObjectPoolQueue or mBulletImactPoolQueue is less than 0");
+            return;
+        }
+
+        GameObject objectToSpawn = BulletObjectPoolQueue.Dequeue();
+        objectToSpawn.transform.position = position;
+        objectToSpawn.SetActive(true);
+        objectToSpawn.GetComponent<BulletClass>().Initialize(target, damage, mBulletImactPoolQueue.Dequeue());
+    }
+
+    public void HideBullet(GameObject bullet)
+    {
+        BulletObjectPoolQueue.Enqueue(bullet);
+        bullet.SetActive(false);
+        bullet.transform.SetParent(mBulletPoolParent);
+        bullet.transform.localPosition = Vector3.zero;
+
+        GameObject bulletImpact = bullet.GetComponent<BulletClass>().GetBulletImpact();
+        mBulletImactPoolQueue.Enqueue(bulletImpact);
+        bulletImpact.transform.SetParent(mBulletImpactPoolParent);
+        StartCoroutine(BulletImpactHideCoroutine(bulletImpact));
+    }
+    #endregion
+
+    #region Coroutine
+    private IEnumerator BulletImpactHideCoroutine(GameObject impact)
+    {
+        yield return mWFSImpactHide;
+        impact.SetActive(false);
+        impact.transform.localPosition = Vector3.zero;
     }
     #endregion
 
