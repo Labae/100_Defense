@@ -13,14 +13,27 @@ public class TowerBuyPanel : MonoBehaviour
     private TowerData mTowerData;
     private UIManager mUIManager;
 
+    private Dictionary<string, GameObject> mUISetTowerObjectDictionary = new Dictionary<string, GameObject>();
+
     public void SetData(TowerData towerData, GameObject model, UIManager uiManager)
     {
         mTowerData = towerData;
         mUIManager = uiManager;
 
-        GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
-        UITowerRotation towrRotation = uiSetTower.GetComponent<UITowerRotation>();
-        towrRotation.RotateTower();
+        if(!mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
+        {
+            GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
+            UITowerRotation towrRotation = uiSetTower.GetComponent<UITowerRotation>();
+            towrRotation.RotateTower();
+
+            mUISetTowerObjectDictionary.Add(mTowerData.Towerkey, uiSetTower);
+        }
+        else
+        {
+            GameObject towerObj = mUISetTowerObjectDictionary[mTowerData.Towerkey];
+            towerObj.SetActive(true);
+            towerObj.GetComponent<UITowerRotation>().RotateTower();
+        }
 
         mTowerTitle.text = mTowerData.Modelname;
 
@@ -62,7 +75,12 @@ public class TowerBuyPanel : MonoBehaviour
 
     public void ExitButton()
     {
-        Destroy(mTowerObjectParent.GetChild(0).gameObject);
+        if(mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
+        {
+            GameObject towerObj = mUISetTowerObjectDictionary[mTowerData.Towerkey];
+            towerObj.GetComponent<UITowerRotation>().StopRotateTower();
+            towerObj.SetActive(false);
+        }
         mTowerTitle.text = string.Empty;
         mTowerDescription.text = string.Empty;
         mBuyButton.onClick.Clear();

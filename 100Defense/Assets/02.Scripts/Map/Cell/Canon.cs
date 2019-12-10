@@ -38,14 +38,10 @@ public class Canon : MonoBehaviour
         }
         mAttackSpeedTimer -= Time.deltaTime;
 
-        // TODO : 이거 이상함.
         Vector3 dir = target.position - transform.position;
         dir.y = 0.0f;
 
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        Debug.Log(transform.parent.parent.parent.name + "A" + angle);
-        Debug.Log(transform.parent.parent.parent.name + towerRotationY);
-
         if(towerRotationY >= 180.0f)
         {
             angle += 180.0f;
@@ -59,8 +55,6 @@ public class Canon : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * 10.0f, Color.red);
             return;
         }
-
-        // 요기까지.
 
         if (mAttackSpeedTimer <= 0)
         {

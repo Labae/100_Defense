@@ -109,15 +109,15 @@ public class UIManager : MonoBehaviour
         Tower towerData = GameManager.Instance.GetObjectPool().GetTowerData();
 
         mStoreGrid.repositionNow = true;
+
+        GameObject setTower = Resources.Load("01.Prefabs/UI/Set Tower") as GameObject;
+        if (setTower == null)
+        {
+            return false;
+        }
         for (int i = 0; i < towerData.dataArray.Length; i++)
         {
-            GameObject setTower = Resources.Load("01.Prefabs/UI/Set Tower") as GameObject;
-            if (setTower == null)
-            {
-                return false;
-            }
             GameObject uiSetTower = Instantiate(setTower, mStoreGrid.transform);
-
 
             string modelName = towerData.dataArray[i].Modelname;
             GameObject towerModel = Resources.Load("01.Prefabs/Tower/" + modelName) as GameObject;
