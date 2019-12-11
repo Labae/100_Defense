@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
 
     private BoxCollider2D mAdBtnCollider;
     private BoxCollider2D mReturnCollider;
-    private Vector3 mAdAndReturnBtnRotation;
+    private Vector3 mDisapperRotation;
     #endregion
 
     #region Unity Function
@@ -177,8 +177,8 @@ public class UIManager : MonoBehaviour
         mReturnCollider = mReturnToBasicButton.GetComponent<BoxCollider2D>();
         mReturnCollider.enabled = false;
 
-        mAdAndReturnBtnRotation = new Vector3(0.0f, 90.0f, 0.0f);
-        mReturnToBasicButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.0f);
+        mDisapperRotation = new Vector3(0.0f, 90.0f, 0.0f);
+        mReturnToBasicButton.transform.DOLocalRotate(mDisapperRotation, 0.0f);
 
         return true;
     }
@@ -204,6 +204,12 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void FlipAnimation(GameObject apperObject, GameObject disapperObject)
+    {
+        apperObject.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
+        disapperObject.transform.DOLocalRotate(mDisapperRotation, 0.25f);
     }
 
     #endregion
@@ -245,12 +251,13 @@ public class UIManager : MonoBehaviour
 
     public void StoreOpenButton()
     {
-        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.5f).SetEase(Ease.InBack);
+        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.3f).SetEase(Ease.OutBack);
         mTowerStoreButton.SetActive(false);
         mTowerDestoryButton.SetActive(false);
-        mAdvertisementButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.25f).OnComplete(()=> mAdBtnCollider.enabled = false);
-        mReturnToBasicButton.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
+
+        FlipAnimation(mReturnToBasicButton, mAdvertisementButton);
         mReturnCollider.enabled = true;
+        mAdBtnCollider.enabled = false;
     }
 
     public void DestoryButton()
@@ -271,12 +278,15 @@ public class UIManager : MonoBehaviour
 
     public void ReturnToBasic()
     {
-        mAdvertisementButton.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
-        mAdBtnCollider.enabled = true;
-        mReturnToBasicButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.25f).OnComplete(() => mReturnCollider.enabled = false);
         mStoreGrid.transform.DOLocalMoveX(1000.0f, 0.0f);
         mTowerStoreButton.SetActive(true);
+        mTowerStoreButton.transform.DOScale(1.0f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.25f).From(0.0f);
         mTowerDestoryButton.SetActive(true);
+        mTowerDestoryButton.transform.DOScale(1.0f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.25f).From(0.0f);
+
+        FlipAnimation(mAdvertisementButton, mReturnToBasicButton);
+        mAdBtnCollider.enabled = true;
+        mReturnCollider.enabled = false;
     }
 
     public void OpenTowerBuyPanel(TowerData towerData, GameObject model)
