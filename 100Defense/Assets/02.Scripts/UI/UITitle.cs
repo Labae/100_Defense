@@ -5,24 +5,24 @@ using DG.Tweening;
 
 public class UITitle : MonoBehaviour
 {
-    public UIPanel TouchGuard;
-    public UIButton StartButton;
-    public GameObject CreditPanel;
+    [SerializeField] private UIPanel mTouchGuard;
+    [SerializeField] private UIButton mStartButton;
+    [SerializeField] private GameObject mCreditPanel;
 
     private void Start()
     {
-        StartButton.onClick.Add(new EventDelegate(() => SceneMove.Instance.MoveGameScene()));
+        mStartButton.onClick.Add(new EventDelegate(() => SceneMove.Instance.MoveGameScene()));
     }
 
     public void OpenCredit()
     {
-        CreditPanel.transform.DOLocalMoveX(0.0f, 0.2f).SetEase(Ease.Linear);
-        TouchGuard.depth = CreditPanel.GetComponent<UIPanel>().depth;
+        mCreditPanel.transform.DOLocalMoveX(0.0f, 0.2f).SetEase(Ease.Linear);
+        mTouchGuard.depth = mCreditPanel.GetComponent<UIPanel>().depth;
     }
 
     public void CloseCredit()
     {
-        CreditPanel.transform.DOLocalMoveX(1000.0f, 0.2f).SetEase(Ease.Linear);
-        TouchGuard.depth = 0;
+        mCreditPanel.transform.DOLocalMoveX(1000.0f, 0.2f).SetEase(Ease.Linear);
+        mTouchGuard.depth = 0;
     }
 }

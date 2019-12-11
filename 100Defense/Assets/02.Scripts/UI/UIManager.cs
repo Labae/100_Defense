@@ -90,6 +90,7 @@ public class UIManager : MonoBehaviour
     private Vector3 mDisapperRotation;
     private Color mTouchGuardOriginColor;
     private bool mIsShowGameOverPanel;
+    private float mStorePanelOffset;
     #endregion
 
     #region Unity Function
@@ -104,7 +105,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.Instance.GetIsGameOver() && !mIsShowGameOverPanel)
+        if (GameManager.Instance.GetIsGameOver() && !mIsShowGameOverPanel)
         {
             ShowGameOverPanel();
             mIsShowGameOverPanel = true;
@@ -145,6 +146,7 @@ public class UIManager : MonoBehaviour
         Tower towerData = GameManager.Instance.GetObjectPool().GetTowerData();
 
         mStoreGrid.repositionNow = true;
+        mStoreGrid.gameObject.SetActive(false);
 
         GameObject setTower = Resources.Load("01.Prefabs/UI/Set Tower") as GameObject;
         if (setTower == null)
@@ -197,6 +199,8 @@ public class UIManager : MonoBehaviour
         mReturnToBasicButton.transform.DOLocalRotate(mDisapperRotation, 0.0f);
 
         mTouchGuardOriginColor = mTouchGuard.GetComponentInChildren<UISprite>().color;
+
+        mStorePanelOffset = mUIStorePanel.clipOffset.x;
 
         return true;
     }
@@ -277,10 +281,12 @@ public class UIManager : MonoBehaviour
 
     public void StoreOpenButton()
     {
-        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.5f).SetEase(Ease.OutBack);
         mTowerStoreButton.SetActive(false);
         mTowerDestoryButton.SetActive(false);
 
+        mStoreGrid.gameObject.SetActive(true);
+        mUIStorePanel.transform.DOLocalMoveX(-296.0f, 0.5f).SetEase(Ease.OutBack).From(1000.0f);
+        mUIStorePanel.clipOffset = new Vector2(296.0f, 0.0f);
         FlipAnimation(mReturnToBasicButton, mAdvertisementButton, delegate { mReturnCollider.enabled = true; mAdBtnCollider.enabled = false; });
     }
 
@@ -302,7 +308,7 @@ public class UIManager : MonoBehaviour
 
     public void ReturnToBasic()
     {
-        mStoreGrid.transform.DOLocalMoveX(1000.0f, 0.0f);
+        mStoreGrid.gameObject.SetActive(false);
         mTowerStoreButton.SetActive(true);
         mTowerStoreButton.transform.DOScale(1.0f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.25f).From(0.0f);
         mTowerDestoryButton.SetActive(true);

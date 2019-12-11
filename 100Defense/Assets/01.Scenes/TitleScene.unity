@@ -775,9 +775,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 868d2559b8dc4784aaa2190e87919ca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TouchGuard: {fileID: 1873625959}
-  StartButton: {fileID: 855589424}
-  CreditPanel: {fileID: 987750131}
+  mTouchGuard: {fileID: 1873625959}
+  mStartButton: {fileID: 855589424}
+  mCreditPanel: {fileID: 987750131}
 --- !u!1 &708192020
 GameObject:
   m_ObjectHideFlags: 0

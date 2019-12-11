@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         Title,
         Game,
         GameOver
-    };
+    }
 
     private InputManager mInput;
     private GameObject mMapPrefab;
