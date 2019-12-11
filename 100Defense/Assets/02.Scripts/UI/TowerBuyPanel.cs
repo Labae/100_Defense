@@ -13,7 +13,7 @@ public class TowerBuyPanel : MonoBehaviour
     private TowerData mTowerData;
     private UIManager mUIManager;
 
-    private Dictionary<string, GameObject> mUISetTowerObjectDictionary = new Dictionary<string, GameObject>();
+    private readonly Dictionary<string, GameObject> mUISetTowerObjectDictionary = new Dictionary<string, GameObject>();
 
     public void SetData(TowerData towerData, GameObject model, UIManager uiManager)
     {

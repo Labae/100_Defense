@@ -38,6 +38,22 @@ public class UIManager : MonoBehaviour
     /// Tower Buy Panel Class
     /// </summary>
     [SerializeField] private TowerBuyPanel mTowerBuyPanel = null;
+    /// <summary>
+    /// Tower Store Button
+    /// </summary>
+    [SerializeField] private GameObject mTowerStoreButton = null;
+    /// <summary>
+    /// Tower Destroy Button
+    /// </summary>
+    [SerializeField] private GameObject mTowerDestoryButton = null;
+    /// <summary>
+    ///  Advertisement Button
+    /// </summary>
+    [SerializeField] private GameObject mAdvertisementButton = null;
+    /// <summary>
+    ///  ReturnToBasic Button
+    /// </summary>
+    [SerializeField] private GameObject mReturnToBasicButton = null;
     #endregion
 
     #region Private Value
@@ -61,6 +77,10 @@ public class UIManager : MonoBehaviour
     /// Store Panel Offset X 값.
     /// </summary>
     private float mPanelOffsetX;
+
+    private BoxCollider2D mAdBtnCollider;
+    private BoxCollider2D mReturnCollider;
+    private Vector3 mAdAndReturnBtnRotation;
     #endregion
 
     #region Unity Function
@@ -153,6 +173,13 @@ public class UIManager : MonoBehaviour
             uiTowerRotations[i].RotateTower();
         }
 
+        mAdBtnCollider = mAdvertisementButton.GetComponent<BoxCollider2D>();
+        mReturnCollider = mReturnToBasicButton.GetComponent<BoxCollider2D>();
+        mReturnCollider.enabled = false;
+
+        mAdAndReturnBtnRotation = new Vector3(0.0f, 90.0f, 0.0f);
+        mReturnToBasicButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.0f);
+
         return true;
     }
 
@@ -214,6 +241,42 @@ public class UIManager : MonoBehaviour
                 Debug.Log("Failed Wave to start");
             }
         }
+    }
+
+    public void StoreOpenButton()
+    {
+        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.5f).SetEase(Ease.InBack);
+        mTowerStoreButton.SetActive(false);
+        mTowerDestoryButton.SetActive(false);
+        mAdvertisementButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.25f).OnComplete(()=> mAdBtnCollider.enabled = false);
+        mReturnToBasicButton.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
+        mReturnCollider.enabled = true;
+    }
+
+    public void DestoryButton()
+    {
+        CellClass selectedCell = GameManager.Instance.GetMap().GetSelectedCell();
+       if (selectedCell == null)
+        {
+            return;
+        }
+
+        if(!selectedCell.DestoryTower())
+        {
+            return;
+        }
+
+        GameManager.Instance.GetMap().SetSelectedCell(null);
+    }
+
+    public void ReturnToBasic()
+    {
+        mAdvertisementButton.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
+        mAdBtnCollider.enabled = true;
+        mReturnToBasicButton.transform.DOLocalRotate(mAdAndReturnBtnRotation, 0.25f).OnComplete(() => mReturnCollider.enabled = false);
+        mStoreGrid.transform.DOLocalMoveX(1000.0f, 0.0f);
+        mTowerStoreButton.SetActive(true);
+        mTowerDestoryButton.SetActive(true);
     }
 
     public void OpenTowerBuyPanel(TowerData towerData, GameObject model)
