@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Setting Panel GameObject
     /// </summary>
-    [SerializeField] private GameObject mSettingPanel = null;
+    [SerializeField] private GameObject mSettingPanel;
     /// <summary>
     /// TouchGuard Panel
     /// </summary>
@@ -41,19 +41,19 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Tower Store Button
     /// </summary>
-    [SerializeField] private GameObject mTowerStoreButton = null;
+    [SerializeField] private GameObject mTowerStoreButton;
     /// <summary>
     /// Tower Destroy Button
     /// </summary>
-    [SerializeField] private GameObject mTowerDestoryButton = null;
+    [SerializeField] private GameObject mTowerDestoryButton;
     /// <summary>
     ///  Advertisement Button
     /// </summary>
-    [SerializeField] private GameObject mAdvertisementButton = null;
+    [SerializeField] private GameObject mAdvertisementButton;
     /// <summary>
     ///  ReturnToBasic Button
     /// </summary>
-    [SerializeField] private GameObject mReturnToBasicButton = null;
+    [SerializeField] private GameObject mReturnToBasicButton;
     #endregion
 
     #region Private Value
