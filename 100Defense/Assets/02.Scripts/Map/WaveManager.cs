@@ -36,7 +36,7 @@ public class WaveManager : MonoBehaviour
 
     public void Loop()
     {
-        if(!GetIsWaving() && !mIsUpdatePath)
+        if (!GetIsWaving() && !mIsUpdatePath)
         {
             mIsUpdatePath = true;
             mMap.GetPathFinding().PathFind();
@@ -45,7 +45,7 @@ public class WaveManager : MonoBehaviour
 
     public bool WaveStart()
     {
-        if(!mMap.GetPathFinding().GetPathSuccess())
+        if (!mMap.GetPathFinding().GetPathSuccess())
         {
             return false;
         }
@@ -87,13 +87,18 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator CreateEnemyCoroutine(string enemyKey, List<Vector3> path, int waveNumber, EnemyData enemyData)
     {
-        if(path == null)
+        if (path == null)
         {
             yield break;
         }
 
         for (int i = 0; i < waveNumber; i++)
         {
+            if (GameManager.Instance.GetIsGameOver())
+            {
+                mIsWaveStart = false;
+                yield break;
+            }
             GameObject enemyObject = new GameObject();
             EnemyClass enemy = enemyObject.AddComponent<EnemyClass>();
 
@@ -108,12 +113,12 @@ public class WaveManager : MonoBehaviour
     {
         bool isWaveEnd = mMap.GetEnemies().Count > 0 ? false : true;
 
-        if(!mIsWaveStart && isWaveEnd)
+        if (!mIsWaveStart && isWaveEnd)
         {
             mIsWaving = false;
         }
 
-        if(mIsWaveStart && !isWaveEnd)
+        if (mIsWaveStart && !isWaveEnd)
         {
             mIsWaving = true;
         }

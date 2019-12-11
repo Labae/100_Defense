@@ -27,7 +27,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
         }
 
         mEnemyEffect = Resources.Load("01.Prefabs/Enemy/EnemyEffectImpact") as GameObject;
-        if(!mEnemyEffect)
+        if (!mEnemyEffect)
         {
             Debug.Log("EnemyEffectImpact not load");
             return false;
@@ -62,7 +62,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
         GameObject model = Instantiate(modelData, Vector3.zero, Quaternion.identity);
         model.transform.SetParent(transform);
-        float cellHalfSizeY = mMap.GetCell(0,0).transform.localScale.y * 0.5f;
+        float cellHalfSizeY = mMap.GetCell(0, 0).transform.localScale.y * 0.5f;
         model.transform.localPosition = new Vector3(0.0f, cellHalfSizeY + model.transform.localScale.y * 0.5f, 0.0f);
 
         return model;
@@ -136,16 +136,17 @@ public class EnemyClass : MonoBehaviour, IDamagable
             yield return null;
         }
 
-        yield return StartCoroutine(DestroyEnemy());
+        yield return StartCoroutine(DestroyEnemyCoroutine());
+        GameManager.Instance.GetPlayerInfo().Life--;
     }
 
     private Vector3 GetAngle(Vector3 direction)
     {
-        if(direction.x > 0.0f)
+        if (direction.x > 0.0f)
         {
             return new Vector3(0.0f, 0.0f, 0.0f);
         }
-        else if(direction.x < 0.0f)
+        else if (direction.x < 0.0f)
         {
             return new Vector3(0.0f, 180.0f, 0.0f);
         }
@@ -163,16 +164,24 @@ public class EnemyClass : MonoBehaviour, IDamagable
         }
     }
 
-    private IEnumerator DestroyEnemy()
+    public void DestroyEnemy()
     {
-        GameManager.Instance.GetPlayerInfo().Life--;
+        StartCoroutine(DestroyEnemyCoroutine(5.0f));
+        GameObject effect = Instantiate(mEnemyEffect, transform.position, Quaternion.identity) as GameObject;
+        if (!effect)
+        {
+            Debug.Log("Failed Instantiate enemy effect");
+        }
+        Destroy(effect, 2.0f);
+    }
 
-
+    private IEnumerator DestroyEnemyCoroutine(float _speed = 1.0f)
+    {
         Vector3 originScale = mModel.transform.localScale;
         float x = mModel.transform.localScale.x;
         float y = mModel.transform.localScale.y;
         float z = mModel.transform.localScale.z;
-        float speed = 1.0f;
+        float speed = _speed;
 
         while (mModel.transform.localScale != Vector3.zero)
         {
@@ -187,17 +196,18 @@ public class EnemyClass : MonoBehaviour, IDamagable
         mModel.transform.localScale = Vector3.zero;
 
         mMap.RemoveEnemy(this);
+
         Destroy(this.gameObject);
     }
 
     public void Damage(int _damage)
     {
         Health -= _damage;
-        if(Health <= 0)
+        if (Health <= 0)
         {
             mMap.RemoveEnemy(this);
             GameObject effect = Instantiate(mEnemyEffect, transform.position, Quaternion.identity) as GameObject;
-            if(!effect)
+            if (!effect)
             {
                 Debug.Log("Failed Instantiate enemy effect");
                 return;

@@ -207,6 +207,98 @@ public class CSVManager : MonoBehaviour
     }
     #endregion
 
+    public void ClearCSVFiles()
+    {
+        List<string[]> rowData = new List<string[]>();
+        string[] rowDataTemp = new string[2];
+        rowDataTemp[0] = "Key";
+        rowDataTemp[1] = "TowerName";
+        rowData.Add(rowDataTemp);
+
+        for (int x = 0; x < mMapX; x++)
+        {
+            for (int y = 0; y < mMapY; y++)
+            {
+                rowDataTemp = new string[2];
+                int keyValue = x * mMapX + y % mMapY;
+                string mapIndex = keyValue.ToString();
+                rowDataTemp[0] = mapIndex;
+                rowDataTemp[1] = "0";
+                rowData.Add(rowDataTemp);
+            }
+        }
+
+        string[][] output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        int length = output.GetLength(0);
+        string delimiter = ",";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+        {
+            sb.AppendLine(string.Join(delimiter, output[index]));
+        }
+
+        string filePath = getPath("/Resources/03.Datas/Game/MapData.csv");
+
+        StreamWriter outStream = File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
+
+        rowData = new List<string[]>();
+        rowDataTemp = new string[2];
+        rowDataTemp[0] = "Key";
+        rowDataTemp[1] = "Value";
+        rowData.Add(rowDataTemp);
+
+        rowDataTemp = new string[2];
+        string key = "Gold";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = "0";
+        rowData.Add(rowDataTemp);
+
+        rowDataTemp = new string[2];
+        key = "WaveIndex";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = "0";
+        rowData.Add(rowDataTemp);
+
+        rowDataTemp = new string[2];
+        key = "Life";
+        rowDataTemp[0] = key;
+        rowDataTemp[1] = "3";
+        rowData.Add(rowDataTemp);
+
+        output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        length = output.GetLength(0);
+        delimiter = ",";
+
+        sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+        {
+            sb.AppendLine(string.Join(delimiter, output[index]));
+        }
+
+        filePath = getPath("/Resources/03.Datas/Game/PlayerInformation.csv");
+
+        outStream = File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
+    }
+
     private string getPath(string path)
     {
 #if UNITY_EDITOR

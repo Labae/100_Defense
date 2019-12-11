@@ -51,8 +51,15 @@ public class PlayerInformation : IObservable
         {
             if (mLife != value)
             {
-                mLife = value;
-                Notify();
+                if (value > 3)
+                {
+                    mLife = 3;
+                }
+                else
+                {
+                    mLife = value;
+                    Notify();
+                }
             }
         }
     }

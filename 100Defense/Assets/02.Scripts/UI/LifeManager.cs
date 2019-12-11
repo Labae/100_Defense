@@ -17,7 +17,7 @@ public class LifeManager : MonoBehaviour, IObserver
         }
 
         int life = GameManager.Instance.GetPlayerInfo().Life;
-        for (int i = 0; i < life; i++)
+        for (int i = 0; i < 3; i++)
         {
             GameObject obj = Instantiate(mLife, Vector3.zero, Quaternion.identity);
             obj.transform.SetParent(transform);
@@ -25,6 +25,11 @@ public class LifeManager : MonoBehaviour, IObserver
             obj.transform.rotation = Quaternion.identity;
             obj.transform.localScale = Vector3.one;
             obj.name = "Life" + i.ToString();
+
+            if(i > life - 1)
+            {
+                obj.SetActive(false);
+            }
         }
     }
     public void OnNotify(IObservable ob)

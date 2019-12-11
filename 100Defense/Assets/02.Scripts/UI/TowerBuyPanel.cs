@@ -20,7 +20,7 @@ public class TowerBuyPanel : MonoBehaviour
         mTowerData = towerData;
         mUIManager = uiManager;
 
-        if(!mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
+        if (!mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
         {
             GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
             UITowerRotation towrRotation = uiSetTower.GetComponent<UITowerRotation>();
@@ -84,6 +84,7 @@ public class TowerBuyPanel : MonoBehaviour
         mTowerTitle.text = string.Empty;
         mTowerDescription.text = string.Empty;
         mBuyButton.onClick.Clear();
+        mUIManager.CloseTowerBuyPanel();
     }
 
     private string StringTowerType(TowerType towerType)

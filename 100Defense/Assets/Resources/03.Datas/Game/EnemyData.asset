@@ -17,17 +17,17 @@ MonoBehaviour:
   dataArray:
   - key: ID_ENEMY01
     name: Red_Caterpillars
-    health: 50
+    health: 15
     movespeed: 1
   - key: ID_ENEMY02
     name: Earthworm
     health: 30
-    movespeed: 1.1
+    movespeed: 2
   - key: ID_ENEMY03
     name: Turtle
     health: 45
-    movespeed: 1.2
+    movespeed: 3
   - key: ID_ENEMY04
     name: Sloth
     health: 60
-    movespeed: 1.3
+    movespeed: 4

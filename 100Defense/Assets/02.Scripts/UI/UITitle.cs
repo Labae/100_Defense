@@ -6,10 +6,12 @@ using DG.Tweening;
 public class UITitle : MonoBehaviour
 {
     public UIPanel TouchGuard;
+    public UIButton StartButton;
     public GameObject CreditPanel;
 
     private void Start()
     {
+        StartButton.onClick.Add(new EventDelegate(() => SceneMove.Instance.MoveGameScene()));
     }
 
     public void OpenCredit()

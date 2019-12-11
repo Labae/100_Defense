@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using DG.Tweening;
 
 public class UIManager : MonoBehaviour
@@ -54,6 +55,12 @@ public class UIManager : MonoBehaviour
     ///  ReturnToBasic Button
     /// </summary>
     [SerializeField] private GameObject mReturnToBasicButton;
+    /// <summary>
+    ///  GameOver Panel
+    /// </summary>
+    [SerializeField] private GameObject mGameOverPanel;
+    [SerializeField]
+    private Color mTouchGuardGameoverColor;
     #endregion
 
     #region Private Value
@@ -81,12 +88,15 @@ public class UIManager : MonoBehaviour
     private BoxCollider2D mAdBtnCollider;
     private BoxCollider2D mReturnCollider;
     private Vector3 mDisapperRotation;
+    private Color mTouchGuardOriginColor;
+    private bool mIsShowGameOverPanel;
     #endregion
 
     #region Unity Function
+
     private void Start()
     {
-        if(!Initialize())
+        if (!Initialize())
         {
             return;
         }
@@ -94,6 +104,12 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.Instance.GetIsGameOver() && !mIsShowGameOverPanel)
+        {
+            ShowGameOverPanel();
+            mIsShowGameOverPanel = true;
+        }
+
         VisibleTowerUIRotation();
     }
     #endregion
@@ -180,6 +196,8 @@ public class UIManager : MonoBehaviour
         mDisapperRotation = new Vector3(0.0f, 90.0f, 0.0f);
         mReturnToBasicButton.transform.DOLocalRotate(mDisapperRotation, 0.0f);
 
+        mTouchGuardOriginColor = mTouchGuard.GetComponentInChildren<UISprite>().color;
+
         return true;
     }
 
@@ -206,10 +224,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void FlipAnimation(GameObject apperObject, GameObject disapperObject)
+    private void FlipAnimation(GameObject apperObject, GameObject disapperObject, TweenCallback callback)
     {
-        apperObject.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f);
         disapperObject.transform.DOLocalRotate(mDisapperRotation, 0.25f);
+        apperObject.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f).OnComplete(callback);
+    }
+
+    public void ShowGameOverPanel()
+    {
+        mGameOverPanel.transform.DOLocalMoveX(0.0f, 1.0f);
+        mTouchGuard.gameObject.SetActive(true);
+        mTouchGuard.depth = mGameOverPanel.GetComponent<UIPanel>().depth - 1;
+        mTouchGuard.GetComponentInChildren<UISprite>().color = mTouchGuardGameoverColor;
     }
 
     #endregion
@@ -222,7 +248,7 @@ public class UIManager : MonoBehaviour
     {
         mTouchGuard.gameObject.SetActive(true);
         mSettingPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
-        mTouchGuard.depth = mSettingPanel.GetComponent<UIPanel>().depth;
+        mTouchGuard.depth = mSettingPanel.GetComponent<UIPanel>().depth - 1;
     }
 
     /// <summary>
@@ -240,7 +266,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void WaveStart()
     {
-        if(mWaveManager)
+        if (mWaveManager)
         {
             if (!mWaveManager.WaveStart())
             {
@@ -251,24 +277,22 @@ public class UIManager : MonoBehaviour
 
     public void StoreOpenButton()
     {
-        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.3f).SetEase(Ease.OutBack);
+        mStoreGrid.transform.DOLocalMoveX(0.0f, 0.5f).SetEase(Ease.OutBack);
         mTowerStoreButton.SetActive(false);
         mTowerDestoryButton.SetActive(false);
 
-        FlipAnimation(mReturnToBasicButton, mAdvertisementButton);
-        mReturnCollider.enabled = true;
-        mAdBtnCollider.enabled = false;
+        FlipAnimation(mReturnToBasicButton, mAdvertisementButton, delegate { mReturnCollider.enabled = true; mAdBtnCollider.enabled = false; });
     }
 
     public void DestoryButton()
     {
         CellClass selectedCell = GameManager.Instance.GetMap().GetSelectedCell();
-       if (selectedCell == null)
+        if (selectedCell == null)
         {
             return;
         }
 
-        if(!selectedCell.DestoryTower())
+        if (!selectedCell.DestoryTower())
         {
             return;
         }
@@ -284,9 +308,7 @@ public class UIManager : MonoBehaviour
         mTowerDestoryButton.SetActive(true);
         mTowerDestoryButton.transform.DOScale(1.0f, 0.25f).SetEase(Ease.OutBack).SetDelay(0.25f).From(0.0f);
 
-        FlipAnimation(mAdvertisementButton, mReturnToBasicButton);
-        mAdBtnCollider.enabled = true;
-        mReturnCollider.enabled = false;
+        FlipAnimation(mAdvertisementButton, mReturnToBasicButton, delegate { mReturnCollider.enabled = false; mAdBtnCollider.enabled = true; });
     }
 
     public void OpenTowerBuyPanel(TowerData towerData, GameObject model)
@@ -294,7 +316,7 @@ public class UIManager : MonoBehaviour
         mTouchGuard.gameObject.SetActive(true);
         mTowerBuyPanel.SetData(towerData, model, this);
         mTowerBuyPanel.transform.DOLocalMoveX(0.0f, 0.25f).SetEase(Ease.InCirc);
-        mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth;
+        mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth - 1;
     }
 
     public void CloseTowerBuyPanel()
@@ -302,6 +324,76 @@ public class UIManager : MonoBehaviour
         mTouchGuard.gameObject.SetActive(false);
         mTowerBuyPanel.transform.DOLocalMoveX(1000.0f, 0.25f).SetEase(Ease.InCirc);
         mTouchGuard.depth = 0;
+    }
+
+    public void RestartBtn()
+    {
+        if (Advertisement.IsReady())
+        {
+            mTouchGuard.gameObject.SetActive(true);
+            mTouchGuard.depth = 999;
+            var option = new ShowOptions { resultCallback = RestartResultHandle };
+            Advertisement.Show(option);
+            mTouchGuard.GetComponentInChildren<UISprite>().color = mTouchGuardOriginColor;
+        }
+    }
+
+    public void GameEndBtn()
+    {
+        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+        SceneMove.Instance.MoveTitleScene();
+    }
+
+    public void AdvertisementBtn()
+    {
+        if (Advertisement.IsReady("rewardedVideo"))
+        {
+            mTouchGuard.gameObject.SetActive(true);
+            mTouchGuard.depth = 999;
+            var option = new ShowOptions { resultCallback = AdvertisementRewardHandle };
+            Advertisement.Show("rewardedVideo", option);
+        }
+    }
+
+    private void AdvertisementRewardHandle(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Failed:
+                Debug.Log("ad was failed");
+                break;
+            case ShowResult.Skipped:
+                mTouchGuard.gameObject.SetActive(false);
+                mTouchGuard.depth = 0;
+                Debug.Log("ad was skipped");
+                break;
+            case ShowResult.Finished:
+                mTouchGuard.gameObject.SetActive(false);
+                mTouchGuard.depth = 0;
+                GameManager.Instance.GetPlayerInfo().Life++;
+                Debug.Log("ad was finished");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void RestartResultHandle(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Failed:
+                Debug.Log("ad was failed");
+                break;
+            case ShowResult.Skipped:
+                Debug.Log("ad was skipped");
+                break;
+            case ShowResult.Finished:
+                Debug.Log("ad was finished");
+                break;
+            default:
+                break;
+        }
     }
     #endregion
 }

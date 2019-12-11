@@ -1,29 +1,31 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Advertisements;
 
 public class GameManager : MonoBehaviour
 {
     #region Singleton
-    public static GameManager instance; 
+    public static GameManager instance;
     public static GameManager Instance
     {
         get
         {
-            if(instance == null)
+            if (instance == null)
             {
                 GameManager[] objs = FindObjectsOfType<GameManager>();
-                if(objs.Length > 0)
+                if (objs.Length > 0)
                 {
                     instance = objs[0];
                 }
 
-                if(objs.Length > 1)
+                if (objs.Length > 1)
                 {
                     Debug.LogError("GameManager Error");
                 }
 
-                if(instance == null)
+                if (instance == null)
                 {
                     GameObject obj = new GameObject("GameManager");
                     obj.AddComponent<GameManager>();
@@ -35,6 +37,14 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public enum GameState
+    {
+        Splash,
+        Title,
+        Game,
+        GameOver
+    };
+
     private InputManager mInput;
     private GameObject mMapPrefab;
     private MapManager mMap;
@@ -45,10 +55,29 @@ public class GameManager : MonoBehaviour
     private PlayerInformation mPlayerInfo;
 
     private bool mInitializeSuccess;
+    private bool mIsGameover;
+    public bool IsGameOver
+    {
+        get
+        {
+            return mIsGameover;
+        }
+        set
+        {
+            if (value == true)
+            {
+                GameOver();
+            }
 
+            mIsGameover = value;
+        }
+    }
+
+    [SerializeField]
+    private GameState mGameState;
     [Header("Max Size (10, 10)")]
     [SerializeField]
-    private Vector2 mMapSize = Vector2.zero;
+    private Vector2 mMapSize = new Vector2(7, 7);
 
     private void Awake()
     {
@@ -64,9 +93,30 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    private void Update()
     {
-        StartCoroutine(Initialize());
+        if (mGameState == GameState.Game)
+        {
+            if (mInitializeSuccess)
+            {
+                if (!GetIsGameOver())
+                {
+                    if (mInput != null)
+                    {
+                        mInput.MouseEvent();
+                        mInput.KeyboardEvent();
+                    }
+                    if (mMap != null)
+                    {
+                        mMap.TowerUpdate();
+                    }
+                }
+            }
+        }
+    }
+    public void Initialize()
+    {
+        StartCoroutine(InitializeCoroutine());
         if (!mInitializeSuccess)
         {
             return;
@@ -74,20 +124,28 @@ public class GameManager : MonoBehaviour
         StartCoroutine(InitializeAnim());
     }
 
-    private void Update()
+    private void GameOver()
     {
-        if (mInput != null)
+        List<EnemyClass> enemise = mMap.GetEnemies();
+        for (int i = 0; i < enemise.Count; i++)
         {
-            mInput.MouseEvent();
-            mInput.KeyboardEvent();
-        }
-        if (mMap != null)
-        {
-            mMap.TowerUpdate();
+            enemise[i].DestroyEnemy();
         }
     }
 
-    private IEnumerator Initialize()
+    public bool GetIsGameOver()
+    {
+        IsGameOver = false;
+
+        if (mPlayerInfo.Life <= 0)
+        {
+            IsGameOver = true;
+        }
+
+        return IsGameOver;
+    }
+
+    private IEnumerator InitializeCoroutine()
     {
         mInitializeSuccess = true;
 
@@ -100,7 +158,7 @@ public class GameManager : MonoBehaviour
         }
 
         mPlayerInfo = mCSV.LoadPlayerInfo();
-        if(mPlayerInfo == null)
+        if (mPlayerInfo == null)
         {
             Debug.Log("Failed Load PlayerInfo");
             yield break;
@@ -129,7 +187,7 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
-        mMapPrefab = Instantiate<GameObject>(map, Vector3.zero, Quaternion.identity);
+        mMapPrefab = Instantiate(map, Vector3.zero, Quaternion.identity) as GameObject;
         if (!mMapPrefab)
         {
             Debug.Log("Failed Instantiate Map Prefab.");
@@ -221,6 +279,30 @@ public class GameManager : MonoBehaviour
     public ObjectPool GetObjectPool()
     {
         return mObjectPool;
+    }
+
+    public void SetGameState(GameState state)
+    {
+        if (mGameState != state)
+        {
+            mGameState = state;
+
+            switch (mGameState)
+            {
+                case GameState.Splash:
+                    break;
+                case GameState.Title:
+                    break;
+                case GameState.Game:
+                    mIsGameover = false;
+                    break;
+                case GameState.GameOver:
+                    mCSV.ClearCSVFiles();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     #region Static
