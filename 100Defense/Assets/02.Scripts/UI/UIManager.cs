@@ -78,8 +78,9 @@ public class UIManager : MonoBehaviour
     private readonly List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
     /// <summary>
     /// 이 값은 상점에서 3개의 타워 UI만 회전하게 하기 위한 값.
+    /// 구하는 방법은 max offset - 296 / (max tower count - 3)
     /// </summary>
-    private const float mOffsetX = 350.0f;
+    private const float mOffsetX = 343.6f;
     /// <summary>
     /// Store Panel Offset X 값.
     /// </summary>
@@ -90,6 +91,7 @@ public class UIManager : MonoBehaviour
     private Vector3 mDisapperRotation;
     private Color mTouchGuardOriginColor;
     private bool mIsShowGameOverPanel;
+    private readonly float mUITowerModelYPos = -45.0f;
     #endregion
 
     #region Unity Function
@@ -165,6 +167,7 @@ public class UIManager : MonoBehaviour
 
             GameObject tower = Instantiate(towerModel, uiSetTower.transform);
             tower.transform.GetChild(0).localScale = tower.transform.GetChild(0).localScale * 250.0f;
+            tower.transform.localPosition = new Vector3(tower.transform.localPosition.x, mUITowerModelYPos, tower.transform.localPosition.z);
             UITowerRotation towerRotation = tower.AddComponent<UITowerRotation>();
             uiTowerRotations.Add(towerRotation);
             Canon canon = tower.GetComponentInChildren<Canon>();
@@ -211,7 +214,7 @@ public class UIManager : MonoBehaviour
             int value = Mathf.RoundToInt(mPanelOffsetX / mOffsetX) - 1;
             for (int i = 0; i < uiTowerRotations.Count; i++)
             {
-                if (i >= value && i < value + 3)
+                if (i >= value && i < value + 4)
                 {
                     uiTowerRotations[i].RotateTower();
                 }

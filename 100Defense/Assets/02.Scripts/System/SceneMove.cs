@@ -59,5 +59,4 @@ public class SceneMove : MonoBehaviour
     {
         SceneManager.LoadScene("TitleScene");
     }
-
 }

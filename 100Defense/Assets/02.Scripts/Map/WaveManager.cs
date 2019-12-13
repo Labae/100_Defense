@@ -86,7 +86,6 @@ public class WaveManager : MonoBehaviour
             StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveIndex]));
             mIsUpdatePath = false;
 
-
             return true;
         }
 

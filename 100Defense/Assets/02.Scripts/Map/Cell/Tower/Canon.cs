@@ -61,7 +61,6 @@ public class Canon : MonoBehaviour
             mAttackSpeedTimer = mAttackSpeed;
             mObjectPool.SpawnBulletFromPool(target, transform.position, mAttackDamage);
         }
-
     }
 
     public void SetAttackTimerZero()

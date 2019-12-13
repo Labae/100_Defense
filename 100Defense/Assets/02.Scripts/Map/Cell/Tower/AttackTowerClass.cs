@@ -6,7 +6,7 @@ public class AttackTowerClass : TowerClass
 {
     private Canon mCanon;
     private float mAttackRange;
-    private float mRotateSpeed = 5.0f;
+    private readonly float mRotateSpeed = 5.0f;
 
     public override bool Initialize(string cellData)
     {
@@ -66,7 +66,7 @@ public class AttackTowerClass : TowerClass
         base.Loop(enemies);
         Transform target = null;
         target = GetWithinRange(enemies);
-        Rotate(enemies, target); 
+        Rotate(target); 
         mCanon.Loop(target, transform.eulerAngles.y);
     }
 
@@ -87,7 +87,7 @@ public class AttackTowerClass : TowerClass
         return nearestEnemy;
     }
 
-    private void Rotate(List<EnemyClass> enemies, Transform target)
+    private void Rotate(Transform target)
     {
         if (target == null)
         {
@@ -98,7 +98,6 @@ public class AttackTowerClass : TowerClass
                 Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
                 transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
             }
-            return;
         }
         else
         {

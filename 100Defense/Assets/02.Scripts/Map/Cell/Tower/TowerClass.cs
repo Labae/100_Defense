@@ -39,7 +39,6 @@ public class TowerClass : MonoBehaviour
 
     public virtual void Loop(List<EnemyClass> enemies)
     {
-
     }
 
     public virtual bool Build(CellClass cell, string cellData)

@@ -44,8 +44,6 @@ public class PlusBuffTowerClass : BuffTowerClass
             case BuffType.AttackRange:
                 mBuffAmount = mTowerData.Buffamount;
                 break;
-            default:
-                break;
         }
 
         mTargetTowers = GetTargetTowers(mTargetPositions);

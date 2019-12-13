@@ -42,8 +42,6 @@ public class CubeBuffTowerClass : BuffTowerClass
             case BuffType.AttackRange:
                 mBuffAmount = mTowerData.Buffamount;
                 break;
-            default:
-                break;
         }
 
         mTargetTowers = GetTargetTowers(mTargetPositions);

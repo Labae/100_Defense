@@ -343,8 +343,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         BuffShapeType buffShapeType = data.BUFFSHAPETYPE;
         switch (buffShapeType)
         {
-            case BuffShapeType.None:
-                break;
             case BuffShapeType.Plus:
                 tower = towrObj.AddComponent<PlusBuffTowerClass>();
                 break;
@@ -353,8 +351,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
                 break;
             case BuffShapeType.Cube:
                 tower = towrObj.AddComponent<CubeBuffTowerClass>();
-                break;
-            default:
                 break;
         }
 
