@@ -260,7 +260,7 @@ public class CSVManager : MonoBehaviour
         rowDataTemp = new string[2];
         string key = "Gold";
         rowDataTemp[0] = key;
-        rowDataTemp[1] = "0";
+        rowDataTemp[1] = "100";
         rowData.Add(rowDataTemp);
 
         rowDataTemp = new string[2];

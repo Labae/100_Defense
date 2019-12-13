@@ -24,4 +24,8 @@ public class EnemyData
   float movespeed;
   public float Movespeed { get {return movespeed; } set { movespeed = value;} }
   
+  [SerializeField]
+  int price;
+  public int Price { get {return price; } set { price = value;} }
+  
 }

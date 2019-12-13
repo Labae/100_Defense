@@ -256,11 +256,24 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     private TowerClass CreateTower(string towerName)
     {
         GameObject towerObject = GameManager.Instance.GetObjectPool().SpawnTowerFromPool(towerName, transform);
-        TowerClass tower = GetComponent<TowerClass>();
-        if (tower == null)
+        TowerData towerData = GameManager.Instance.GetObjectPool().TowerDataDictionary[towerName];
+
+        TowerClass tower = null;
+
+        switch (towerData.TOWERTYPE)
         {
-            tower = towerObject.AddComponent<TowerClass>();
+            case TowerType.Attack:
+                tower = towerObject.AddComponent<AttackTowerClass>();
+                break;
+            case TowerType.Buff:
+                tower = AddBuffTowerClass(towerObject, towerData);
+                break;
+            default:
+                tower = null;
+                Debug.LogError("Tower is null");
+                break;
         }
+
         mMap.AddTower(tower);
 
         return tower;
@@ -269,14 +282,14 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     /// <summary>
     /// Build Tower
     /// </summary>
-    /// <param name="type"></param>
-    public bool BuildTower(string type)
+    /// <param name="key"></param>
+    public bool BuildTower(string key)
     {
         if (mTower == null)
         {
             mWalkable = false;
 
-            if(!GameManager.Instance.GetWaveManager().GetIsWaving())
+            if (!GameManager.Instance.GetWaveManager().GetIsWaving())
             {
                 mMap.GetPathFinding().PathFind();
                 if (!mMap.GetPathFinding().GetPathSuccess())
@@ -286,8 +299,8 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
                 }
             }
 
-            mTower = CreateTower(type);
-            if (!mTower.Build(this, type))
+            mTower = CreateTower(key);
+            if (!mTower.Build(this, key))
             {
                 Debug.Log("Failed Tower Initialize.");
                 return false;
@@ -316,12 +329,41 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mMap.SetSelectedCell(null);
             mTower = null;
 
-            if(!GameManager.Instance.GetWaveManager().GetIsWaving())
+            if (!GameManager.Instance.GetWaveManager().GetIsWaving())
             {
                 mMap.GetPathFinding().PathFind();
             }
             return true;
         }
+    }
+
+    private TowerClass AddBuffTowerClass(GameObject towrObj, TowerData data)
+    {
+        TowerClass tower = null;
+        BuffShapeType buffShapeType = data.BUFFSHAPETYPE;
+        switch (buffShapeType)
+        {
+            case BuffShapeType.None:
+                break;
+            case BuffShapeType.Plus:
+                tower = towrObj.AddComponent<PlusBuffTowerClass>();
+                break;
+            case BuffShapeType.Cross:
+                tower = towrObj.AddComponent<CrossBuffTowerClass>();
+                break;
+            case BuffShapeType.Cube:
+                tower = towrObj.AddComponent<CubeBuffTowerClass>();
+                break;
+            default:
+                break;
+        }
+
+        if(tower == null)
+        {
+            Debug.Log("Buff Tower Class is null");
+        }
+
+        return tower;
     }
 
     /// <summary>

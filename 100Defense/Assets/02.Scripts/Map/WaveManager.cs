@@ -11,6 +11,8 @@ public class WaveManager : MonoBehaviour
     private bool mIsWaveStart;
     private bool mIsWaving;
     private bool mIsUpdatePath;
+    [SerializeField]
+    private PlayerInformation mPrevPlayerInfo;
 
     public bool Initialize(MapManager map)
     {
@@ -30,6 +32,7 @@ public class WaveManager : MonoBehaviour
 
         mMap = map;
         mWFSNextEnemySpawnTime = new WaitForSeconds(1.0f);
+        mPrevPlayerInfo = new PlayerInformation();
 
         return true;
     }
@@ -62,7 +65,11 @@ public class WaveManager : MonoBehaviour
             string enemyKey = mWaveData.dataArray[waveIndex].Enemykey;
             int waveCount = mWaveData.dataArray[waveIndex].COUNT;
             mIsWaveStart = true;
-            GameManager.Instance.GetPlayerInfo().WaveIndex++;
+            PlayerInformation info = GameManager.Instance.GetPlayerInfo();
+            mPrevPlayerInfo.Gold = info.Gold;
+            mPrevPlayerInfo.WaveIndex = info.WaveIndex;
+            mPrevPlayerInfo.Life = info.Life;
+            info.WaveIndex++;
 
             List<TowerClass> towers = mMap.GetTowers();
             for (int i = 0; i < towers.Count; i++)
@@ -78,6 +85,7 @@ public class WaveManager : MonoBehaviour
 
             StartCoroutine(CreateEnemyCoroutine(enemyKey, mMap.GetPathFinding().GetPath(), waveCount, mEnemyData.dataArray[waveIndex]));
             mIsUpdatePath = false;
+
 
             return true;
         }
@@ -124,5 +132,10 @@ public class WaveManager : MonoBehaviour
         }
 
         return mIsWaving;
+    }
+
+    public PlayerInformation GetPrevPlayerInfo()
+    {
+        return mPrevPlayerInfo;
     }
 }

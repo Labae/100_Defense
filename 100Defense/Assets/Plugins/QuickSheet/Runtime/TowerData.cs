@@ -36,4 +36,16 @@ public class TowerData
   float attackspeed;
   public float Attackspeed { get {return attackspeed; } set { attackspeed = value;} }
   
+  [SerializeField]
+  BuffShapeType buffshapetype;
+  public BuffShapeType BUFFSHAPETYPE { get {return buffshapetype; } set { buffshapetype = value;} }
+  
+  [SerializeField]
+  BuffType bufftype;
+  public BuffType BUFFTYPE { get {return bufftype; } set { bufftype = value;} }
+  
+  [SerializeField]
+  float buffamount;
+  public float Buffamount { get {return buffamount; } set { buffamount = value;} }
+  
 }

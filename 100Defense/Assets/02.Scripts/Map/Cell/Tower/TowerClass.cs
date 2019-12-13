@@ -5,15 +5,12 @@ using UnityEngine;
 public class TowerClass : MonoBehaviour
 {
     private Vector3 mOriginScale;
-    private Canon mCanon;
     private ObjectPool mObjectPool;
-    private TowerData mTowerData;
-    private float mAttackRange;
+    protected TowerData mTowerData;
 
-    private float mRotateSpeed = 5.0f;
     private int mPrice;
 
-    public bool Initialize(string cellData)
+    public virtual bool Initialize(string cellData)
     {
         transform.localPosition = Vector3.zero;
         mOriginScale = Vector3.one * 2.0f;
@@ -34,76 +31,18 @@ public class TowerClass : MonoBehaviour
 
         mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
-        mCanon = GetComponentInChildren<Canon>();
-        if (!mCanon)
-        {
-            Debug.Log("Failed Get Canon Component");
-            return false;
-        }
-
-        if (!mCanon.IsInitialize())
-        {
-            if (!mCanon.Initialize(mTowerData))
-            {
-                Debug.Log("Failed Initialize Canon");
-                return false;
-            }
-        }
-
-        mAttackRange = mTowerData.Range;
+       
         mPrice = mTowerData.Price;
 
         return true;
     }
 
-    public void Loop(List<EnemyClass> enemies)
+    public virtual void Loop(List<EnemyClass> enemies)
     {
-        Transform target = null;
-        target = GetWithinRange(enemies);
-        Rotate(enemies, target);
-        mCanon.Loop(target, transform.eulerAngles.y);
+
     }
 
-    private Transform GetWithinRange(List<EnemyClass> enemies)
-    {
-        Transform nearestEnemy = null;
-
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
-            if (dist <= mAttackRange)
-            {
-                nearestEnemy = enemies[i].transform;
-                break;
-            }
-        }
-
-        return nearestEnemy;
-    }
-
-    private void Rotate(List<EnemyClass> enemies, Transform target)
-    {
-        if (target == null)
-        {
-            if (!GameManager.Instance.GetWaveManager().GetIsWaving())
-            {
-                Vector3 dir = GameManager.Instance.GetMap().GetStartCell().transform.position - transform.position;
-                Quaternion lookRotation = Quaternion.LookRotation(dir);
-                Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
-                transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
-            }
-            return;
-        }
-        else
-        {
-            Vector3 dir = target.position - transform.position;
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * mRotateSpeed).eulerAngles;
-            transform.rotation = Quaternion.Euler(0.0f, rotation.y, 0.0f);
-        }
-    }
-
-    public bool Build(CellClass cell, string cellData)
+    public virtual bool Build(CellClass cell, string cellData)
     {
         transform.localPosition = Vector3.zero;
         mOriginScale = Vector3.one * 2.0f;
@@ -124,20 +63,6 @@ public class TowerClass : MonoBehaviour
 
         mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
-        mCanon = GetComponentInChildren<Canon>();
-        if (!mCanon)
-        {
-            Debug.Log("Failed Get Canon Component");
-            return false;
-        }
-
-        if (!mCanon.Initialize(mTowerData))
-        {
-            Debug.Log("Failed Initialize Canon");
-            return false;
-        }
-
-        mAttackRange = mTowerData.Range;
         mPrice = mTowerData.Price;
 
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.Towerkey);
@@ -147,18 +72,12 @@ public class TowerClass : MonoBehaviour
         return true;
     }
 
-    public void DestroyTower(CellClass cell)
+    public virtual void DestroyTower(CellClass cell)
     {
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
         cell.GetMap().RemoveTower(this);
+        GameManager.Instance.GetPlayerInfo().Gold += Mathf.RoundToInt(mPrice * 0.5f);
         StartCoroutine(DestoryCoroutine());
-    }
-
-    public void Destroyimmediately(CellClass cell)
-    {
-        cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
-        cell.GetMap().RemoveTower(this);
-        mObjectPool.HideTower(mTowerData.Towerkey, gameObject);
     }
 
     public IEnumerator ApperanceAnim()
@@ -207,5 +126,23 @@ public class TowerClass : MonoBehaviour
     public int GetPrice()
     {
         return mPrice;
+    }
+    public virtual void UpdateAttackRange(float newAttackRange)
+    {
+    }
+    public virtual void DowngradeAttackRange(float newAttackRange)
+    {
+    }
+    public virtual void UpdateAttackDamage(int newAttackDamage)
+    {
+    }
+    public virtual void DowngradeAttackDamage(int newAttackDamage)
+    {
+    }
+    public virtual void UpdateAttackSpeed(float newAttackSpeed)
+    {
+    }
+    public virtual void DowngradeAttackSpeed(float newAttackSpeed)
+    {
     }
 }

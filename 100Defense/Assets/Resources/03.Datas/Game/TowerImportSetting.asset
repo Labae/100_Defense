@@ -46,4 +46,16 @@ MonoBehaviour:
     name: AttackSpeed
     isEnable: 0
     isArray: 0
+  - type: 7
+    name: BuffShapeType
+    isEnable: 0
+    isArray: 0
+  - type: 7
+    name: BuffType
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: BuffAmount
+    isEnable: 0
+    isArray: 0
   AccessCode: 

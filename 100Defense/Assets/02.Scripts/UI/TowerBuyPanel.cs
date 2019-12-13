@@ -61,14 +61,14 @@ public class TowerBuyPanel : MonoBehaviour
             return;
         }
 
-        if(GameManager.Instance.GetMap().GetSelectedCell() == null)
+        if(GameManager.Instance.GetMapManager().GetSelectedCell() == null)
         {
             // TODO : Cell 선택 알려주는 Image.
             return;
         }
 
-        GameManager.Instance.GetMap().GetSelectedCell().BuildTower(mTowerData.Towerkey);
-        GameManager.Instance.GetMap().SetSelectedCell(null);
+        GameManager.Instance.GetMapManager().GetSelectedCell().BuildTower(mTowerData.Towerkey);
+        GameManager.Instance.GetMapManager().SetSelectedCell(null);
         mUIManager.CloseTowerBuyPanel();
         ExitButton();
     }

@@ -32,11 +32,11 @@ public class Canon : MonoBehaviour
 
     public void Loop(Transform target, float towerRotationY)
     {
+        mAttackSpeedTimer -= Time.deltaTime;
         if (target == null)
         {
             return;
         }
-        mAttackSpeedTimer -= Time.deltaTime;
 
         Vector3 dir = target.position - transform.position;
         dir.y = 0.0f;
@@ -72,5 +72,25 @@ public class Canon : MonoBehaviour
     public bool IsInitialize()
     {
         return mIsInitialize;
+    }
+
+    public void UpdateAttackDamage(int newAttackDamage)
+    {
+        mAttackDamage = mAttackDamage + newAttackDamage;
+    }
+
+    public void UpdateAttackSpeed(float newAttackSpeed)
+    {
+        mAttackSpeed = mAttackSpeed + newAttackSpeed;
+    }
+
+    public void DowngradeAttackDamage(int newAttackDamage)
+    {
+        mAttackDamage = mAttackDamage - newAttackDamage;
+    }
+
+    public void DowngradeAttackSpeed(float newAttackSpeed)
+    {
+        mAttackSpeed = mAttackSpeed - newAttackSpeed;
     }
 }

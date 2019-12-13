@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class EnemyClass : MonoBehaviour, IDamagable
 {
-    private float mSpeed;
     private GameObject mModel;
     private MapManager mMap;
     private GameObject mEnemyEffect;
 
+    private float mSpeed;
     public int Health { get; set; }
+    private int mPrice;
 
     public bool Initialize(MapManager map, string enemyKey, List<Vector3> path, EnemyData data)
     {
@@ -18,6 +19,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
         transform.name = data.Name;
         mSpeed = data.Movespeed;
         Health = data.Health;
+        mPrice = data.Price;
 
         mModel = CreateModel(data.Name, path[0]);
         if (!mModel)
@@ -213,6 +215,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
                 return;
             }
 
+            GameManager.Instance.GetPlayerInfo().Gold += mPrice;
             Destroy(effect, 2.0f);
             Destroy(this.gameObject);
         }

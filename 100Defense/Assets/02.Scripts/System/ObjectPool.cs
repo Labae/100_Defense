@@ -37,7 +37,7 @@ public class ObjectPool : MonoBehaviour
     /// <summary>
     /// 맵에 설치될 타워의 오브젝트 풀.
     /// </summary>
-    private Dictionary<string, Queue<GameObject>> TowerObjectPoolDictionary;
+    private Dictionary<string, Queue<GameObject>> mTowerObjectPoolDictionary;
     /// <summary>
     /// 오브젝트들이 Active가 false일때 저장될 부모 Transform.
     /// </summary>
@@ -46,11 +46,13 @@ public class ObjectPool : MonoBehaviour
     /// Tower Data Dictionary
     /// </summary>
     private Dictionary<string, TowerData> mTowerDataDictionary;
+    private Dictionary<BuffType, Queue<GameObject>> mTowerEffectDictionary;
     /// <summary>
     /// bullet object pool.
     /// </summary>
     public Queue<GameObject> BulletObjectPoolQueue;
     private Queue<GameObject> mBulletImactPoolQueue;
+    private List<Transform> mTowerEffectParents;
     #endregion
 
     private Tower mTowerData;
@@ -60,23 +62,25 @@ public class ObjectPool : MonoBehaviour
     private Transform mBulletImpactPoolParent;
     private WaitForSeconds mWFSImpactHide;
 
-    public Dictionary<string, TowerData> TowerDataDictionary { get => mTowerDataDictionary;}
+    public Dictionary<string, TowerData> TowerDataDictionary { get => mTowerDataDictionary; }
 
     #region Method
     public bool Initialize(Vector2 mapSize)
     {
-        TowerObjectPoolDictionary = new Dictionary<string, Queue<GameObject>>();
+        mTowerObjectPoolDictionary = new Dictionary<string, Queue<GameObject>>();
         mTowerDataDictionary = new Dictionary<string, TowerData>();
         mTowerObjectPoolParentChildDictionary = new Dictionary<string, Transform>();
         BulletObjectPoolQueue = new Queue<GameObject>();
         mBulletImactPoolQueue = new Queue<GameObject>();
+        mTowerEffectDictionary = new Dictionary<BuffType, Queue<GameObject>>();
+        mTowerEffectParents = new List<Transform>();
         mWFSImpactHide = new WaitForSeconds(2.0f);
 
         GameObject objectPoolParnet = new GameObject("Object Pool Parent");
         Transform objectPoolParentTrs = objectPoolParnet.transform;
 
         mTowerData = GetTowerData();
-        
+
         int towerTypeLength = mTowerData.dataArray.Length;
         int poolSize = (int)mapSize.x * (int)mapSize.y - ((int)mapSize.x + (int)mapSize.y - 1);
 
@@ -102,7 +106,7 @@ public class ObjectPool : MonoBehaviour
                 objectPool.Enqueue(obj);
             }
 
-            TowerObjectPoolDictionary.Add(pool.GetKey(), objectPool);
+            mTowerObjectPoolDictionary.Add(pool.GetKey(), objectPool);
             mTowerObjectPoolParentChildDictionary.Add(pool.GetKey(), objectPoolParnetChild.transform);
             TowerDataDictionary.Add(mTowerData.dataArray[i].Towerkey, mTowerData.dataArray[i]);
         }
@@ -129,6 +133,42 @@ public class ObjectPool : MonoBehaviour
             mBulletImactPoolQueue.Enqueue(imapct);
         }
 
+        int buffTypeCount = (int)BuffType.End - 1;
+
+        GameObject towerEffectParent = new GameObject("TowerEffect Pool Parent");
+        towerEffectParent.transform.SetParent(objectPoolParentTrs);
+        towerEffectParent.transform.position = Vector3.zero;
+        towerEffectParent.transform.rotation = Quaternion.identity;
+        towerEffectParent.transform.localScale = Vector3.one;
+
+        GameObject attackEffect = Resources.Load("01.Prefabs/Tower/Buff/AttackEffect") as GameObject;
+        GameObject rangeEffect = Resources.Load("01.Prefabs/Tower/Buff/RangeEffect") as GameObject;
+        GameObject speedEffect = Resources.Load("01.Prefabs/Tower/Buff/SpeedEffect") as GameObject;
+
+        List<GameObject> towerEffectPrefabs = new List<GameObject>();
+        towerEffectPrefabs.Add(attackEffect);
+        towerEffectPrefabs.Add(rangeEffect);
+        towerEffectPrefabs.Add(speedEffect);
+        for (int index = 0; index < buffTypeCount; index++)
+        {
+            GameObject parent = new GameObject("Buff" + index.ToString());
+            parent.transform.SetParent(towerEffectParent.transform);
+            mTowerEffectParents.Add(parent.transform);
+            Queue<GameObject> objectQueue = new Queue<GameObject>();
+
+            for (int i = 0; i < poolSize; i++)
+            {
+                GameObject obj = Instantiate(towerEffectPrefabs[index], parent.transform);
+                obj.SetActive(false);
+                objectQueue.Enqueue(obj);
+            }
+
+            BuffType key = (BuffType)index + 1;
+
+            mTowerEffectDictionary.Add(key, objectQueue);
+        }
+
+
         return true;
     }
 
@@ -139,13 +179,13 @@ public class ObjectPool : MonoBehaviour
     /// <returns></returns>
     public GameObject SpawnTowerFromPool(string key, Transform parent)
     {
-        if(!TowerObjectPoolDictionary.ContainsKey(key))
+        if (!mTowerObjectPoolDictionary.ContainsKey(key))
         {
             Debug.Log("Failed Find key in TowerObjectPoolDictionary");
             return null;
         }
 
-        GameObject objectToSpawn = TowerObjectPoolDictionary[key].Dequeue();
+        GameObject objectToSpawn = mTowerObjectPoolDictionary[key].Dequeue();
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.SetParent(parent);
 
@@ -154,7 +194,7 @@ public class ObjectPool : MonoBehaviour
 
     public void HideTower(string key, GameObject tower)
     {
-        if (!TowerObjectPoolDictionary.ContainsKey(key))
+        if (!mTowerObjectPoolDictionary.ContainsKey(key))
         {
             Debug.Log("Failed Find key in TowerObjectPoolDictionary");
             return;
@@ -166,15 +206,20 @@ public class ObjectPool : MonoBehaviour
             return;
         }
 
-        TowerObjectPoolDictionary[key].Enqueue(tower);
+        mTowerObjectPoolDictionary[key].Enqueue(tower);
         tower.SetActive(false);
         tower.transform.GetChild(0).localScale = Vector3.zero;
         tower.transform.SetParent(mTowerObjectPoolParentChildDictionary[key]);
+        TowerClass towerClass = tower.GetComponent<TowerClass>();
+        if (towerClass != null)
+        {
+            Destroy(towerClass);
+        }
     }
 
     public void SpawnBulletFromPool(Transform target, Vector3 position, int damage)
     {
-        if(BulletObjectPoolQueue.Count < 0 || mBulletImactPoolQueue.Count < 0)
+        if (BulletObjectPoolQueue.Count < 0 || mBulletImactPoolQueue.Count < 0)
         {
             Debug.Log("BulletObjectPoolQueue or mBulletImactPoolQueue is less than 0");
             return;
@@ -198,6 +243,44 @@ public class ObjectPool : MonoBehaviour
         bulletImpact.transform.SetParent(mBulletImpactPoolParent);
         StartCoroutine(BulletImpactHideCoroutine(bulletImpact));
     }
+
+    public GameObject SpawnTowerEffect(BuffType key, Transform parent)
+    {
+        if (!mTowerEffectDictionary.ContainsKey(key))
+        {
+            Debug.Log("Failed Find key in mTowerBuffDictionary");
+        }
+
+        GameObject objectToSpawn = mTowerEffectDictionary[key].Dequeue();
+        if (objectToSpawn == null)
+        {
+            Debug.Log("Failed to spawn tower buff effect");
+            return null;
+        }
+        objectToSpawn.SetActive(true);
+        objectToSpawn.transform.SetParent(parent);
+        objectToSpawn.transform.localPosition = Vector3.zero;
+        objectToSpawn.transform.localScale = Vector3.one;
+
+        ParticleSystem ps = objectToSpawn.GetComponent<ParticleSystem>();
+        ps.Play();
+
+        return objectToSpawn;
+    }
+
+    public void HideTowerEffect(BuffType key, GameObject tower)
+    {
+        if (!mTowerEffectDictionary.ContainsKey(key))
+        {
+            Debug.Log("Failed Find key in mTowerBuffDictionary");
+            return;
+        }
+
+        mTowerEffectDictionary[key].Enqueue(tower);
+        tower.SetActive(false);
+        int index = (int)key - 1;
+        tower.transform.SetParent(mTowerEffectParents[index]);
+    }
     #endregion
 
     #region Coroutine
@@ -212,7 +295,7 @@ public class ObjectPool : MonoBehaviour
     #region Get
     public Tower GetTowerData()
     {
-        if(mTowerData != null)
+        if (mTowerData != null)
         {
             return mTowerData;
         }

@@ -34,4 +34,8 @@ MonoBehaviour:
     name: MoveSpeed
     isEnable: 0
     isArray: 0
+  - type: 3
+    name: Price
+    isEnable: 0
+    isArray: 0
   AccessCode: 

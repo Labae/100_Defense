@@ -53,19 +53,11 @@ public class SceneMove : MonoBehaviour
     public void MoveGameScene()
     {
         SceneManager.LoadScene("GameScene");
-        GameManager.Instance.SetGameState(GameManager.GameState.Game);
     }
 
     public void MoveTitleScene()
     {
-        StartCoroutine(MoveTitleSceneCoroutine());
+        SceneManager.LoadScene("TitleScene");
     }
 
-    private IEnumerator MoveTitleSceneCoroutine()
-    {
-        float waitTime = 1.0f;
-        yield return new WaitForSeconds(waitTime);
-        SceneManager.LoadScene("TitleScene");
-        GameManager.Instance.SetGameState(GameManager.GameState.Title);
-    }
 }

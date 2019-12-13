@@ -90,7 +90,6 @@ public class UIManager : MonoBehaviour
     private Vector3 mDisapperRotation;
     private Color mTouchGuardOriginColor;
     private bool mIsShowGameOverPanel;
-    private float mStorePanelOffset;
     #endregion
 
     #region Unity Function
@@ -169,11 +168,10 @@ public class UIManager : MonoBehaviour
             UITowerRotation towerRotation = tower.AddComponent<UITowerRotation>();
             uiTowerRotations.Add(towerRotation);
             Canon canon = tower.GetComponentInChildren<Canon>();
-            if (canon == null)
+            if (canon != null)
             {
-                break;
+                Destroy(canon);
             }
-            Destroy(canon);
 
             UIButton btn = uiSetTower.GetComponentInChildren<UIButton>();
             EventDelegate eventBtn = new EventDelegate(this, "OpenTowerBuyPanel");
@@ -199,9 +197,6 @@ public class UIManager : MonoBehaviour
         mReturnToBasicButton.transform.DOLocalRotate(mDisapperRotation, 0.0f);
 
         mTouchGuardOriginColor = mTouchGuard.GetComponentInChildren<UISprite>().color;
-
-        mStorePanelOffset = mUIStorePanel.clipOffset.x;
-
         return true;
     }
 
@@ -292,7 +287,7 @@ public class UIManager : MonoBehaviour
 
     public void DestoryButton()
     {
-        CellClass selectedCell = GameManager.Instance.GetMap().GetSelectedCell();
+        CellClass selectedCell = GameManager.Instance.GetMapManager().GetSelectedCell();
         if (selectedCell == null)
         {
             return;
@@ -303,7 +298,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        GameManager.Instance.GetMap().SetSelectedCell(null);
+        GameManager.Instance.GetMapManager().SetSelectedCell(null);
     }
 
     public void ReturnToBasic()
@@ -352,6 +347,11 @@ public class UIManager : MonoBehaviour
 
     public void AdvertisementBtn()
     {
+        if(GameManager.instance.GetPlayerInfo().Life == 3)
+        {
+            return;
+        }
+
         if (Advertisement.IsReady("rewardedVideo"))
         {
             mTouchGuard.gameObject.SetActive(true);
@@ -393,9 +393,15 @@ public class UIManager : MonoBehaviour
                 break;
             case ShowResult.Skipped:
                 Debug.Log("ad was skipped");
+                mTouchGuard.depth = 100;
+                mTouchGuard.GetComponentInChildren<UISprite>().color = Color.black;
+                GameManager.Instance.SetGameState(GameManager.GameState.Restart);
                 break;
             case ShowResult.Finished:
                 Debug.Log("ad was finished");
+                mTouchGuard.depth = 100;
+                mTouchGuard.GetComponentInChildren<UISprite>().color = Color.black;
+                GameManager.Instance.SetGameState(GameManager.GameState.Restart);
                 break;
             default:
                 break;

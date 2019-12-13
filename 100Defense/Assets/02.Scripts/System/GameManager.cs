@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         Splash,
         Title,
         Game,
+        Restart,
         GameOver
     }
 
@@ -261,7 +262,7 @@ public class GameManager : MonoBehaviour
         mMap.SetCanClick(true);
     }
 
-    public MapManager GetMap()
+    public MapManager GetMapManager()
     {
         return mMap;
     }
@@ -281,6 +282,11 @@ public class GameManager : MonoBehaviour
         return mObjectPool;
     }
 
+    public CSVManager GetCSVManager()
+    {
+        return mCSV;
+    }
+
     public void SetGameState(GameState state)
     {
         if (mGameState != state)
@@ -294,7 +300,14 @@ public class GameManager : MonoBehaviour
                 case GameState.Title:
                     break;
                 case GameState.Game:
+                    Initialize();
                     mIsGameover = false;
+                    break;
+                case GameState.Restart:
+                    PlayerInformation prevInfo = mWave.GetPrevPlayerInfo();
+                    mMap.Save();
+                    mCSV.SavePlayerInfo(prevInfo);
+                    SceneMove.Instance.MoveGameScene();
                     break;
                 case GameState.GameOver:
                     mCSV.ClearCSVFiles();

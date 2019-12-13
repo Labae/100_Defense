@@ -19,15 +19,19 @@ MonoBehaviour:
     name: Red_Caterpillars
     health: 15
     movespeed: 1
+    price: 10
   - key: ID_ENEMY02
     name: Earthworm
     health: 30
     movespeed: 2
+    price: 10
   - key: ID_ENEMY03
     name: Turtle
     health: 45
     movespeed: 3
+    price: 20
   - key: ID_ENEMY04
     name: Sloth
     health: 60
     movespeed: 4
+    price: 20

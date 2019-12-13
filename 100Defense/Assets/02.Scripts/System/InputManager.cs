@@ -49,7 +49,7 @@ public class InputManager : MonoBehaviour
     {
         if (mMap == null)
         {
-            mMap = GetComponent<GameManager>().GetMap();
+            mMap = GetComponent<GameManager>().GetMapManager();
         }
 
         if (!mMap.GetIsFinishedApperanceMapAnim())

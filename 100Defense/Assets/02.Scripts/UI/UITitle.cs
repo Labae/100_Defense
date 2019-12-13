@@ -11,6 +11,7 @@ public class UITitle : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.SetGameState(GameManager.GameState.Title);
         mStartButton.onClick.Add(new EventDelegate(() => SceneMove.Instance.MoveGameScene()));
     }
 

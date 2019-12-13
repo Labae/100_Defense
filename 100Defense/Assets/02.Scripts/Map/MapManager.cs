@@ -202,7 +202,6 @@ public class MapManager : MonoBehaviour
     public void Save()
     {
         mCSV.MapSave(mMapData);
-        mCSV.SavePlayerInfo(GameManager.Instance.GetPlayerInfo());
     }
     #endregion
 
@@ -360,6 +359,11 @@ public class MapManager : MonoBehaviour
     public bool GetIsFinishedApperanceMapAnim()
     {
         return mIsFinishedApperanceMapAnim;
+    }
+
+    public CellClass[,] GetMap()
+    {
+        return mMap;
     }
 
     #region Get PathFinding

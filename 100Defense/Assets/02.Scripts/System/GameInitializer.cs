@@ -6,6 +6,6 @@ public class GameInitializer : MonoBehaviour
 {
     void Start()
     {
-        GameManager.Instance.Initialize();
+        GameManager.Instance.SetGameState(GameManager.GameState.Game);
     }
 }
