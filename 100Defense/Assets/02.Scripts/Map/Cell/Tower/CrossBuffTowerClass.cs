@@ -91,7 +91,7 @@ public class CrossBuffTowerClass : BuffTowerClass
     /// 버프를 받을 수 있는 좌표를 받아오는 함수.
     /// </summary>
     /// <returns></returns>
-    private List<Tuple<int, int>> GetTargetPositions()
+    protected override List<Tuple<int, int>> GetTargetPositions()
     {
         List<Tuple<int, int>> positions = new List<Tuple<int, int>>();
         for (int i = -1; i < 2; i++)

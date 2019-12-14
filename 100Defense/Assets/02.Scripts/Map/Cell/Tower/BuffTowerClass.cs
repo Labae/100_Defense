@@ -204,5 +204,10 @@ public class BuffTowerClass : TowerClass
 
         return targetTowers.ToArray();
     }
+
+    protected virtual List<Tuple<int, int>> GetTargetPositions()
+    {
+        return null;
+    }
     #endregion
 }
