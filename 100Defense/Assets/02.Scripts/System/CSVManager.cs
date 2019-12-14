@@ -12,6 +12,12 @@ public class CSVManager : MonoBehaviour
     private int mMapX, mMapY;
 
     #region Load Save Map
+    /// <summary>
+    /// 맵 데이터 로드.
+    /// </summary>
+    /// <param name="sizeX"></param>
+    /// <param name="sizeY"></param>
+    /// <returns></returns>
     public string[,] LoadMap(int sizeX, int sizeY)
     {
         mMapX = sizeX;
@@ -58,7 +64,10 @@ public class CSVManager : MonoBehaviour
         strReader.Dispose();
         return retval;
     }
-
+    /// <summary>
+    /// 맵 데이터 저장.
+    /// </summary>
+    /// <param name="mapData"></param>
     public void MapSave(string[,] mapData)
     {
         List<string[]> rowData = new List<string[]>();
@@ -106,6 +115,10 @@ public class CSVManager : MonoBehaviour
     #endregion
 
     #region Load Save PlayerInfo
+    /// <summary>
+    /// 플레이어 정보 로드.
+    /// </summary>
+    /// <returns></returns>
     public PlayerInformation LoadPlayerInfo()
     {
         StreamReader strReader = new StreamReader(getPath("/Resources/03.Datas/Game/PlayerInformation.csv"));
@@ -155,7 +168,10 @@ public class CSVManager : MonoBehaviour
         strReader.Dispose();
         return playerInfo;
     }
-
+    /// <summary>
+    /// 플레이어 정보 저장.
+    /// </summary>
+    /// <param name="info"></param>
     public void SavePlayerInfo(PlayerInformation info)
     {
         List<string[]> rowData = new List<string[]>();
@@ -207,6 +223,9 @@ public class CSVManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// 모든 CSV File을 기본으로 설정.
+    /// </summary>
     public void ClearCSVFiles()
     {
         List<string[]> rowData = new List<string[]>();
@@ -299,6 +318,11 @@ public class CSVManager : MonoBehaviour
         outStream.Close();
     }
 
+    /// <summary>
+    /// 파일 경로 가져오기.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
     private string getPath(string path)
     {
 #if UNITY_EDITOR

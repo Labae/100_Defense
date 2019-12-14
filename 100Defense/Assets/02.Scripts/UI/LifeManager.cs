@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class LifeManager : MonoBehaviour, IObserver
 {
+    /// <summary>
+    /// Life 이미지를 자식으로 하는 Grid
+    /// </summary>
     [SerializeField] private UIGrid LifeGrid = null;
+    /// <summary>
+    /// Life GameObject.
+    /// </summary>
     private GameObject mLife;
+
+    #region Unity Event
     private void Start()
     {
         LifeGrid.repositionNow = true;
@@ -32,6 +40,9 @@ public class LifeManager : MonoBehaviour, IObserver
             }
         }
     }
+    #endregion
+
+    #region IObserver
     public void OnNotify(IObservable ob)
     {
         PlayerInformation info = ob as PlayerInformation;
@@ -51,4 +62,5 @@ public class LifeManager : MonoBehaviour, IObserver
             GetComponent<UIGrid>().Reposition();
         }
     }
+    #endregion
 }

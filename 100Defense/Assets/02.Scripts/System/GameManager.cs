@@ -37,6 +37,9 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// 게임 상태.
+    /// </summary>
     public enum GameState
     {
         Splash,
@@ -46,16 +49,43 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
+    /// <summary>
+    /// Input Manager
+    /// </summary>
     private InputManager mInput;
+    /// <summary>
+    /// 맵 Prefab
+    /// </summary>
     private GameObject mMapPrefab;
+    /// <summary>
+    /// 맵 클래스.
+    /// </summary>
     private MapManager mMap;
+    /// <summary>
+    /// CSV 매니저 클래스.
+    /// </summary>
     private CSVManager mCSV;
+    /// <summary>
+    /// 웨이브 매니저 클래스.
+    /// </summary>
     private WaveManager mWave;
+    /// <summary>
+    /// 오브젝트 풀 클래스.
+    /// </summary>
     private ObjectPool mObjectPool;
 
+    /// <summary>
+    /// 플레이어 정보.
+    /// </summary>
     private PlayerInformation mPlayerInfo;
 
+    /// <summary>
+    /// 초기화 성공 여부.
+    /// </summary>
     private bool mInitializeSuccess;
+    /// <summary>
+    /// 게임이 종료되었는지.
+    /// </summary>
     private bool mIsGameover;
     public bool IsGameOver
     {
@@ -74,12 +104,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private GameState mGameState;
+    /// <summary>
+    /// 현재 게임 상태.
+    /// </summary>
+    [SerializeField] private GameState mGameState;
+    /// <summary>
+    /// 맵 크기.
+    /// </summary>
     [Header("Max Size (10, 10)")]
-    [SerializeField]
-    private Vector2 mMapSize = new Vector2(7, 7);
+    [SerializeField] private Vector2 mMapSize = new Vector2(7, 7);
 
+    #region Unity Event
     private void Awake()
     {
         if (instance == null)
@@ -115,6 +150,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Method
+    /// <summary>
+    /// 게임 매니저 초기화.
+    /// </summary>
     public void Initialize()
     {
         StartCoroutine(InitializeCoroutine());
@@ -125,6 +166,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine(InitializeAnim());
     }
 
+    /// <summary>
+    /// 게임 종료 함수.
+    /// </summary>
     private void GameOver()
     {
         List<EnemyClass> enemise = mMap.GetEnemies();
@@ -133,19 +177,13 @@ public class GameManager : MonoBehaviour
             enemise[i].DestroyEnemy();
         }
     }
+    #endregion
 
-    public bool GetIsGameOver()
-    {
-        IsGameOver = false;
-
-        if (mPlayerInfo.Life <= 0)
-        {
-            IsGameOver = true;
-        }
-
-        return IsGameOver;
-    }
-
+    #region Coroutine
+    /// <summary>
+    /// 초기화 Coroutine
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator InitializeCoroutine()
     {
         mInitializeSuccess = true;
@@ -249,7 +287,10 @@ public class GameManager : MonoBehaviour
             yield break;
         }
     }
-
+    /// <summary>
+    /// 초기화 애니메이션.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator InitializeAnim()
     {
         yield return new WaitForSeconds(1.0f);
@@ -261,32 +302,61 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         mMap.SetCanClick(true);
     }
+    #endregion
 
+    #region Get Set
+    /// <summary>
+    /// 게임 종료 여부
+    /// </summary>
+    /// <returns></returns>
+    public bool GetIsGameOver()
+    {
+        IsGameOver = false;
+
+        if (mPlayerInfo.Life <= 0)
+        {
+            IsGameOver = true;
+        }
+
+        return IsGameOver;
+    }
+    /// <summary>
+    /// 맵 매니저 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public MapManager GetMapManager()
     {
         return mMap;
     }
-
+    /// <summary>
+    /// 웨이브 매니저 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public WaveManager GetWaveManager()
     {
         return mWave;
     }
-
+    /// <summary>
+    /// 플레이어 정보 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public PlayerInformation GetPlayerInfo()
     {
         return mPlayerInfo;
     }
-
+    /// <summary>
+    /// 오브젝트 풀 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public ObjectPool GetObjectPool()
     {
         return mObjectPool;
     }
 
-    public CSVManager GetCSVManager()
-    {
-        return mCSV;
-    }
-
+    /// <summary>
+    /// 게임 상태 설정.
+    /// </summary>
+    /// <param name="state"></param>
     public void SetGameState(GameState state)
     {
         if (mGameState != state)
@@ -318,7 +388,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
+
     #region Static
+    /// <summary>
+    /// 모든 Layer를 재설정.
+    /// </summary>
+    /// <param name="trans">부모 오브젝트</param>
+    /// <param name="name">레이어 이름</param>
     public static void ChangeLayerMaskRecursively(Transform trans, string name)
     {
         trans.gameObject.layer = LayerMask.NameToLayer(name);

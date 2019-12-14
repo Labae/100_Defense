@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 관찰자 interface
+/// </summary>
 public interface IObservable
 {
     void Notify();
@@ -9,6 +12,9 @@ public interface IObservable
     void RemoveObserver(IObserver ob);
 }
 
+/// <summary>
+/// 관찰 대상 interface
+/// </summary>
 public interface IObserver
 {
     void OnNotify(IObservable ob);

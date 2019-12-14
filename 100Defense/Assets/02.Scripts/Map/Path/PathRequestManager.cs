@@ -5,7 +5,13 @@ using System;
 
 public class PathRequestManager : MonoBehaviour
 {
+    /// <summary>
+    /// 길찾기 요청 큐.
+    /// </summary>
     private Queue<PathRequset> mPathRequestQueue = new Queue<PathRequset>();
+    /// <summary>
+    /// 현재 길찾기 요청.
+    /// </summary>
     private PathRequset mCurrentPathRequest;
 
     private static PathRequestManager instance;

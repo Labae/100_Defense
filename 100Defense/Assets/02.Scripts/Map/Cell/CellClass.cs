@@ -429,11 +429,16 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         return mMap;
     }
 
+    /// <summary>
+    /// 적이 걸을 수 있는 Cell인지를 가져옴.
+    /// </summary>
+    /// <returns></returns>
     public bool GetWalkable()
     {
         return mWalkable;
     }
 
+    #region Get Set A* Values
     public int GetGCost()
     {
         return mGCost;
@@ -458,17 +463,30 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     {
         return mParent;
     }
+    #endregion
 
+    /// <summary>
+    /// 적이 걸을 수 있는지를 설정.
+    /// </summary>
+    /// <param name="walkable"></param>
     public void SetWalkable(bool walkable)
     {
         mWalkable = walkable;
     }
 
+    /// <summary>
+    /// Cell의 상태를 가져오는 함수.
+    /// </summary>
+    /// <returns></returns>
     public CellState GetState()
     {
         return mState;
     }
 
+    /// <summary>
+    /// Cell의 상태를 설정하는 함수.
+    /// </summary>
+    /// <param name="state"></param>
     public void SetState(CellState state)
     {
         if (state == CellState.EStart || state == CellState.EGoal)

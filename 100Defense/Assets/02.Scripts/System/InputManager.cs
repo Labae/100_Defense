@@ -4,11 +4,25 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    /// <summary>
+    /// 맵 클래스.
+    /// </summary>
     private MapManager mMap;
+    /// <summary>
+    /// 메인 카메라.
+    /// </summary>
     private Camera mMainCamera;
-
+    /// <summary>
+    /// Cell의 LayerMask
+    /// </summary>
     private int mCellLayerMask;
 
+    #region Method
+    /// <summary>
+    /// InputManager 초기화 함수,
+    /// </summary>
+    /// <param name="map"></param>
+    /// <returns></returns>
     public bool Initlaize(MapManager map)
     {
         mMap = map;
@@ -23,6 +37,9 @@ public class InputManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 마우스 이벤트 처리 함수.
+    /// </summary>
     public void MouseEvent()
     {
         if (Input.GetMouseButtonDown(0))
@@ -31,20 +48,9 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void KeyboardEvent()
-    {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            DestroyTower();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            mMap.Save();
-
-        }
-    }
-
+    /// <summary>
+    /// Cell 클릭.
+    /// </summary>
     private void ClickCell()
     {
         if (mMap == null)
@@ -84,6 +90,20 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    #region Test Method
+    public void KeyboardEvent()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DestroyTower();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            mMap.Save();
+        }
+    }
+
     private void DestroyTower()
     {
         if (mMap.GetSelectedCell() != null)
@@ -91,4 +111,6 @@ public class InputManager : MonoBehaviour
             mMap.GetSelectedCell().DestoryTower();
         }
     }
+    #endregion
+    #endregion
 }

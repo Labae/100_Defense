@@ -59,8 +59,10 @@ public class UIManager : MonoBehaviour
     ///  GameOver Panel
     /// </summary>
     [SerializeField] private GameObject mGameOverPanel;
-    [SerializeField]
-    private Color mTouchGuardGameoverColor;
+    /// <summary>
+    /// 게임 종료시 뒷 배경 색깔.
+    /// </summary>
+    [SerializeField] private Color mTouchGuardGameoverColor;
     #endregion
 
     #region Private Value
@@ -78,7 +80,7 @@ public class UIManager : MonoBehaviour
     private readonly List<UITowerRotation> uiTowerRotations = new List<UITowerRotation>();
     /// <summary>
     /// 이 값은 상점에서 3개의 타워 UI만 회전하게 하기 위한 값.
-    /// 구하는 방법은 max offset - 296 / (max tower count - 3)
+    /// 구하는 방법은 max offset - min offset / (max tower count - 3)
     /// </summary>
     private const float mOffsetX = 343.6f;
     /// <summary>
@@ -86,11 +88,29 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private float mPanelOffsetX;
 
+    /// <summary>
+    /// 광고(하트추가) 버튼 콜라이더.
+    /// </summary>
     private BoxCollider2D mAdBtnCollider;
+    /// <summary>
+    /// 구매, 파괴 버튼으로 돌아가게하는 버튼 콜라이더.
+    /// </summary>
     private BoxCollider2D mReturnCollider;
+    /// <summary>
+    /// 광고버튼과, 돌아가는 버튼의 사라질 Rotation.
+    /// </summary>
     private Vector3 mDisapperRotation;
+    /// <summary>
+    /// 터치 가드의 원색.
+    /// </summary>
     private Color mTouchGuardOriginColor;
+    /// <summary>
+    /// 게임 오버 패널이 보였는지.
+    /// </summary>
     private bool mIsShowGameOverPanel;
+    /// <summary>
+    /// UI TowrModel의 y좌표.
+    /// </summary>
     private readonly float mUITowerModelYPos = -45.0f;
     #endregion
 
@@ -226,12 +246,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 뒤집는 애니메이션.
+    /// </summary>
+    /// <param name="apperObject"></param>
+    /// <param name="disapperObject"></param>
+    /// <param name="callback"> 완료될 때 실행할 함수 </param>
     private void FlipAnimation(GameObject apperObject, GameObject disapperObject, TweenCallback callback)
     {
         disapperObject.transform.DOLocalRotate(mDisapperRotation, 0.25f);
         apperObject.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(0.25f).OnComplete(callback);
     }
 
+    /// <summary>
+    /// 게임 오버 패널 보여주는 함수.
+    /// </summary>
     public void ShowGameOverPanel()
     {
         mGameOverPanel.transform.DOLocalMoveX(0.0f, 1.0f);
@@ -277,6 +306,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 상점을 여는 버튼.
+    /// </summary>
     public void StoreOpenButton()
     {
         mTowerStoreButton.SetActive(false);
@@ -288,6 +320,9 @@ public class UIManager : MonoBehaviour
         FlipAnimation(mReturnToBasicButton, mAdvertisementButton, delegate { mReturnCollider.enabled = true; mAdBtnCollider.enabled = false; });
     }
 
+    /// <summary>
+    /// 타워 파괴 버튼.
+    /// </summary>
     public void DestoryButton()
     {
         CellClass selectedCell = GameManager.Instance.GetMapManager().GetSelectedCell();
@@ -304,6 +339,9 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.GetMapManager().SetSelectedCell(null);
     }
 
+    /// <summary>
+    /// 기본(구매, 파괴)화면으로 돌아가는 함수.
+    /// </summary>
     public void ReturnToBasic()
     {
         mStoreGrid.gameObject.SetActive(false);
@@ -315,6 +353,11 @@ public class UIManager : MonoBehaviour
         FlipAnimation(mAdvertisementButton, mReturnToBasicButton, delegate { mReturnCollider.enabled = false; mAdBtnCollider.enabled = true; });
     }
 
+    /// <summary>
+    /// 타워 구매 패널 여는 버튼.
+    /// </summary>
+    /// <param name="towerData"></param>
+    /// <param name="model"></param>
     public void OpenTowerBuyPanel(TowerData towerData, GameObject model)
     {
         mTouchGuard.gameObject.SetActive(true);
@@ -323,6 +366,9 @@ public class UIManager : MonoBehaviour
         mTouchGuard.depth = mTowerBuyPanel.GetComponent<UIPanel>().depth - 1;
     }
 
+    /// <summary>
+    /// 타워 구매 패널 닫는 버튼.
+    /// </summary>
     public void CloseTowerBuyPanel()
     {
         mTouchGuard.gameObject.SetActive(false);
@@ -330,6 +376,9 @@ public class UIManager : MonoBehaviour
         mTouchGuard.depth = 0;
     }
 
+    /// <summary>
+    /// 게임 종료시 다시 시작하는 버튼.
+    /// </summary>
     public void RestartBtn()
     {
         if (Advertisement.IsReady())
@@ -342,12 +391,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 게임 종료 버튼.
+    /// </summary>
     public void GameEndBtn()
     {
         GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
         SceneMove.Instance.MoveTitleScene();
     }
 
+    /// <summary>
+    /// 광고 버튼(하트 추가).
+    /// </summary>
     public void AdvertisementBtn()
     {
         if(GameManager.instance.GetPlayerInfo().Life == 3)
@@ -364,6 +419,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 광고를 보고 하트를 얻는 Handle.
+    /// </summary>
+    /// <param name="result"></param>
     private void AdvertisementRewardHandle(ShowResult result)
     {
         switch (result)
@@ -387,6 +446,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 광고를 보고 다시 시작하는 Handle.
+    /// </summary>
+    /// <param name="result"></param>
     private void RestartResultHandle(ShowResult result)
     {
         switch (result)

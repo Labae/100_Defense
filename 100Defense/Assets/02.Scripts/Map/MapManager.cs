@@ -69,6 +69,12 @@ public class MapManager : MonoBehaviour
     #endregion
 
     #region Method
+    /// <summary>
+    /// 맵 초기화 함수.
+    /// </summary>
+    /// <param name="csv"></param>
+    /// <param name="mapSize"></param>
+    /// <returns></returns>
     public bool Initialize(CSVManager csv, Vector2 mapSize)
     {
         mMapSizeX = (int)mapSize.x;
@@ -154,21 +160,36 @@ public class MapManager : MonoBehaviour
     }
 
     #region Tower Function
+    /// <summary>
+    /// 현재 맵에 있는 타워 List에서 추가
+    /// </summary>
+    /// <param name="tower"></param>
     public void AddTower(TowerClass tower)
     {
         mTowers.Add(tower);
     }
 
+    /// <summary>
+    /// 현재 맵에 있는 타워 List에서 제거.
+    /// </summary>
+    /// <param name="tower"></param>
     public void RemoveTower(TowerClass tower)
     {
         mTowers.Remove(tower);
     }
 
+    /// <summary>
+    /// 현재 맵에 있는 타워들을 가져옴.
+    /// </summary>
+    /// <returns></returns>
     public List<TowerClass> GetTowers()
     {
         return mTowers;
     }
 
+    /// <summary>
+    /// 타워 루프 함수.
+    /// </summary>
     public void TowerUpdate()
     {
         for (int i = 0; i < mTowers.Count; i++)
@@ -180,17 +201,26 @@ public class MapManager : MonoBehaviour
     #endregion
 
     #region Enemy Function
-
+    /// <summary>
+    /// 현재 맵에 있는 적 List에 추가.
+    /// </summary>
+    /// <param name="enemy"></param>
     public void AddEnemy(EnemyClass enemy)
     {
         mEnemies.Add(enemy);
     }
-
+    /// <summary>
+    /// 현재 맵에 있는 적 List에서 제거.
+    /// </summary>
+    /// <param name="enemy"></param>
     public void RemoveEnemy(EnemyClass enemy)
     {
         mEnemies.Remove(enemy);
     }
-
+    /// <summary>
+    /// 현재 맵에 있는 적 List가져오기.
+    /// </summary>
+    /// <returns></returns>
     public List<EnemyClass> GetEnemies()
     {
         return mEnemies;
@@ -198,7 +228,9 @@ public class MapManager : MonoBehaviour
 
 
     #endregion
-
+    /// <summary>
+    /// 맵 데이터 저장.
+    /// </summary>
     public void Save()
     {
         mCSV.MapSave(mMapData);
@@ -206,9 +238,13 @@ public class MapManager : MonoBehaviour
     #endregion
 
     #region Coroutine
+    /// <summary>
+    /// 맵 애니메이션 Coroutine.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator MapAnimCoroutine()
     {
-        yield return StartCoroutine(CellApperanceAnimationCoroutine());
+        yield return StartCoroutine(MapApperanceAnimationCoroutine());
         for (int x = 0; x < mMapSizeX; x++)
         {
             for (int y = 0; y < mMapSizeY; y++)
@@ -222,7 +258,12 @@ public class MapManager : MonoBehaviour
         yield return mWFSCellStartGoalAnimTime;
         yield return StartCoroutine(CellStartGoalAnimationCoroutine());
     }
-    private IEnumerator CellApperanceAnimationCoroutine()
+
+    /// <summary>
+    /// 맵 등장 애니메이션.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator MapApperanceAnimationCoroutine()
     {
         // 짝수
         if(mMapSizeX % 2 == 0)
@@ -289,6 +330,10 @@ public class MapManager : MonoBehaviour
         mIsFinishedApperanceMapAnim = true;
     }
 
+    /// <summary>
+    /// 시작 Cell과 Goal Cell 애니메이션.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator CellStartGoalAnimationCoroutine()
     {
         mStartCell.Anim();
@@ -298,7 +343,13 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
+    #region Get Set
+
     #region Get Set SelectedCell
+    /// <summary>
+    /// 선택된 Cell을 설정.
+    /// </summary>
+    /// <param name="cell"></param>
     public void SetSelectedCell(CellClass cell)
     {
         if (mSelectedCell != null)
@@ -308,7 +359,10 @@ public class MapManager : MonoBehaviour
 
         mSelectedCell = cell;
     }
-
+    /// <summary>
+    /// 선택된 Cell을 가져옴.
+    /// </summary>
+    /// <returns></returns>
     public CellClass GetSelectedCell()
     {
         return mSelectedCell;
@@ -316,15 +370,27 @@ public class MapManager : MonoBehaviour
     #endregion
 
     #region Get Map Size
+    /// <summary>
+    /// 맵 사이즈 X가져오기.
+    /// </summary>
+    /// <returns></returns>
     public int GetMapSizeX()
     {
         return mMapSizeX;
     }
+    /// <summary>
+    /// 맵 사이즈 Y가져오기.
+    /// </summary>
+    /// <returns></returns>
     public int GetMapSizeY()
     {
         return mMapSizeY;
     }
 
+    /// <summary>
+    /// 맵 전체 사이즈 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public int GetMaxSize()
     {
         return mMapSizeX * mMapSizeY;
@@ -332,11 +398,19 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Get Cell Layer
+    /// </summary>
+    /// <returns></returns>
     public int GetCellLayerMask()
     {
         return 1 << LayerMask.NameToLayer("Cell");
     }
 
+    /// <summary>
+    /// 시작 Cell을 가져옴.
+    /// </summary>
+    /// <returns></returns>
     public CellClass GetStartCell()
     {
         return mStartCell;
@@ -344,11 +418,19 @@ public class MapManager : MonoBehaviour
 
     #region Get Set CanClick
 
+    /// <summary>
+    /// 클릭 가능한지에 대한 여부.
+    /// </summary>
+    /// <returns></returns>
     public bool GetCanClick()
     {
         return mCanClick;
     }
 
+    /// <summary>
+    /// 클릭 가능 여부를 설정.
+    /// </summary>
+    /// <param name="click"></param>
     public void SetCanClick(bool click)
     {
         mCanClick = click;
@@ -356,11 +438,19 @@ public class MapManager : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// 맵 등장 애니메이션이 끝났는지.
+    /// </summary>
+    /// <returns></returns>
     public bool GetIsFinishedApperanceMapAnim()
     {
         return mIsFinishedApperanceMapAnim;
     }
-
+    
+    /// <summary>
+    /// 맵(CellClass[,] 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public CellClass[,] GetMap()
     {
         return mMap;
@@ -372,6 +462,11 @@ public class MapManager : MonoBehaviour
         return mPathFind;
     }
 
+    /// <summary>
+    /// 주변 이웃 Cell가져오기.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
     public List<CellClass> GetNeighbours(CellClass node)
     {
         List<CellClass> neighbours = new List<CellClass>();
@@ -404,11 +499,12 @@ public class MapManager : MonoBehaviour
 
 
     #region Get Cell Function
-    public CellClass[,] GetCells()
-    {
-        return mMap;
-    }
-
+    /// <summary>
+    /// 특정 좌표의 Cell을 가져오기.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public CellClass GetCell(int x, int y)
     {
         return mMap[x, y];
@@ -417,6 +513,12 @@ public class MapManager : MonoBehaviour
     #endregion
 
     #region Get Set MapData
+    /// <summary>
+    /// 맵 데이터 설정.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="data"></param>
     public void SetMapData(int x, int y, string data)
     {
         if (data == null)
@@ -426,10 +528,15 @@ public class MapManager : MonoBehaviour
         mMapData[x, y] = data;
     }
 
+    /// <summary>
+    /// 맵 데이터 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public string[,] GetMapData()
     {
         return mMapData;
     }
 
+    #endregion
     #endregion
 }

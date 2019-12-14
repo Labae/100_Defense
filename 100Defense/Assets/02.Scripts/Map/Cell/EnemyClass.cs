@@ -4,14 +4,41 @@ using UnityEngine;
 
 public class EnemyClass : MonoBehaviour, IDamagable
 {
+    /// <summary>
+    /// 적의 모델.
+    /// </summary>
     private GameObject mModel;
+    /// <summary>
+    /// 맵 매니저 클래스
+    /// </summary>
     private MapManager mMap;
+    /// <summary>
+    /// 적이 죽을 때 나오는 효과.
+    /// </summary>
     private GameObject mEnemyEffect;
 
+    /// <summary>
+    /// 적의 이동 속도.
+    /// </summary>
     private float mSpeed;
+    /// <summary>
+    /// 적의 체력.
+    /// </summary>
     public int Health { get; set; }
+    /// <summary>
+    /// 적 처치시 나오는 돈.
+    /// </summary>
     private int mPrice;
 
+    #region Method
+    /// <summary>
+    /// 적 초기화 함수.
+    /// </summary>
+    /// <param name="map"></param>
+    /// <param name="enemyKey"></param>
+    /// <param name="path"></param>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public bool Initialize(MapManager map, string enemyKey, List<Vector3> path, EnemyData data)
     {
         mMap = map;
@@ -52,6 +79,12 @@ public class EnemyClass : MonoBehaviour, IDamagable
         return true;
     }
 
+    /// <summary>
+    /// 적 모델 생성 함수.
+    /// </summary>
+    /// <param name="modelName"></param>
+    /// <param name="startPos"></param>
+    /// <returns></returns>
     private GameObject CreateModel(string modelName, Vector3 startPos)
     {
         transform.position = startPos;
@@ -70,12 +103,37 @@ public class EnemyClass : MonoBehaviour, IDamagable
         return model;
     }
 
+    /// <summary>
+    /// 적 파괴 함수.
+    /// </summary>
+    public void DestroyEnemy()
+    {
+        StartCoroutine(DestroyEnemyCoroutine(5.0f));
+        GameObject effect = Instantiate(mEnemyEffect, transform.position, Quaternion.identity) as GameObject;
+        if (!effect)
+        {
+            Debug.Log("Failed Instantiate enemy effect");
+        }
+        Destroy(effect, 2.0f);
+    }
+    #endregion
+
+    #region Coroutine
+    /// <summary>
+    /// 적의 전체적인 코루틴.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
     private IEnumerator EnemyCoroutine(List<Vector3> path)
     {
         yield return StartCoroutine(ApperanceAnim());
         yield return StartCoroutine(FollowPath(path));
     }
 
+    /// <summary>
+    /// 적이 나타나는 애니메이션 코루틴.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ApperanceAnim()
     {
         Vector3 originScale = mModel.transform.localScale;
@@ -98,6 +156,11 @@ public class EnemyClass : MonoBehaviour, IDamagable
         mModel.transform.localScale = originScale;
     }
 
+    /// <summary>
+    /// 적이 path를 따라 가는 코루틴.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
     private IEnumerator FollowPath(List<Vector3> path)
     {
         for (int i = 0; i < path.Count; i++)
@@ -142,41 +205,11 @@ public class EnemyClass : MonoBehaviour, IDamagable
         GameManager.Instance.GetPlayerInfo().Life--;
     }
 
-    private Vector3 GetAngle(Vector3 direction)
-    {
-        if (direction.x > 0.0f)
-        {
-            return new Vector3(0.0f, 0.0f, 0.0f);
-        }
-        else if (direction.x < 0.0f)
-        {
-            return new Vector3(0.0f, 180.0f, 0.0f);
-        }
-        else if (direction.z > 0.0f)
-        {
-            return new Vector3(0.0f, 270.0f, 0.0f);
-        }
-        else if (direction.z < 0.0f)
-        {
-            return new Vector3(0.0f, 90.0f, 0.0f);
-        }
-        else
-        {
-            return Vector3.zero;
-        }
-    }
-
-    public void DestroyEnemy()
-    {
-        StartCoroutine(DestroyEnemyCoroutine(5.0f));
-        GameObject effect = Instantiate(mEnemyEffect, transform.position, Quaternion.identity) as GameObject;
-        if (!effect)
-        {
-            Debug.Log("Failed Instantiate enemy effect");
-        }
-        Destroy(effect, 2.0f);
-    }
-
+    /// <summary>
+    /// 적이 파괴되는 애니메이션 코루틴.
+    /// </summary>
+    /// <param name="_speed"></param>
+    /// <returns></returns>
     private IEnumerator DestroyEnemyCoroutine(float _speed = 1.0f)
     {
         Vector3 originScale = mModel.transform.localScale;
@@ -201,7 +234,44 @@ public class EnemyClass : MonoBehaviour, IDamagable
 
         Destroy(this.gameObject);
     }
+    #endregion
 
+    #region Get
+    /// <summary>
+    /// 방향에 따라 각도를 받아오는 함수.
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    private Vector3 GetAngle(Vector3 direction)
+    {
+        if (direction.x > 0.0f)
+        {
+            return new Vector3(0.0f, 0.0f, 0.0f);
+        }
+        else if (direction.x < 0.0f)
+        {
+            return new Vector3(0.0f, 180.0f, 0.0f);
+        }
+        else if (direction.z > 0.0f)
+        {
+            return new Vector3(0.0f, 270.0f, 0.0f);
+        }
+        else if (direction.z < 0.0f)
+        {
+            return new Vector3(0.0f, 90.0f, 0.0f);
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+    #endregion
+
+    #region IDamagable
+    /// <summary>
+    /// 데미지를 받을 때 실행되는 함수.
+    /// </summary>
+    /// <param name="_damage"></param>
     public void Damage(int _damage)
     {
         Health -= _damage;
@@ -220,4 +290,5 @@ public class EnemyClass : MonoBehaviour, IDamagable
             Destroy(this.gameObject);
         }
     }
+    #endregion
 }

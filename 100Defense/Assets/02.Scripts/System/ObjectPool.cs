@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
+    /// <summary>
+    /// 타워 풀 클래스.
+    /// </summary>
     public class TowerPool
     {
         private readonly string key;
@@ -51,20 +54,48 @@ public class ObjectPool : MonoBehaviour
     /// bullet object pool.
     /// </summary>
     public Queue<GameObject> BulletObjectPoolQueue;
+    /// <summary>
+    /// 총알 임팩트(효과) pool.
+    /// </summary>
     private Queue<GameObject> mBulletImactPoolQueue;
+    /// <summary>
+    /// 타워 버프 임팩트(효과) pool.
+    /// </summary>
     private List<Transform> mTowerEffectParents;
     #endregion
 
+    /// <summary>
+    /// 타워 정보.
+    /// </summary>
     private Tower mTowerData;
-
-    private int mBulletAndImpactPoolLength = 250;
+    /// <summary>
+    /// 총알과 효과의 Pool의 길이.
+    /// </summary>
+    private readonly int mBulletAndImpactPoolLength = 250;
+    /// <summary>
+    /// 총알 Pool의 부모.
+    /// </summary>
     private Transform mBulletPoolParent;
+    /// <summary>
+    /// 총알 효과의 부모.
+    /// </summary>
     private Transform mBulletImpactPoolParent;
+    /// <summary>
+    /// 효과를 보여주고 사라지는 대기 시간.
+    /// </summary>
     private WaitForSeconds mWFSImpactHide;
 
+    /// <summary>
+    /// 타워 정보 Property
+    /// </summary>
     public Dictionary<string, TowerData> TowerDataDictionary { get => mTowerDataDictionary; }
 
     #region Method
+    /// <summary>
+    /// 오브젝트 풀 초기화 함수.
+    /// </summary>
+    /// <param name="mapSize"></param>
+    /// <returns></returns>
     public bool Initialize(Vector2 mapSize)
     {
         mTowerObjectPoolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -191,6 +222,11 @@ public class ObjectPool : MonoBehaviour
         return objectToSpawn;
     }
 
+    /// <summary>
+    /// 타워 숨기기.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="tower"></param>
     public void HideTower(string key, GameObject tower)
     {
         if (!mTowerObjectPoolDictionary.ContainsKey(key))
@@ -216,6 +252,12 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 총알 소환.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="position"></param>
+    /// <param name="damage"></param>
     public void SpawnBulletFromPool(Transform target, Vector3 position, int damage)
     {
         if (BulletObjectPoolQueue.Count < 0 || mBulletImactPoolQueue.Count < 0)
@@ -229,7 +271,10 @@ public class ObjectPool : MonoBehaviour
         objectToSpawn.SetActive(true);
         objectToSpawn.GetComponent<BulletClass>().Initialize(target, damage, mBulletImactPoolQueue.Dequeue());
     }
-
+    /// <summary>
+    /// 총알 숨기기.
+    /// </summary>
+    /// <param name="bullet"></param>
     public void HideBullet(GameObject bullet)
     {
         BulletObjectPoolQueue.Enqueue(bullet);
@@ -242,7 +287,12 @@ public class ObjectPool : MonoBehaviour
         bulletImpact.transform.SetParent(mBulletImpactPoolParent);
         StartCoroutine(BulletImpactHideCoroutine(bulletImpact));
     }
-
+    /// <summary>
+    /// 타워 효과 소환.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     public GameObject SpawnTowerEffect(BuffType key, Transform parent)
     {
         if (!mTowerEffectDictionary.ContainsKey(key))
@@ -266,7 +316,11 @@ public class ObjectPool : MonoBehaviour
 
         return objectToSpawn;
     }
-
+    /// <summary>
+    /// 타워 효과 제거.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="tower"></param>
     public void HideTowerEffect(BuffType key, GameObject tower)
     {
         if (!mTowerEffectDictionary.ContainsKey(key))
@@ -283,6 +337,11 @@ public class ObjectPool : MonoBehaviour
     #endregion
 
     #region Coroutine
+    /// <summary>
+    /// 총알 임팩트 사라지는 코루틴.
+    /// </summary>
+    /// <param name="impact"></param>
+    /// <returns></returns>
     private IEnumerator BulletImpactHideCoroutine(GameObject impact)
     {
         yield return mWFSImpactHide;
@@ -292,6 +351,10 @@ public class ObjectPool : MonoBehaviour
     #endregion
 
     #region Get
+    /// <summary>
+    /// 타워 정보 가져오기.
+    /// </summary>
+    /// <returns></returns>
     public Tower GetTowerData()
     {
         if (mTowerData != null)

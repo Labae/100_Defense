@@ -5,16 +5,35 @@ using System.Text;
 
 public class TowerBuyPanel : MonoBehaviour
 {
+    /// <summary>
+    /// 타워 모델이 나올 부모
+    /// </summary>
     [SerializeField] private Transform mTowerObjectParent = null;
+    /// <summary>
+    /// 타워 제목
+    /// </summary>
     [SerializeField] private UILabel mTowerTitle = null;
+    /// <summary>
+    /// 타워에 대한 설명
+    /// </summary>
     [SerializeField] private UILabel mTowerDescription = null;
+    /// <summary>
+    /// 구매 버튼
+    /// </summary>
     [SerializeField] private UIButton mBuyButton = null;
 
+    /// <summary>
+    /// 타워 정보
+    /// </summary>
     private TowerData mTowerData;
     private UIManager mUIManager;
 
+    /// <summary>
+    /// Tower Object UI에 대한 오브젝트 풀.
+    /// </summary>
     private readonly Dictionary<string, GameObject> mUISetTowerObjectDictionary = new Dictionary<string, GameObject>();
 
+    #region Method
     public void SetData(TowerData towerData, GameObject model, UIManager uiManager)
     {
         mTowerData = towerData;
@@ -39,7 +58,7 @@ public class TowerBuyPanel : MonoBehaviour
 
         StringBuilder sb = new StringBuilder();
         sb.Append("Type : ");
-        sb.AppendLine(StringTowerType(mTowerData.TOWERTYPE));
+        sb.AppendLine(GetStringTowerType(mTowerData.TOWERTYPE));
         sb.Append("Range : ");
         sb.AppendLine(mTowerData.Range.ToString());
         sb.Append("Damage : ");
@@ -52,6 +71,9 @@ public class TowerBuyPanel : MonoBehaviour
 
         mBuyButton.onClick.Add(new EventDelegate(BuyButton));
     }
+    #endregion
+
+    #region Button Event
 
     public void BuyButton()
     {
@@ -86,8 +108,10 @@ public class TowerBuyPanel : MonoBehaviour
         mBuyButton.onClick.Clear();
         mUIManager.CloseTowerBuyPanel();
     }
+    #endregion
 
-    private string StringTowerType(TowerType towerType)
+    #region Get
+    private string GetStringTowerType(TowerType towerType)
     {
         switch (towerType)
         {
@@ -99,4 +123,5 @@ public class TowerBuyPanel : MonoBehaviour
                 return "NULL";
         }
     }
+    #endregion
 }

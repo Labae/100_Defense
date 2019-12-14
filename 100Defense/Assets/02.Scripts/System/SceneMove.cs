@@ -36,6 +36,7 @@ public class SceneMove : MonoBehaviour
     }
     #endregion
 
+    #region Unity Event
     private void Awake()
     {
         if (instance == null)
@@ -49,12 +50,19 @@ public class SceneMove : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }
+    #endregion
 
+    /// <summary>
+    /// GameScene으로 이동.
+    /// </summary>
     public void MoveGameScene()
     {
         SceneManager.LoadScene("GameScene");
     }
 
+    /// <summary>
+    /// TitleScene을 이동.
+    /// </summary>
     public void MoveTitleScene()
     {
         SceneManager.LoadScene("TitleScene");

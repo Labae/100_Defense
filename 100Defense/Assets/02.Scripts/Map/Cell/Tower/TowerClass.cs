@@ -4,12 +4,29 @@ using UnityEngine;
 
 public class TowerClass : MonoBehaviour
 {
+    /// <summary>
+    /// 타워의 원 크기.
+    /// </summary>
     private Vector3 mOriginScale;
+    /// <summary>
+    /// 오브젝트 풀 클래스.
+    /// </summary>
     private ObjectPool mObjectPool;
+    /// <summary>
+    /// 타워 정보.
+    /// </summary>
     protected TowerData mTowerData;
-
+    /// <summary>
+    /// 타워 가격.
+    /// </summary>
     private int mPrice;
 
+    #region Method
+    /// <summary>
+    /// 타워 초기화 함수.
+    /// </summary>
+    /// <param name="cellData"></param>
+    /// <returns></returns>
     public virtual bool Initialize(string cellData)
     {
         transform.localPosition = Vector3.zero;
@@ -37,10 +54,20 @@ public class TowerClass : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 타워 루프 함수.
+    /// </summary>
+    /// <param name="enemies"></param>
     public virtual void Loop(List<EnemyClass> enemies)
     {
     }
 
+    /// <summary>
+    /// 타워 짓는 함수.
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <param name="cellData"></param>
+    /// <returns></returns>
     public virtual bool Build(CellClass cell, string cellData)
     {
         transform.localPosition = Vector3.zero;
@@ -71,6 +98,10 @@ public class TowerClass : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 타워 파괴 함수.
+    /// </summary>
+    /// <param name="cell"></param>
     public virtual void DestroyTower(CellClass cell)
     {
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), null);
@@ -79,6 +110,58 @@ public class TowerClass : MonoBehaviour
         StartCoroutine(DestoryCoroutine());
     }
 
+    #region Change Tower Data Methode
+    /// <summary>
+    /// 공격범위 업그레이드.
+    /// </summary>
+    /// <param name="newAttackRange"></param>
+    public virtual void UpgradeAttackRange(float newAttackRange)
+    {
+    }
+    /// <summary>
+    /// 공격범위 다운그레이드.
+    /// </summary>
+    /// <param name="newAttackRange"></param>
+    public virtual void DowngradeAttackRange(float newAttackRange)
+    {
+    }
+    /// <summary>
+    /// 공격력 업그레이드.
+    /// </summary>
+    /// <param name="newAttackDamage"></param>
+    public virtual void UpgradeAttackDamage(int newAttackDamage)
+    {
+    }
+    /// <summary>
+    /// 공격력 다운그레이드.
+    /// </summary>
+    /// <param name="newAttackDamage"></param>
+    public virtual void DowngradeAttackDamage(int newAttackDamage)
+    {
+    }
+    /// <summary>
+    /// 공격 속도 업그레이드.
+    /// </summary>
+    /// <param name="newAttackSpeed"></param>
+    public virtual void UpgradeAttackSpeed(float newAttackSpeed)
+    {
+    }
+    /// <summary>
+    /// 공격 속도 다운그레이드.
+    /// </summary>
+    /// <param name="newAttackSpeed"></param>
+    public virtual void DowngradeAttackSpeed(float newAttackSpeed)
+    {
+    }
+    #endregion
+
+    #endregion
+
+    #region Coroutine
+    /// <summary>
+    /// 타워 등장 애니메이션.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator ApperanceAnim()
     {
         transform.localScale = Vector3.zero;
@@ -122,26 +205,13 @@ public class TowerClass : MonoBehaviour
         mObjectPool.HideTower(mTowerData.Towerkey, gameObject);
     }
 
+    #endregion
+
+    #region Get
     public int GetPrice()
     {
         return mPrice;
     }
-    public virtual void UpdateAttackRange(float newAttackRange)
-    {
-    }
-    public virtual void DowngradeAttackRange(float newAttackRange)
-    {
-    }
-    public virtual void UpdateAttackDamage(int newAttackDamage)
-    {
-    }
-    public virtual void DowngradeAttackDamage(int newAttackDamage)
-    {
-    }
-    public virtual void UpdateAttackSpeed(float newAttackSpeed)
-    {
-    }
-    public virtual void DowngradeAttackSpeed(float newAttackSpeed)
-    {
-    }
+    #endregion
+
 }
