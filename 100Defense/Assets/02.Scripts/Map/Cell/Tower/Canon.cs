@@ -16,6 +16,10 @@ public class Canon : MonoBehaviour
     /// 공격력.
     /// </summary>
     private int mAttackDamage;
+    /// <summary>
+    /// 공격 범위.
+    /// </summary>
+    private float mAttackRange;
 
     /// <summary>
     /// 오브젝트 풀 클래스.
@@ -29,7 +33,28 @@ public class Canon : MonoBehaviour
     /// <summary>
     /// 최대 공격 가능 각도.
     /// </summary>
-    private const float mAngle = 30.0f;
+    private const float mViewAngle = 30.0f;
+
+    /// <summary>
+    /// 타워의 y 각도.
+    /// </summary>
+    private float mTowerYRotation;
+
+    public float ViewAngle
+    {
+        get
+        {
+            return mViewAngle;
+        }
+    }
+
+    public float AttackRange
+    {
+        get
+        {
+            return mAttackRange;
+        }
+    }
 
     #region Method
     /// <summary>
@@ -42,6 +67,7 @@ public class Canon : MonoBehaviour
         mAttackSpeed = towerData.Attackspeed;
         mAttackSpeedTimer = 0.0f;
         mAttackDamage = towerData.Damage;
+        mAttackRange = towerData.Range;
 
         mObjectPool = GameManager.Instance.GetObjectPool();
         if(!mObjectPool)
@@ -62,33 +88,22 @@ public class Canon : MonoBehaviour
     public void Loop(Transform target, float towerRotationY)
     {
         mAttackSpeedTimer -= Time.deltaTime;
+        mTowerYRotation = towerRotationY;
         if (target == null)
         {
             return;
         }
 
-        Vector3 dir = target.position - transform.position;
+        Vector3 dir = (target.position - transform.position).normalized;
+        // y좌표는 차이나면 안되므로 0으로 설정해야함.
         dir.y = 0.0f;
-
-        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        if(towerRotationY >= 180.0f)
+        if(Vector3.Angle(transform.forward, dir) < ViewAngle * 0.5f)
         {
-            angle += 180.0f;
-            towerRotationY -= 180.0f;
-        }
-
-        float finalAngle = (towerRotationY >= angle) ? towerRotationY - angle : angle - towerRotationY;
-
-        if (finalAngle > mAngle)
-        {
-            Debug.DrawRay(transform.position, transform.forward * 10.0f, Color.red);
-            return;
-        }
-
-        if (mAttackSpeedTimer <= 0)
-        {
-            mAttackSpeedTimer = mAttackSpeed;
-            mObjectPool.SpawnBulletFromPool(target, transform.position, mAttackDamage);
+            if (mAttackSpeedTimer <= 0)
+            {
+                mAttackSpeedTimer = mAttackSpeed;
+                mObjectPool.SpawnBulletFromPool(target, transform.position, mAttackDamage);
+            }
         }
     }
 
@@ -126,6 +141,30 @@ public class Canon : MonoBehaviour
     public void DowngradeAttackSpeed(float newAttackSpeed)
     {
         mAttackSpeed = mAttackSpeed - newAttackSpeed;
+    }
+
+    /// <summary>
+    /// 공격 범위 업그레이드.
+    /// </summary>
+    /// <param name="newAttackRange"></param>
+    public void UpgradeAttackRange(float newAttackRange)
+    {
+        mAttackRange = mAttackRange + newAttackRange;
+    }
+
+    /// <summary>
+    /// 공격력 업그레이드.
+    /// </summary>
+    /// <param name="newAttackRange"></param>
+    public void DowngradeAttackRange(float newAttackRange)
+    {
+        mAttackRange = mAttackRange - newAttackRange;
+    }
+
+    public Vector3 CirclePoint(float angle)
+    {
+        angle += mTowerYRotation;
+        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad), 0, Mathf.Cos(angle * Mathf.Deg2Rad));
     }
     #endregion
 

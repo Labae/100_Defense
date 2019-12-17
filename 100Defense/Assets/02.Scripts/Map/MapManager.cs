@@ -355,9 +355,14 @@ public class MapManager : MonoBehaviour
         if (mSelectedCell != null)
         {
             mSelectedCell.ReleaseSelected();
+            mSelectedCell.HideBuffArea();
         }
 
         mSelectedCell = cell;
+        if(mSelectedCell != null)
+        {
+            mSelectedCell.ShowBuffArea();
+        }
     }
     /// <summary>
     /// 선택된 Cell을 가져옴.

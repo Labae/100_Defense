@@ -9,10 +9,6 @@ public class AttackTowerClass : TowerClass
     /// </summary>
     private Canon mCanon;
     /// <summary>
-    /// 공격 속도.
-    /// </summary>
-    private float mAttackRange;
-    /// <summary>
     /// 타워 회전 속도.(공격 대상을 향하도록)
     /// </summary>
     private readonly float mRotateSpeed = 5.0f;
@@ -45,9 +41,6 @@ public class AttackTowerClass : TowerClass
                 return false;
             }
         }
-
-        mAttackRange = mTowerData.Range;
-
         return true;
     }
 
@@ -77,8 +70,6 @@ public class AttackTowerClass : TowerClass
             return false;
         }
 
-        mAttackRange = mTowerData.Range;
-
         return true;
     }
 
@@ -89,8 +80,7 @@ public class AttackTowerClass : TowerClass
     public override void Loop(List<EnemyClass> enemies)
     {
         base.Loop(enemies);
-        Transform target = null;
-        target = GetWithinRange(enemies);
+        Transform target = GetWithinRange(enemies);
         Rotate(target); 
         mCanon.Loop(target, transform.eulerAngles.y);
     }
@@ -107,7 +97,7 @@ public class AttackTowerClass : TowerClass
         for (int i = 0; i < enemies.Count; i++)
         {
             float dist = Vector3.Distance(transform.position, enemies[i].transform.position);
-            if (dist <= mAttackRange)
+            if (dist <= mCanon.AttackRange)
             {
                 nearestEnemy = enemies[i].transform;
                 break;
@@ -146,62 +136,26 @@ public class AttackTowerClass : TowerClass
     /// 타워 파괴 함수.
     /// </summary>
     /// <param name="cell"></param>
-    public override void DestroyTower(CellClass cell)
+    public new void DestroyTower(CellClass cell)
     {
         base.DestroyTower(cell);
     }
 
-    /// <summary>
-    /// 공격 범위 업그레이드.
-    /// </summary>
-    /// <param name="newAttackRange"></param>
-    public override void UpgradeAttackRange(float newAttackRange)
+    public new CellClass[] GetBuffArea()
     {
-        mAttackRange = mAttackRange + newAttackRange;
+        return base.GetBuffArea();
     }
 
-    /// <summary>
-    /// 공격력 업그레이드.
-    /// </summary>
-    /// <param name="newAttackDamage"></param>
-    public override void UpgradeAttackDamage(int newAttackDamage)
+    public override void Upgrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
+        mCanon.UpgradeAttackRange(newAttackRange);
         mCanon.UpgradeAttackDamage(newAttackDamage);
-    }
-
-    /// <summary>
-    /// 공격 속도 업그레이드.
-    /// </summary>
-    /// <param name="newAttackSpeed"></param>
-    public override void UpgradeAttackSpeed(float newAttackSpeed)
-    {
         mCanon.UpgradeAttackSpeed(newAttackSpeed);
     }
-
-    /// <summary>
-    /// 공격력 다운그레이드.
-    /// </summary>
-    /// <param name="newAttackDamage"></param>
-    public override void DowngradeAttackDamage(int newAttackDamage)
+    public override void DownGrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
+        mCanon.DowngradeAttackRange(newAttackRange);
         mCanon.DowngradeAttackDamage(newAttackDamage);
-    }
-
-    /// <summary>
-    /// 공격력 업그레이드.
-    /// </summary>
-    /// <param name="newAttackRange"></param>
-    public override void DowngradeAttackRange(float newAttackRange)
-    {
-        mAttackRange = mAttackRange - newAttackRange;
-    }
-
-    /// <summary>
-    /// 공격속도 다운그레이드
-    /// </summary>
-    /// <param name="newAttackSpeed"></param>
-    public override void DowngradeAttackSpeed(float newAttackSpeed)
-    {
         mCanon.DowngradeAttackSpeed(newAttackSpeed);
     }
     #endregion

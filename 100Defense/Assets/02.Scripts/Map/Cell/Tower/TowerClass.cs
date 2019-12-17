@@ -20,6 +20,17 @@ public class TowerClass : MonoBehaviour
     /// 타워 가격.
     /// </summary>
     private int mPrice;
+    /// <summary>
+    /// 타워 타입.
+    /// </summary>
+    private TowerType mTowerType;
+    public TowerType TowerType
+    {
+        get
+        {
+            return mTowerType;
+        }
+    }
 
     #region Method
     /// <summary>
@@ -48,8 +59,8 @@ public class TowerClass : MonoBehaviour
 
         mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
-       
         mPrice = mTowerData.Price;
+        mTowerType = mTowerData.TOWERTYPE;
 
         return true;
     }
@@ -90,6 +101,7 @@ public class TowerClass : MonoBehaviour
         mTowerData = mObjectPool.TowerDataDictionary[cellData];
 
         mPrice = mTowerData.Price;
+        mTowerType = mTowerData.TOWERTYPE;
 
         cell.GetMap().SetMapData(cell.GetCellX(), cell.GetCellY(), mTowerData.Towerkey);
         StopCoroutine(ApperanceAnim());
@@ -110,48 +122,20 @@ public class TowerClass : MonoBehaviour
         StartCoroutine(DestoryCoroutine());
     }
 
-    #region Change Tower Data Methode
-    /// <summary>
-    /// 공격범위 업그레이드.
-    /// </summary>
-    /// <param name="newAttackRange"></param>
-    public virtual void UpgradeAttackRange(float newAttackRange)
+    #region Change Tower Data Method
+    public virtual void Upgrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
+
     }
-    /// <summary>
-    /// 공격범위 다운그레이드.
-    /// </summary>
-    /// <param name="newAttackRange"></param>
-    public virtual void DowngradeAttackRange(float newAttackRange)
+
+    public virtual void DownGrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
+
     }
-    /// <summary>
-    /// 공격력 업그레이드.
-    /// </summary>
-    /// <param name="newAttackDamage"></param>
-    public virtual void UpgradeAttackDamage(int newAttackDamage)
+
+    public virtual CellClass[] GetBuffArea()
     {
-    }
-    /// <summary>
-    /// 공격력 다운그레이드.
-    /// </summary>
-    /// <param name="newAttackDamage"></param>
-    public virtual void DowngradeAttackDamage(int newAttackDamage)
-    {
-    }
-    /// <summary>
-    /// 공격 속도 업그레이드.
-    /// </summary>
-    /// <param name="newAttackSpeed"></param>
-    public virtual void UpgradeAttackSpeed(float newAttackSpeed)
-    {
-    }
-    /// <summary>
-    /// 공격 속도 다운그레이드.
-    /// </summary>
-    /// <param name="newAttackSpeed"></param>
-    public virtual void DowngradeAttackSpeed(float newAttackSpeed)
-    {
+        return null;
     }
     #endregion
 

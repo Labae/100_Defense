@@ -14,6 +14,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         EGoal,
         ERoad,
         ESelected,
+        EBuff,
         End
     };
 
@@ -155,6 +156,12 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             Debug.Log("Failed Load CellSelected Material.");
             return false;
         }
+        mMaterials[(int)CellState.EBuff] = Resources.Load(matPath + "CellBuff") as Material;
+        if (!mMaterials[(int)CellState.EBuff])
+        {
+            Debug.Log("Failed Load CellBuff Material.");
+            return false;
+        }
 
         mMeshRenderer = GetComponent<MeshRenderer>();
         if (!mMeshRenderer)
@@ -227,15 +234,21 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         else
         {
+            if(mState == CellState.EBuff)
+            {
+                mState = mPrevState;
+            }
             mPrevState = mState;
-            mState = CellState.ESelected;
-            mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
+
             mMap.SetSelectedCell(this);
+            SetState(CellState.ESelected);
+            mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
         }
 
         StopCoroutine(ApperanceAnimationCoroutine());
         StartCoroutine(ApperanceAnimationCoroutine());
     }
+
     /// <summary>
     /// 선택된 Cell상태를 해제함.
     /// </summary>
@@ -243,8 +256,41 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     {
         if (mState == CellState.ESelected)
         {
-            mState = mPrevState;
-            mMeshRenderer.material = mMaterials[(int)mPrevState];
+            SetState(mPrevState);
+        }
+    }
+
+    public void ShowBuffArea()
+    {
+        if(mTower != null)
+        {
+            CellClass[] areas = mTower.GetBuffArea();
+            if(areas == null)
+            {
+                return;
+            }
+            Material mat = mMaterials[(int)CellState.EBuff];
+            for (int i = 0; i < areas.Length; i++)
+            {
+                areas[i].SetPrevState(areas[i].GetState());
+                areas[i].SetState(CellState.EBuff);
+            }
+        }
+    }
+
+    public void HideBuffArea()
+    {
+        if(mTower != null)
+        {
+            CellClass[] areas = mTower.GetBuffArea();
+            if(areas == null)
+            {
+                return;
+            }
+            for (int i = 0; i < areas.Length; i++)
+            {
+                areas[i].SetState(areas[i].GetPrevState());
+            }
         }
     }
 
@@ -352,9 +398,18 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             case BuffShapeType.Cube:
                 tower = towrObj.AddComponent<CubeBuffTowerClass>();
                 break;
+            case BuffShapeType.Knight:
+                tower = towrObj.AddComponent<KnightBuffTowerClass>();
+                break;
+            case BuffShapeType.HorizontalSteppingStone:
+                tower = towrObj.AddComponent<HorizontalSteppingStoneBuffTowerClass>();
+                break;
+            case BuffShapeType.VerticalSteppingStone:
+                tower = towrObj.AddComponent<VerticalSteppingStoneBuffTowerClass>();
+                break;
         }
 
-        if(tower == null)
+        if (tower == null)
         {
             Debug.Log("Buff Tower Class is null");
         }
@@ -427,6 +482,16 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     public MapManager GetMap()
     {
         return mMap;
+    }
+
+    public CellState GetPrevState()
+    {
+        return mPrevState;
+    }
+
+    public void SetPrevState(CellState state)
+    {
+        mPrevState = state;
     }
 
     /// <summary>

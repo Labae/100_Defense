@@ -4,4 +4,7 @@
     Plus,
     Cross,
     Cube,
+    Knight,
+    HorizontalSteppingStone,
+    VerticalSteppingStone,
 }

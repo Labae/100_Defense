@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class BuffTowerClass : TowerClass
+public abstract class BuffTowerClass : TowerClass
 {
     /// <summary>
     /// 버프를 줄 타워들
@@ -49,7 +49,15 @@ public class BuffTowerClass : TowerClass
     /// <summary>
     /// 업데이트 되기 전의 타겟 타워의 개수.
     /// </summary>
-    protected int mPrevTargetTowerCount;
+    private int mPrevTargetTowerCount = -1;
+
+    public TowerClass[] TargetTowers
+    {
+        get
+        {
+            return mTargetTowers;
+        }
+    }
 
     #region Method
     /// <summary>
@@ -77,6 +85,8 @@ public class BuffTowerClass : TowerClass
 
         mObjectPool = GameManager.Instance.GetObjectPool();
         mEffectObjects = new List<GameObject>();
+
+        mTargetPositions = GetTargetPositions();
 
         return true;
     }
@@ -106,6 +116,7 @@ public class BuffTowerClass : TowerClass
 
         mObjectPool = GameManager.Instance.GetObjectPool();
         mEffectObjects = new List<GameObject>();
+        mTargetPositions = GetTargetPositions();
 
         return true;
     }
@@ -117,7 +128,11 @@ public class BuffTowerClass : TowerClass
     public override void Loop(List<EnemyClass> enemies)
     {
         base.Loop(enemies);
-
+        if (mTargetPositions == null)
+        {
+            Debug.LogError("mTargetPositions is null");
+            return;
+        }
         mTargetTowers = GetTargetTowers(mTargetPositions);
         if (mPrevTargetTowerCount != mTargetTowers.Length)
         {
@@ -133,13 +148,13 @@ public class BuffTowerClass : TowerClass
                 switch (mTowerData.BUFFTYPE)
                 {
                     case BuffType.Damage:
-                        mTargetTowers[i].UpgradeAttackDamage(mIBuffAmount);
+                        mTargetTowers[i].Upgrade(0.0f, mIBuffAmount, 0.0f);
                         break;
                     case BuffType.AttackSpeed:
-                        mTargetTowers[i].UpgradeAttackSpeed(mBuffAmount);
+                        mTargetTowers[i].Upgrade(0.0f, 0, mBuffAmount);
                         break;
                     case BuffType.AttackRange:
-                        mTargetTowers[i].UpgradeAttackRange(mBuffAmount);
+                        mTargetTowers[i].Upgrade(mBuffAmount, 0, 0.0f);
                         break;
                     default:
                         continue;
@@ -161,13 +176,13 @@ public class BuffTowerClass : TowerClass
             switch (mTowerData.BUFFTYPE)
             {
                 case BuffType.Damage:
-                    mTargetTowers[i].DowngradeAttackDamage(mIBuffAmount);
+                    mTargetTowers[i].DownGrade(0.0f, mIBuffAmount, 0.0f);
                     break;
                 case BuffType.AttackSpeed:
-                    mTargetTowers[i].DowngradeAttackSpeed(mBuffAmount);
+                    mTargetTowers[i].DownGrade(0.0f, 0, mBuffAmount);
                     break;
                 case BuffType.AttackRange:
-                    mTargetTowers[i].DowngradeAttackRange(mBuffAmount);
+                    mTargetTowers[i].DownGrade(mBuffAmount, 0, 0.0f);
                     break;
                 default:
                     continue;
@@ -198,16 +213,43 @@ public class BuffTowerClass : TowerClass
             TowerClass targetTower = map[x, y].GetTower();
             if (targetTower != null)
             {
-                targetTowers.Add(targetTower);
+                if (targetTower.TowerType == TowerType.Attack)
+                {
+                    targetTowers.Add(targetTower);
+                }
             }
         }
 
         return targetTowers.ToArray();
     }
 
-    protected virtual List<Tuple<int, int>> GetTargetPositions()
+    /// <summary>
+    /// 버프를 줄 수 있는 좌표를 가져오는 함수.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract List<Tuple<int, int>> GetTargetPositions();
+
+    public override CellClass[] GetBuffArea()
     {
-        return null;
+        return GetBuffCell(mTargetPositions);
+    }
+
+    private CellClass[] GetBuffCell(List<Tuple<int, int>> coordi)
+    {
+        List<CellClass> targetCells = new List<CellClass>();
+        CellClass[,] map = GameManager.Instance.GetMapManager().GetMap();
+        for (int i = 0; i < coordi.Count; i++)
+        {
+            int x = coordi[i].Item1;
+            int y = coordi[i].Item2;
+            CellClass targetCell = map[x, y];
+            if (targetCell != null)
+            {
+                targetCells.Add(targetCell);
+            }
+        }
+
+        return targetCells.ToArray();
     }
     #endregion
 }

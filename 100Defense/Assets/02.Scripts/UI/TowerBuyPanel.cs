@@ -28,6 +28,8 @@ public class TowerBuyPanel : MonoBehaviour
     private TowerData mTowerData;
     private UIManager mUIManager;
 
+    private readonly float mUITowerYPos = -10.0f;
+
     /// <summary>
     /// Tower Object UI에 대한 오브젝트 풀.
     /// </summary>
@@ -41,11 +43,12 @@ public class TowerBuyPanel : MonoBehaviour
 
         if (!mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
         {
-            GameObject uiSetTower = Instantiate(model, mTowerObjectParent);
-            UITowerRotation towrRotation = uiSetTower.GetComponent<UITowerRotation>();
+            GameObject uiTower = Instantiate(model, mTowerObjectParent);
+            UITowerRotation towrRotation = uiTower.GetComponent<UITowerRotation>();
+            uiTower.transform.localPosition = Vector3.up * mUITowerYPos;
             towrRotation.RotateTower();
 
-            mUISetTowerObjectDictionary.Add(mTowerData.Towerkey, uiSetTower);
+            mUISetTowerObjectDictionary.Add(mTowerData.Towerkey, uiTower);
         }
         else
         {
@@ -58,15 +61,24 @@ public class TowerBuyPanel : MonoBehaviour
 
         StringBuilder sb = new StringBuilder();
         sb.Append("Type : ");
-        sb.AppendLine(GetStringTowerType(mTowerData.TOWERTYPE));
-        sb.Append("Range : ");
-        sb.AppendLine(mTowerData.Range.ToString());
-        sb.Append("Damage : ");
-        sb.AppendLine(mTowerData.Damage.ToString());
-        sb.Append("AttackSpeed : ");
-        sb.AppendLine(mTowerData.Attackspeed.ToString());
+        sb.AppendLine(GetTowerTypeToString(mTowerData.TOWERTYPE));
         sb.Append("Price : ");
         sb.AppendLine(mTowerData.Price.ToString());
+        if (mTowerData.TOWERTYPE == TowerType.Attack)
+        {
+            sb.Append("Range : ");
+            sb.AppendLine(mTowerData.Range.ToString());
+            sb.Append("Damage : ");
+            sb.AppendLine(mTowerData.Damage.ToString());
+            sb.Append("AttackSpeed : ");
+            sb.AppendLine(mTowerData.Attackspeed.ToString());
+        }
+        else
+        {
+            sb.Append("Buff To :");
+            sb.AppendLine(GetBuffTypeToString(mTowerData.BUFFTYPE));
+            // TODO : SHOW Buff Area Image
+        }
         mTowerDescription.text = sb.ToString();
 
         mBuyButton.onClick.Add(new EventDelegate(BuyButton));
@@ -83,7 +95,7 @@ public class TowerBuyPanel : MonoBehaviour
             return;
         }
 
-        if(GameManager.Instance.GetMapManager().GetSelectedCell() == null)
+        if (GameManager.Instance.GetMapManager().GetSelectedCell() == null)
         {
             // TODO : Cell 선택 알려주는 Image.
             return;
@@ -97,7 +109,7 @@ public class TowerBuyPanel : MonoBehaviour
 
     public void ExitButton()
     {
-        if(mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
+        if (mUISetTowerObjectDictionary.ContainsKey(mTowerData.Towerkey))
         {
             GameObject towerObj = mUISetTowerObjectDictionary[mTowerData.Towerkey];
             towerObj.GetComponent<UITowerRotation>().StopRotateTower();
@@ -111,7 +123,7 @@ public class TowerBuyPanel : MonoBehaviour
     #endregion
 
     #region Get
-    private string GetStringTowerType(TowerType towerType)
+    private string GetTowerTypeToString(TowerType towerType)
     {
         switch (towerType)
         {
@@ -121,6 +133,22 @@ public class TowerBuyPanel : MonoBehaviour
                 return "Buff";
             default:
                 return "NULL";
+        }
+    }
+
+    private string GetBuffTypeToString(BuffType buffType)
+    {
+        switch (buffType)
+        {
+            case BuffType.Damage:
+                return "Damage";
+            case BuffType.AttackRange:
+                return "AttackRange";
+            case BuffType.AttackSpeed:
+                return "AttackSpeed";
+            default:
+                Debug.Log("Miss Bufftype");
+                return "";
         }
     }
     #endregion

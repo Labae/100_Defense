@@ -22,7 +22,7 @@ MonoBehaviour:
     price: 10
   - key: ID_ENEMY02
     name: Earthworm
-    health: 30
+    health: 100000
     movespeed: 2
     price: 10
   - key: ID_ENEMY03
