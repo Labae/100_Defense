@@ -125,12 +125,10 @@ public class TowerClass : MonoBehaviour
     #region Change Tower Data Method
     public virtual void Upgrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
-
     }
 
     public virtual void DownGrade(float newAttackRange, int newAttackDamage, float newAttackSpeed)
     {
-
     }
 
     public virtual CellClass[] GetBuffArea()

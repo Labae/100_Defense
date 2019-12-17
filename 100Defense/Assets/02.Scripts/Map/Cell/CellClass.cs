@@ -269,7 +269,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             {
                 return;
             }
-            Material mat = mMaterials[(int)CellState.EBuff];
             for (int i = 0; i < areas.Length; i++)
             {
                 areas[i].SetPrevState(areas[i].GetState());
