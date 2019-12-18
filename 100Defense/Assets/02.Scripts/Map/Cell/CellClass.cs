@@ -107,6 +107,13 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         mCellIndexY = y;
         mWalkable = true;
 
+        mSoundManager = GameManager.Instance.GetSoundManager();
+        if (!mSoundManager)
+        {
+            Debug.Log("Failed Get mSoundManager");
+            return false;
+        }
+
         mMap = GetComponentInParent<MapManager>();
         if (!mMap)
         {
@@ -194,13 +201,6 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
                 return false;
             }
             mWalkable = false;
-        }
-
-        mSoundManager = GameManager.Instance.GetSoundManager();
-        if (!mSoundManager)
-        {
-            Debug.Log("Failed Get mSoundManager");
-            return false;
         }
 
         return true;

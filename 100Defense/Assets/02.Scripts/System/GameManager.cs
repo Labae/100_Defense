@@ -80,11 +80,13 @@ public class GameManager : MonoBehaviour
     private SoundManager mSoundManager;
     public float SfxVolume
     {
-        get;set;
+        get;
+        set;
     }
     public float MusicVolume
     {
-        get; set;
+        get;
+        set;
     }
 
     ///Player Pref Key
