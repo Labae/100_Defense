@@ -63,6 +63,14 @@ public class UIManager : MonoBehaviour
     /// 게임 종료시 뒷 배경 색깔.
     /// </summary>
     [SerializeField] private Color mTouchGuardGameoverColor;
+    /// <summary>
+    /// 음악 소리 슬라이더.
+    /// </summary>
+    [SerializeField] private UISlider mMusicVolumeSlider;
+    /// <summary>
+    /// 효과음 슬라이더.
+    /// </summary>
+    [SerializeField] private UISlider mSfxVolumeSlider;
     #endregion
 
     #region Private Value
@@ -74,6 +82,10 @@ public class UIManager : MonoBehaviour
     /// Player Information
     /// </summary>
     private PlayerInformation mPlayerInfo;
+    /// <summary>
+    /// 사운드 매니저 클래스.
+    /// </summary>
+    private SoundManager mSoundManager;
     /// <summary>
     /// 회전하는 3d 타워 오브젝트들.
     /// </summary>
@@ -160,6 +172,15 @@ public class UIManager : MonoBehaviour
             return false;
         }
 
+        mSoundManager = GameManager.Instance.GetSoundManager();
+        if(!mSoundManager)
+        {
+            Debug.Log("Failed Get SoundManager");
+            return false;
+        }
+        mMusicVolumeSlider.value = mSoundManager.MusicAudioSource.volume;
+        mSfxVolumeSlider.value = mSoundManager.SfxAudioSource.volume;
+
         mPlayerInfo.AddObserver(mWaveLabel);
         mPlayerInfo.AddObserver(mLifeSet);
         mTouchGuard.gameObject.SetActive(false);
@@ -201,6 +222,7 @@ public class UIManager : MonoBehaviour
             eventBtn.parameters[0].value = towerData.dataArray[i];
             eventBtn.parameters[1].value = uiTowerRotations[i].gameObject;
             btn.onClick.Add(eventBtn);
+            btn.onClick.Add(new EventDelegate(ButtonClickSoundPlay));
 
             GameManager.ChangeLayerMaskRecursively(tower.transform, "3D UI");
         }
@@ -272,6 +294,25 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region Button Event Method
+    public void ButtonClickSoundPlay()
+    {
+        mSoundManager.PlayUIClickSfx();
+    }
+
+    public void MusicSoundVolumSlider()
+    {
+        mSoundManager.MusicAudioSource.volume = mMusicVolumeSlider.value * 0.1f;
+        mSoundManager.MusicAudioSource.volume = Mathf.Clamp(mSoundManager.MusicAudioSource.volume, 0.0f, 0.1f);
+        GameManager.Instance.MusicVolume = mSoundManager.MusicAudioSource.volume;
+    }
+
+    public void SfxSoundVolumSlider()
+    {
+        mSoundManager.SfxAudioSource.volume = mSfxVolumeSlider.value * 0.1f;
+        mSoundManager.SfxAudioSource.volume = Mathf.Clamp(mSoundManager.SfxAudioSource.volume, 0.0f, 0.1f);
+        GameManager.Instance.SfxVolume = mSoundManager.SfxAudioSource.volume;
+    }
+
     /// <summary>
     /// Setting Panel 열기.
     /// </summary>

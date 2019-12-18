@@ -75,6 +75,24 @@ public class GameManager : MonoBehaviour
     private ObjectPool mObjectPool;
 
     /// <summary>
+    /// 사운드 매니저 클래스.
+    /// </summary>
+    private SoundManager mSoundManager;
+    public float SfxVolume
+    {
+        get;set;
+    }
+    public float MusicVolume
+    {
+        get; set;
+    }
+
+    ///Player Pref Key
+    private const string mPrefMusicVolumeKey = "Music";
+    private const string mPrefVolumeKey = "Volume";
+    private const string mFirstKey = "First";
+
+    /// <summary>
     /// 플레이어 정보.
     /// </summary>
     private PlayerInformation mPlayerInfo;
@@ -127,6 +145,18 @@ public class GameManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+
+        bool isFirst = PlayerPrefs.HasKey(mFirstKey);
+        if (!isFirst)
+        {
+            SfxVolume = 0.05f;
+            MusicVolume = 0.05f;
+        }
+        else
+        {
+            SfxVolume = PlayerPrefs.GetFloat(mPrefVolumeKey);
+            MusicVolume = PlayerPrefs.GetFloat(mPrefMusicVolumeKey);
+        }
     }
 
     private void Update()
@@ -150,6 +180,20 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        if (mGameState == GameState.Game)
+        {
+            mMap.Save();
+            mCSV.SavePlayerInfo(mPlayerInfo);
+        }
+
+        PlayerPrefs.SetFloat(mPrefVolumeKey, SfxVolume * 10.0f);
+        PlayerPrefs.SetFloat(mPrefMusicVolumeKey, MusicVolume * 10.0f);
+        PlayerPrefs.SetInt(mFirstKey, 1);
+    }
+
     #endregion
 
     #region Method
@@ -214,6 +258,21 @@ public class GameManager : MonoBehaviour
         if (!mObjectPool.Initialize(mMapSize))
         {
             Debug.Log("Failed Initialize ObjectPool Component.");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        mSoundManager = gameObject.AddComponent<SoundManager>();
+        if (!mSoundManager)
+        {
+            Debug.Log("Failed Add SoundManager Component");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        if (!mSoundManager.Initialize())
+        {
+            Debug.Log("Failed Initialize mSoundManager Component");
             mInitializeSuccess = false;
             yield break;
         }
@@ -351,6 +410,16 @@ public class GameManager : MonoBehaviour
     public ObjectPool GetObjectPool()
     {
         return mObjectPool;
+    }
+
+
+    /// <summary>
+    /// 사운드 매니저 가져오기.
+    /// </summary>
+    /// <returns></returns>
+    public SoundManager GetSoundManager()
+    {
+        return mSoundManager;
     }
 
     /// <summary>

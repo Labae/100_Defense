@@ -48,6 +48,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
     /// </summary>
     private TowerClass mTower;
     /// <summary>
+    /// 사운드 매니저.
+    /// </summary>
+    private SoundManager mSoundManager;
+    /// <summary>
     /// 이전 상태의 Cell 상태.
     /// </summary>
     private CellState mPrevState;
@@ -192,6 +196,13 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mWalkable = false;
         }
 
+        mSoundManager = GameManager.Instance.GetSoundManager();
+        if (!mSoundManager)
+        {
+            Debug.Log("Failed Get mSoundManager");
+            return false;
+        }
+
         return true;
     }
     /// <summary>
@@ -234,7 +245,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
         }
         else
         {
-            if(mState == CellState.EBuff)
+            if (mState == CellState.EBuff)
             {
                 mState = mPrevState;
             }
@@ -245,6 +256,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             mMeshRenderer.material = mMaterials[(int)CellState.ESelected];
         }
 
+        mSoundManager.PlayCellClickSfx();
         StopCoroutine(ApperanceAnimationCoroutine());
         StartCoroutine(ApperanceAnimationCoroutine());
     }
@@ -262,10 +274,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
     public void ShowBuffArea()
     {
-        if(mTower != null)
+        if (mTower != null)
         {
             CellClass[] areas = mTower.GetBuffArea();
-            if(areas == null)
+            if (areas == null)
             {
                 return;
             }
@@ -279,10 +291,10 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
 
     public void HideBuffArea()
     {
-        if(mTower != null)
+        if (mTower != null)
         {
             CellClass[] areas = mTower.GetBuffArea();
-            if(areas == null)
+            if (areas == null)
             {
                 return;
             }
@@ -319,6 +331,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
                 break;
         }
 
+        mSoundManager.PlayTowerBuildSfx();
         mMap.AddTower(tower);
 
         return tower;
@@ -378,6 +391,7 @@ public class CellClass : MonoBehaviour, IHeapItem<CellClass>
             {
                 mMap.GetPathFinding().PathFind();
             }
+            mSoundManager.PlayTowerDestroySfx();
             return true;
         }
     }

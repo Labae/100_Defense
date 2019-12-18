@@ -18,6 +18,11 @@ public class EnemyClass : MonoBehaviour, IDamagable
     private GameObject mEnemyEffect;
 
     /// <summary>
+    /// 사운드 매니저 클래스.
+    /// </summary>
+    private SoundManager mSoundManager;
+
+    /// <summary>
     /// 적의 이동 속도.
     /// </summary>
     private float mSpeed;
@@ -59,6 +64,13 @@ public class EnemyClass : MonoBehaviour, IDamagable
         if (!mEnemyEffect)
         {
             Debug.Log("EnemyEffectImpact not load");
+            return false;
+        }
+
+        mSoundManager = GameManager.Instance.GetSoundManager();
+        if(mSoundManager == null)
+        {
+            Debug.Log("Failed Get mSoundManager");
             return false;
         }
 
@@ -286,6 +298,7 @@ public class EnemyClass : MonoBehaviour, IDamagable
             }
 
             GameManager.Instance.GetPlayerInfo().Gold += mPrice;
+            mSoundManager.PlayGetCoinSfx();
             Destroy(effect, 2.0f);
             Destroy(this.gameObject);
         }

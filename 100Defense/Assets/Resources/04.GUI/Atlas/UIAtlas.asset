@@ -3828,10 +3828,10 @@ MonoBehaviour:
     y: 1250
     width: 82
     height: 87
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 41
+    borderRight: 41
+    borderTop: 44
+    borderBottom: 43
     paddingLeft: 23
     paddingRight: 23
     paddingTop: 20
