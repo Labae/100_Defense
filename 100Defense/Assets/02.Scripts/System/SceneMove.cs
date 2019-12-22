@@ -57,7 +57,7 @@ public class SceneMove : MonoBehaviour
     /// </summary>
     public void MoveGameScene()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("LoadingScene");
     }
 
     /// <summary>

@@ -148,6 +148,9 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
+        Screen.SetResolution(900, 1600, true);
+        mGameState = GameState.Splash;
+
         bool isFirst = PlayerPrefs.HasKey(mFirstKey);
         if (!isFirst)
         {
@@ -194,6 +197,14 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat(mPrefVolumeKey, SfxVolume * 10.0f);
         PlayerPrefs.SetFloat(mPrefMusicVolumeKey, MusicVolume * 10.0f);
         PlayerPrefs.SetInt(mFirstKey, 1);
+        if(mMap != null)
+        {
+            mMap.Save();
+        }
+        if(mCSV != null)
+        {
+            mCSV.SavePlayerInfo(mPlayerInfo);
+        }
     }
 
     #endregion
@@ -223,6 +234,7 @@ public class GameManager : MonoBehaviour
             enemise[i].DestroyEnemy();
         }
     }
+
     #endregion
 
     #region Coroutine
@@ -238,6 +250,13 @@ public class GameManager : MonoBehaviour
         if (!mCSV)
         {
             Debug.Log("Failed Get CSV Component.");
+            mInitializeSuccess = false;
+            yield break;
+        }
+
+        if(!mCSV.Initialize((int)mMapSize.x, (int)mMapSize.y))
+        {
+            Debug.Log("Failed Initialize CSV Component.");
             mInitializeSuccess = false;
             yield break;
         }
@@ -374,11 +393,13 @@ public class GameManager : MonoBehaviour
     {
         IsGameOver = false;
 
-        if (mPlayerInfo.Life <= 0)
+        if (mPlayerInfo != null)
         {
-            IsGameOver = true;
+            if (mPlayerInfo.Life <= 0)
+            {
+                IsGameOver = true;
+            }
         }
-
         return IsGameOver;
     }
     /// <summary>

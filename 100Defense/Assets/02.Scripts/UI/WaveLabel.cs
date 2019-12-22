@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public class WaveLabel : MonoBehaviour, IObserver
 {
@@ -13,7 +14,10 @@ public class WaveLabel : MonoBehaviour, IObserver
     private void Start()
     {
         mLabel = GetComponent<UILabel>();
-        mLabel.text = "WAVE " + GameManager.Instance.GetPlayerInfo().WaveIndex.ToString();
+        StringBuilder sb = new StringBuilder();
+        sb.Append("WAVE : ");
+        sb.Append(GameManager.Instance.GetPlayerInfo().WaveIndex.ToString());
+        mLabel.text = sb.ToString();
     }
     #endregion
 
@@ -24,7 +28,10 @@ public class WaveLabel : MonoBehaviour, IObserver
 
         if (info != null)
         {
-            mLabel.text =  "WAVE " + info.WaveIndex.ToString();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("WAVE : ");
+            sb.Append(info.WaveIndex.ToString());
+            mLabel.text = sb.ToString();
         }
     }
     #endregion

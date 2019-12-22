@@ -100,7 +100,7 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            mMap.Save();
+            Application.Quit();
         }
     }
 

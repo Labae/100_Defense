@@ -446,7 +446,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void AdvertisementBtn()
     {
-        if(GameManager.instance.GetPlayerInfo().Life == 3)
+        if(GameManager.Instance.GetPlayerInfo().Life == 3)
+        {
+            return;
+        }
+
+        if(GameManager.Instance.GetWaveManager().GetIsWaving())
         {
             return;
         }
@@ -474,6 +479,7 @@ public class UIManager : MonoBehaviour
             case ShowResult.Skipped:
                 mTouchGuard.gameObject.SetActive(false);
                 mTouchGuard.depth = 0;
+                GameManager.Instance.GetPlayerInfo().Life++;
                 Debug.Log("ad was skipped");
                 break;
             case ShowResult.Finished:
