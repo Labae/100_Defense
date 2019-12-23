@@ -73,8 +73,11 @@ public class WaveManager : MonoBehaviour
     {
         if (!GetIsWaving() && !mIsUpdatePath)
         {
-            mIsUpdatePath = true;
-            mMap.GetPathFinding().PathFind();
+            if (mMap.GetPathFinding().GetIsPathInitializeAnim())
+            {
+                mIsUpdatePath = true;
+                mMap.GetPathFinding().PathFind();
+            }
         }
     }
 

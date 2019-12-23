@@ -190,7 +190,7 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 타워 루프 함수.
     /// </summary>
-    public void TowerUpdate()
+    public void TowerLoop()
     {
         for (int i = 0; i < mTowers.Count; i++)
         {

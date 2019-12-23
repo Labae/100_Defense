@@ -179,7 +179,11 @@ public class GameManager : MonoBehaviour
                     }
                     if (mMap != null)
                     {
-                        mMap.TowerUpdate();
+                        mMap.TowerLoop();
+                    }
+                    if(mWave != null)
+                    {
+                        mWave.Loop();
                     }
                 }
             }

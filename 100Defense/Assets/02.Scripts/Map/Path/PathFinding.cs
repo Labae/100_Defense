@@ -30,6 +30,10 @@ public class PathFinding : MonoBehaviour
     /// 길찾기를 성공하였는지.
     /// </summary>
     private bool mPathSuccess;
+    /// <summary>
+    /// 찾은 길을 처음 표시하였는지.
+    /// </summary>
+    private bool mIsPathInitializeAnim;
 
     #region Method
     /// <summary>
@@ -220,6 +224,11 @@ public class PathFinding : MonoBehaviour
             yield return null;
         }
 
+        if (!mIsPathInitializeAnim)
+        {
+            mIsPathInitializeAnim = true;
+        }
+
         yield return null;
     }
     #endregion
@@ -247,6 +256,15 @@ public class PathFinding : MonoBehaviour
     public bool GetPathSuccess()
     {
         return mPathSuccess;
+    }
+
+    /// <summary>
+    /// 찾은 길 표시를 처음 하였는지.
+    /// </summary>
+    /// <returns></returns>
+    public bool GetIsPathInitializeAnim()
+    {
+        return mIsPathInitializeAnim;
     }
 
     /// <summary>
