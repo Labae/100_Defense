@@ -197,13 +197,17 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat(mPrefVolumeKey, SfxVolume * 10.0f);
         PlayerPrefs.SetFloat(mPrefMusicVolumeKey, MusicVolume * 10.0f);
         PlayerPrefs.SetInt(mFirstKey, 1);
-        if(mMap != null)
+
+        if (mGameState != GameState.GameOver)
         {
-            mMap.Save();
-        }
-        if(mCSV != null)
-        {
-            mCSV.SavePlayerInfo(mPlayerInfo);
+            if (mMap != null)
+            {
+                mMap.Save();
+            }
+            if (mCSV != null)
+            {
+                mCSV.SavePlayerInfo(mPlayerInfo);
+            }
         }
     }
 
@@ -473,6 +477,7 @@ public class GameManager : MonoBehaviour
                     break;
                 case GameState.GameOver:
                     mCSV.ClearCSVFiles();
+                    mPlayerInfo = mCSV.LoadPlayerInfo();
                     break;
                 default:
                     break;

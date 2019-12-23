@@ -519,7 +519,7 @@ public class MapManager : MonoBehaviour
 
     #region Get Set MapData
     /// <summary>
-    /// 맵 데이터 설정.
+    /// 맵의 Cell 데이터 설정.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
