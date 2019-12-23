@@ -62,6 +62,7 @@ public class WaveManager : MonoBehaviour
         mMap = map;
         mWFSNextEnemySpawnTime = new WaitForSeconds(1.0f);
         mPrevPlayerInfo = new PlayerInformation();
+        mIsUpdatePath = true;
 
         return true;
     }
