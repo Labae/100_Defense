@@ -10,10 +10,6 @@ public class PathFinding : MonoBehaviour
     /// </summary>
     private MapManager mMap;
     /// <summary>
-    /// Path를 찾아주는 클래스.
-    /// </summary>
-    private PathRequestManager mPathRequsetManager;
-    /// <summary>
     /// 적이 걸어갈 길.
     /// </summary>
     private CellClass[] mPath;
@@ -58,9 +54,6 @@ public class PathFinding : MonoBehaviour
             return false;
         }
 
-        mPathRequsetManager = gameObject.AddComponent<PathRequestManager>();
-        mPathRequsetManager.Initialize();
-
         return true;
     }
 
@@ -69,7 +62,7 @@ public class PathFinding : MonoBehaviour
     /// </summary>
     public void PathFind()
     {
-        PathRequestManager.RequestPath(mStartCell, mGoalCell, OnPathFound);
+        StartFindPath(mStartCell, mGoalCell);
     }
 
     /// <summary>
@@ -178,8 +171,8 @@ public class PathFinding : MonoBehaviour
         if (mPathSuccess)
         {
             wayPoints = RetracePath(start, goal);
+            OnPathFound(wayPoints, true);
         }
-        mPathRequsetManager.FinishedProcessingPath(wayPoints, mPathSuccess);
     }
 
     /// <summary>
