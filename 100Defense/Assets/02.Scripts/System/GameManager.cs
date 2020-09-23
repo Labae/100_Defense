@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
                     {
                         mMap.TowerLoop();
                     }
-                    if(mWave != null)
+                    if (mWave != null)
                     {
                         mWave.Loop();
                     }
@@ -218,6 +218,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Method
+
     /// <summary>
     /// 게임 매니저 초기화.
     /// </summary>
